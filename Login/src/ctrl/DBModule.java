@@ -5,26 +5,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import data.User;
+import data.Module;
 
-public class DBUser extends DBManager {
+public class DBModule extends DBManager {
+	
 	/**
-	 * Save a user to the database
+	 * Save a module to the database
 	 * @param u
 	 */
-	public static void saveUser(User u) {
+	public static void saveModule(Module m) {
 		Connection con = null;		
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "INSERT INTO user VALUES('" + u.getEmail() + "', '" + u.getPassword() + "', '" + u.getName() + "', '" + u.getFirstname() + "', '" + u.getRole() + "')";
+			String update = "INSERT INTO module VALUES('" + m.getModTitle() + "', '" + m.getDescription() + "')";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
 				con.commit();
 			} catch (SQLException exc) {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
+				System.out.println("COMMIT fehlgeschlagen module - Rollback durchgefuehrt");
 			} finally {
 				closeQuietly(stmt);
 				closeQuietly(con); // Abbau Verbindung zur Datenbank
@@ -34,23 +35,24 @@ public class DBUser extends DBManager {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
-	 * Delete an user based on it's unique email adress
+	 * Delete an module based on it's unique ModTitle
 	 * @param email
 	 */
-	public static void deleteUser(String email) {
+	public static void deleteModule(String modTitle) {
 		Connection con = null;		
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "DELETE FROM user WHERE email = '" + email + "'";
+			String update = "DELETE FROM module WHERE modTitle = '" + modTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
 				con.commit();
 			} catch (SQLException exc) {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen - "
+				System.out.println("COMMIT module fehlgeschlagen - "
 						+ "Rollback durchgefuehrt");
 			} finally {
 				closeQuietly(stmt);
@@ -62,23 +64,23 @@ public class DBUser extends DBManager {
 		}
 	}
 	/**
-	 * Update a specific User (identified by the email adress) with the data from the user object.
-	 * @param u
-	 * @param email
+	 * Update a specific Module (identified by the ModTitle) with the data from the module object.
+	 * @param Module
+	 * @param modTitle
 	 */
-	public static void updateUser(User u, String email) {
+	public static void updateModule(Module m, String modTitle) {
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE user SET email = '" + u.getEmail() + "', password = '" + u.getPassword() + "', name = '" + u.getName() + "', firstname = '" + u.getFirstname() + "', role = '" + u.getRole() + "' " + "WHERE email = '" + email + "'";
+			String update = "UPDATE module SET modTitle = '" + m.getModTitle() + "', description = '" + m.getDescription() + "' " + "WHERE modTitle = '" + modTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
 				con.commit();
 			} catch (SQLException exc) {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen - "
+				System.out.println("COMMIT module fehlgeschlagen - "
 						+ "Rollback durchgefuehrt");
 			} finally {
 				closeQuietly(stmt);
@@ -90,28 +92,25 @@ public class DBUser extends DBManager {
 		}
 	}
 	/**
-	 * loads a user based on the specific email adress
-	 * @param mail
-	 * @return u
+	 * loads a module based on the specific modTitle
+	 * @param modTitle
+	 * @return m
 	 */
-	public static User loadUser(String mail) {
-		User u = null;
+	public static Module loadUser(String modTitle) {
+		Module m = null;
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM user WHERE email = '" + mail + "'";
+			String query = "SELECT * FROM module WHERE modTitle = '" + modTitle + "'";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			
 			if(rs.next()) {
-				String email = rs.getString("email");
-				String password = rs.getString("password");
-				String name = rs.getString("name");
-				String firstname = rs.getString("firstname");
-				String role = rs.getString("role");
-	
-				u = new User(email, password, name, firstname, role);
+				String title = rs.getString("modTitle");
+				String description = rs.getString("description");
+				
+				m = new Module(title, description);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -121,7 +120,6 @@ public class DBUser extends DBManager {
 		} finally {
 			closeQuietly(con);
 		}
-		return u;
+		return m;
 	}
-	
 }

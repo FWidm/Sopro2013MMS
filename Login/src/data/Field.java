@@ -3,7 +3,9 @@ package data;
  *  Class Field
  *  Fabian Widmann
  */
+
 public class Field {
+	//TODO Achtung namen von DB != namen in der Klasse evtl Probelem
 	private String SubjectmodTitle;
 	private int Subjectversion;
 	private String SubjectsubTitle;
@@ -18,12 +20,12 @@ public class Field {
 	 * @param fieldTitle
 	 * @param description
 	 */
-	public Field(String subjectmodTitle, int subjectversion,
-			String subjectsubTitle, String fieldTitle, String description) {
+	public Field(String fieldTitle, int subjectversion,
+			String subjectsubTitle, String subjectmodTitle, String description) {
 		super();
-		SubjectmodTitle = subjectmodTitle;
-		Subjectversion = subjectversion;
-		SubjectsubTitle = subjectsubTitle;
+		this.SubjectmodTitle = subjectmodTitle;
+		this.Subjectversion = subjectversion;
+		this.SubjectsubTitle = subjectsubTitle;
 		this.fieldTitle = fieldTitle;
 		this.description = description;
 	}
