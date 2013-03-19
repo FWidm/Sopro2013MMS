@@ -1,9 +1,9 @@
 package data;
-/*
- *  Class Field
- *  Fabian Widmann
- */
 
+/**
+ * @author Fabian
+ *
+ */
 public class Field {
 	//TODO Achtung namen von DB != namen in der Klasse evtl Probelem
 	private String SubjectmodTitle;

@@ -6,7 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import data.Field;
-
+/**
+ * @author Fabian
+ * 
+ */
 public class DBField extends DBManager {
 	/**
 	 * Save a field to the database
