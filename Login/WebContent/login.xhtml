@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+<title>MMS Login</title>
+<link href="./css/bootstrap.css" 
+      rel="stylesheet"/> 
+</h:head>
+<h:body>
+<fieldset>
+	<div class="container">
+		<div class="hero-unit">
+			<h:form id="login_frame">
+				<table width="250" border="0" cellpadding="2" align="center">
+					<tr>
+						<td colspan="2"><h2>MMS Login</h2></td>
+					</tr>
+					<tr>
+						<!-- required erzeugt die errorMSG die unten angezeigt wird, falls das Feld leer ist -->
+						<td><h:outputText value="email: "/><h:inputText id="email" value="#{LoginBean.email}" styleClass="input_text"/></td>
+						<td><h:outputText value="Password:  "/><h:inputSecret id="password" value="#{LoginBean.password}" styleClass="input_text"/></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="right">
+							<h:commandButton action="#{LoginBean.checkSuccess}" value="Login" type="submit" class="btn btn-primary"/>
+							
+						</td>
+					</tr>
+				</table>
+				<h:messages />
+				<h:outputText value="#{LoginBean.msg}" />
+				<h:commandButton action="#{LoginBean.fwdCreateNewUser}" value="CreateUser" type="submit" class="btn btn-primary"/>
+			</h:form>
+		</div>
+	</div>
+</fieldset>
+</h:body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+<link href="./css/bootstrap.css" 
+      rel="stylesheet"/> 
+</h:head>
+<h:body>
+	<div class="container">
+		<div class="hero-unit">
+			<div align="right">
+				<h:form id="logout_frame">
+					<h:commandButton action="#{CreateBean.logout}" value="Logout" type="submit" class="btn btn-primary"/>
+				</h:form>
+			</div>
+			<center><h2>Login Success!</h2></center>
+			<div class="alert alert-success" align="center">
+				<p>Hello <b><h:outputText value="#{CreateBean.dbUser.firstname}"/></b>, you are now logged in as <b><h:outputText value="#{Login_bean.dbUser.role}"/></b>.</p>
+			</div>
+		</div>
+	</div>
+	
+</h:body>
+</html>
