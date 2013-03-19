@@ -8,8 +8,8 @@ import java.sql.Statement;
 
 public class DBManager {
 
-	public static final String URL = "jdbc:mysql://bolonka-zwetna-von-der-kreuzbergquelle.de/krm_db?";
-	public static final String DRIVER = "com.mysql.jdbc.Driver";
+	protected static final String URL = "jdbc:mysql://bolonka-zwetna-von-der-kreuzbergquelle.de/krm_db?";
+	protected static final String DRIVER = "com.mysql.jdbc.Driver";
 
 	static {
 		try {
