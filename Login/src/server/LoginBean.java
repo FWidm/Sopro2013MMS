@@ -5,20 +5,14 @@
 
 package server;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 import data.User;
-import ctrl.DbManager;
+import ctrl.DBUser;
 
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
-
-import com.sun.xml.internal.bind.v2.TODO;
 
 import util.PasswordHash;
 
@@ -37,7 +31,7 @@ public class LoginBean {
 	 * @return boolean
 	 */
 	private boolean loadUser(String email){
-		dbUser = DbManager.loadUser(email);
+		dbUser = DBUser.loadUser(email);
 		if(dbUser != null) return true;
 		else return false;
 	}

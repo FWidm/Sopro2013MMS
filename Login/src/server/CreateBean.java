@@ -6,7 +6,7 @@
 package server;
 
 import data.User;
-import ctrl.DbManager;
+import ctrl.DBUser;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -29,7 +29,7 @@ public class CreateBean {
 			return false;
 		User tmp=new User(email, name, firstname, role, passLength);
 		System.out.println(tmp.toString());
-		DbManager.saveUser(tmp);
+		DBUser.saveUser(tmp);
 		return true;
 	}
 	
