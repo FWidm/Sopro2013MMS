@@ -5,76 +5,89 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import data.ModManAccess;
 import data.ModuleModMan;
 
-public class DBModuleModMan extends DBManager {
+public class DBModManAccess extends DBManager {
 	/**
 	 * Save a moduleModMan to the database
+	 * 
 	 * @param u
 	 */
-	public static void saveModuleModMan(ModuleModMan m) {
-		Connection con = null;		
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "INSERT INTO moduleModMan VALUES('" + m.getModManTitle() + "', '" + m.getModTitle() + "')";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen moduleModMan - Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Delete an moduleModMan based on it's unique ModTitle and modManTitle
-	 * @param modManTitle
-	 * @param modTitle
-	 */
-	public static void deleteModuleModMan(String modManTitle, String modTitle) {
-		Connection con = null;		
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "DELETE FROM moduleModMan WHERE modManTitle = '" + modManTitle + "' AND modTitle = '" + modTitle + "'";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT moduleModMan fehlgeschlagen - "
-						+ "Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * Update a specific ModuleModMan (identified by the ModTitle and ModManTitle) with the data from the moduleModMan object.
-	 * @param Module
-	 * @param modManTitle
-	 * @param modTitle
-	 */
-	public static void updateModuleModMan(ModuleModMan m, String modManTitle, String modTitle) {
+	public static void saveModuleModMan(ModManAccess m) {
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE moduleModMan SET modManTitle = '" + m.getModManTitle() + "', modTitle = '" + m.getModTitle() + "' " + "WHERE modManTitle = '" + modManTitle + "' AND modTitle = '" + modTitle + "'";
+			String update = "INSERT INTO modManAccess VALUES('" + m.getEmail()
+					+ "', '" + m.getModManTitle() + "')";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out
+						.println("COMMIT ModuleManAccess fehlgeschlagen moduleModMan - Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Delete an moduleModMan based on it's unique email and modManTitle
+	 * 
+	 * @param email
+	 * @param modTitle
+	 */
+	public static void deleteModuleModMan(String email, String modManTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM modManAccess WHERE email = '" + email
+					+ "' AND modTitle = '" + modManTitle + "'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT ModuleManAccess fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Update a specific ModuleModMan (identified by the ModTitle and
+	 * ModManTitle) with the data from the moduleModMan object.
+	 * 
+	 * @param ModuleManAccess
+	 * @param email
+	 * @param modManTitle
+	 */
+	public static void updateModuleModMan(ModManAccess m, String email,
+			String modManTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE moduleModMan SET email = '" + m.getEmail()
+					+ "', modTitle = '" + m.getModManTitle() + "' "
+					+ "WHERE email = '" + email + "' AND modManTitle = '"
+					+ modManTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -92,27 +105,31 @@ public class DBModuleModMan extends DBManager {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * loads a moduleModMan based on the specific modTitle and modManTitle
+	 * 
+	 * @param email
 	 * @param modManTitle
-	 * @param modTitle
 	 * @return m
 	 */
-	public static ModuleModMan loadModuleModMan(String modManTitle, String modTitle) {
+	public static ModuleModMan loadModuleModMan(String email,
+			String modManTitle) {
 		ModuleModMan m = null;
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM module WHERE modManTitle = '" + modManTitle + "' AND modTitle = '" + modTitle + "'";
+			String query = "SELECT * FROM module WHERE email = '"
+					+ email + "' AND modManTitle = '" + modManTitle + "'";
 
-			ResultSet rs = stmt.executeQuery(query);			
+			ResultSet rs = stmt.executeQuery(query);
 
-			if(rs.next()) {
-				String manTitle = rs.getString("modManTitle");
-				String title = rs.getString("modTitle");
+			if (rs.next()) {
+				String mail = rs.getString("email");
+				String title = rs.getString("modManTitle");
 
-				m = new ModuleModMan(manTitle, title);
+				m = new ModuleModMan(mail, title);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
