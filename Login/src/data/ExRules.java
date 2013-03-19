@@ -24,7 +24,6 @@ public class ExRules {
 	 */
 	public void setExRulesTitle(String exRulesTitle) {
 		this.exRulesTitle = exRulesTitle;
-	}
-	
+	}	
 	
 }
