@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import data.Subject;
-import data.User;
 
 public class DBSubject extends DBManager {
 
