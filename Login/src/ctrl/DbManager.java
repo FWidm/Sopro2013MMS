@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public final class DbManager {
 
-	public static final String URL = "jdbc:mysql://localhost/sopro?";
+	public static final String URL = "jdbc:mysql://bolonka-zwetna-von-der-kreuzbergquelle.de/krm_db?";
 	public static final String DRIVER = "com.mysql.jdbc.Driver";
 
 	static {
@@ -36,7 +36,7 @@ public final class DbManager {
 	public static Connection openConnection() throws SQLException {
 		Connection con = null; 
 		try {
-			con = DriverManager.getConnection(URL + "user=root");
+			con = DriverManager.getConnection(URL + "user=krm_user&password=wlc93Qx6aoJ4v");
 		} catch (SQLException e) {
 			System.out.println("No connection to database possible.");
 			System.exit(2);
@@ -90,7 +90,7 @@ public final class DbManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "INSERT INTO users VALUES('" + u.getEmail() + "', '" + u.getPassword() + "', '" + u.getName() + "', '" + u.getFirstname() + "', '" + u.getRole() + "')";
+			String update = "INSERT INTO user VALUES('" + u.getEmail() + "', '" + u.getPassword() + "', '" + u.getName() + "', '" + u.getFirstname() + "', '" + u.getRole() + "')";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -116,7 +116,7 @@ public final class DbManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "DELETE FROM users WHERE email = '" + email + "'";
+			String update = "DELETE FROM user WHERE email = '" + email + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -144,7 +144,7 @@ public final class DbManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE users SET email = '" + u.getEmail() + "', password = '" + u.getPassword() + "', name = '" + u.getName() + "', firstname = '" + u.getFirstname() + "', role = '" + u.getRole() + "' " + "WHERE email = '" + email + "'";
+			String update = "UPDATE user SET email = '" + u.getEmail() + "', password = '" + u.getPassword() + "', name = '" + u.getName() + "', firstname = '" + u.getFirstname() + "', role = '" + u.getRole() + "' " + "WHERE email = '" + email + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -173,7 +173,7 @@ public final class DbManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM users WHERE email = '" + mail + "'";
+			String query = "SELECT * FROM user WHERE email = '" + mail + "'";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			
