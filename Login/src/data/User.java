@@ -26,12 +26,14 @@ public class User {
 		this.name = name;
 		this.firstname = firstname;
 		// Randompassword
-		
 		String generatedPass=util.PasswordGen.generatePassword(length);
+		//TODO remove sysout, add notification or email for the user email.
+		//something like notify(email user, String generated PW)
+		System.out.println(generatedPass);
+		
 		try {
 			this.password = util.PasswordHash.createHash(generatedPass);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			// TODO Auto-generated catch block
 			System.out.println("User.java @ line 32 - create Hash went wrong");
 			e.printStackTrace();
 		}

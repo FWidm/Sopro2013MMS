@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import data.Field;
+
 /**
  * @author Fabian
  * 
@@ -44,9 +45,12 @@ public class DBField extends DBManager {
 	}
 
 	/**
-	 * Delete an user based on it's unique email adress
+	 * delete a field
 	 * 
-	 * @param email
+	 * @param fieldTitle
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
 	 */
 	public static void deleteField(String fieldTitle, int subjectversion,
 			String subjectsubTitle, String subjectmodTitle) {
@@ -79,10 +83,13 @@ public class DBField extends DBManager {
 
 	/**
 	 * Update a specific Field (identified by modtitle, version and subtitle)
-	 * with the data from the user object.
+	 * with the data from the Field object.
 	 * 
-	 * @param u
-	 * @param email
+	 * @param f
+	 * @param fieldTitle
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
 	 */
 	public static void updateField(Field f, String fieldTitle,
 			int subjectversion, String subjectsubTitle, String subjectmodTitle) {
@@ -90,7 +97,7 @@ public class DBField extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE user SET fieldTitle = '"
+			String update = "UPDATE field SET fieldTitle = '"
 					+ f.getFieldTitle() + "', version = '"
 					+ f.getSubjectversion() + "', subTitle = '"
 					+ f.getSubjectsubTitle() + "', modTitle = '"
@@ -115,10 +122,13 @@ public class DBField extends DBManager {
 	}
 
 	/**
-	 * loads a user based on the specific email adress
+	 * loads a specific field
 	 * 
-	 * @param mail
-	 * @return u
+	 * @param fieldTitle
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
+	 * @return
 	 */
 	public static Field loadField(String fieldTitle, int subjectversion,
 			String subjectsubTitle, String subjectmodTitle) {

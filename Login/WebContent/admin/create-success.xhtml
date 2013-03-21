@@ -10,13 +10,10 @@
 	<div class="container">
 		<div class="hero-unit">
 			<div align="right">
-				<h:form id="logout_frame">
-					<h:commandButton action="#{CreateBean.logout}" value="Logout" type="submit" class="btn btn-primary"/>
-				</h:form>
 			</div>
-			<center><h2>Login Success!</h2></center>
+			<center><h2>Account Created!</h2></center>
 			<div class="alert alert-success" align="center">
-				<p>Hello <b><h:outputText value="#{CreateBean.dbUser.firstname}"/></b>, you are now logged in as <b><h:outputText value="#{Login_bean.dbUser.role}"/></b>.</p>
+				<p>Creation of Account with the email address: "<b><h:outputText value="#{CreateBean.email}"/></b>" successful!</p>
 			</div>
 		</div>
 	</div>

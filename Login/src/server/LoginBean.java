@@ -5,6 +5,9 @@
 
 package server;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 import data.User;
 import ctrl.DBUser;
 
@@ -66,13 +69,21 @@ public class LoginBean {
 		if(email == "" || password == "") return false;
 		if(loadUser(email)){
 			//todo validatePassFILLER => remove filler
-			if(email.equalsIgnoreCase(dbUser.getEmail()) && PasswordHash.validatePasswordFiller(password, dbUser.getPassword())){
-				System.out.println("valid");
-				return true;
-			}
-			else{
-				System.out.println("invalid");
-				return false;
+			try {
+				if(email.equalsIgnoreCase(dbUser.getEmail()) && PasswordHash.validatePassword(password, dbUser.getPassword())){
+					System.out.println("valid");
+					return true;
+				}
+				else{
+					System.out.println("invalid");
+					return false;
+				}
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidKeySpecException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -81,8 +92,7 @@ public class LoginBean {
 	}
 	
 	public String fwdCreateNewUser(){
-		System.out.println("lo!");
-		return "create";
+		return "admin/create";
 		
 	}
 	

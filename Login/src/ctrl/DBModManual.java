@@ -46,7 +46,7 @@ public class DBModManual extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE user SET modManTitle = '" + m.getModManTitle() + "', descriptiom = '" + m.getDescription() + "', exRulesTitle = '" + m.getExRulesTitle() + "', date = '" + m.getDate() +  "WHERE modManTitle = '" + modManTitle + "'";
+			String update = "UPDATE modManual SET modManTitle = '" + m.getModManTitle() + "', descriptiom = '" + m.getDescription() + "', exRulesTitle = '" + m.getExRulesTitle() + "', date = '" + m.getDate() +  "WHERE modManTitle = '" + modManTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {

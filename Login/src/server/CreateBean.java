@@ -23,21 +23,25 @@ public class CreateBean {
 	 * @return boolean
 	 */
 	private boolean saveUser(){
+		//TODO check for duplicate entries before trying to save
 		System.out.println(firstname+name+email+role);
 		
-		if(firstname.isEmpty()&&name.isEmpty()&&email.isEmpty()&&role.isEmpty())
+		if(firstname.isEmpty()&&name.isEmpty()&&email.isEmpty()&&role.isEmpty()){
 			return false;
+		}
+			
 		User tmp=new User(email, name, firstname, role, passLength);
 		System.out.println(tmp.toString());
 		DBUser.saveUser(tmp);
+		System.out.println("true");
 		return true;
 	}
 	
 	public String checkSuccess(){
 		if(saveUser())
-			return "createSuccess";
+			return "create-success";
 		else
-			return "create";
+			return "create-failed";
 	}
 
 	/**
