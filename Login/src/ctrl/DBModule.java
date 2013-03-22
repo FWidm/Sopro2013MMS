@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.Module;
+import data.ModuleModMan;
 
 public class DBModule extends DBManager {
 	
@@ -121,5 +124,27 @@ public class DBModule extends DBManager {
 			closeQuietly(con);
 		}
 		return m;
+	}
+	
+	/**
+	 * loads a Module via the given ModManTitle
+	 * @param modManTitle
+	 * @return
+	 */
+	public static List<Module> loadModulesByManTitle(String modManTitle) {
+		List<Module> modules = new LinkedList<Module>();
+		
+		List<ModuleModMan> moduleModMans = DBModuleModMan.loadByManTitle(modManTitle);
+		
+		for(int i = 0; i < moduleModMans.size(); i++) {
+			modules.add(loadModule(moduleModMans.get(i).getModTitle()));
+		}
+		
+		return modules;
+	}
+	
+	public static void main(String[] args) {
+		List<Module> modules = loadModulesByManTitle("Informatik");
+		System.out.println(modules.get(0).getModTitle());
 	}
 }

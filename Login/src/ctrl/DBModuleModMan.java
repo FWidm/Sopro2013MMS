@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.ModuleModMan;
 
@@ -104,7 +106,7 @@ public class DBModuleModMan extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM module WHERE modManTitle = '" + modManTitle + "' AND modTitle = '" + modTitle + "'";
+			String query = "SELECT * FROM moduleModMan WHERE modManTitle = '" + modManTitle + "' AND modTitle = '" + modTitle + "'";
 
 			ResultSet rs = stmt.executeQuery(query);			
 
@@ -113,6 +115,33 @@ public class DBModuleModMan extends DBManager {
 				String title = rs.getString("modTitle");
 
 				m = new ModuleModMan(manTitle, title);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return m;
+	}
+	
+	public static List<ModuleModMan> loadByManTitle(String modManTitle) {
+		List<ModuleModMan> m = new LinkedList<ModuleModMan>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM moduleModMan WHERE modManTitle = '" + modManTitle + "'";
+
+			ResultSet rs = stmt.executeQuery(query);			
+
+			while(rs.next()) {
+				String manTitle = rs.getString("modManTitle");
+				String title = rs.getString("modTitle");
+
+				m.add(new ModuleModMan(manTitle, title));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);

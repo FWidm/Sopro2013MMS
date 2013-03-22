@@ -137,4 +137,10 @@ public class DBModManual extends DBManager{
 		}
 		return m;
 	}
+	
+	public static void main(String[] args) {
+		List<ModManual> modMans = loadAllModManuals("PO2012");
+		System.out.println(modMans.get(0).getExRulesTitle());
+	}
+	
 }

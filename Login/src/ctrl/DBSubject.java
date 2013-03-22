@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.Subject;
 
@@ -155,4 +157,43 @@ public class DBSubject extends DBManager {
 		}
 		return sub;
 	}
+	
+	public static List<Subject> loadSubject(int version, String modTitle) {
+		List<Subject> subs = new LinkedList<Subject>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM subject WHERE version = " + version
+					+ " AND " + "modTitle = '" + modTitle + "'";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				int ver = rs.getInt("version");
+				String subT = rs.getString("subTitle");
+				String modT = rs.getString("modTitle");
+				String desc = rs.getString("description");
+				String aim = rs.getString("aim");
+				int ects = rs.getInt("ects");
+				boolean ack = rs.getBoolean("ack");
+
+				subs.add(new Subject(ver, subT, modT, desc, aim, ects, ack));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return subs;
+	}
+	
+	public static void main(String[] args) {
+		List<Subject> modMans = loadSubject(0, "Algorithmen und Datenstrukturen");
+		System.out.println(modMans.get(0).getSubTite());
+	}
+	
 }
