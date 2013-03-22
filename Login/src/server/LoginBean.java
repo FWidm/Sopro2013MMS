@@ -55,7 +55,7 @@ public class LoginBean {
 	public String checkSuccess(){
 		if(checkValidUser()){
 			loggedIn=true;
-			return("success");
+			return("login-success");
 		}
 		loggedIn=false;
 		return ("login-failed");
@@ -92,7 +92,7 @@ public class LoginBean {
 	}
 	
 	public String fwdCreateNewUser(){
-		return "admin/create";
+		return "admin-create";
 		
 	}
 	

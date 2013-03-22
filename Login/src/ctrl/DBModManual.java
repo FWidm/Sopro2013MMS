@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.ModManual;
 
@@ -88,6 +90,43 @@ public class DBModManual extends DBManager{
 	
 				m = new ModManual(modManTitle, description, exRulesTitle, date);
 			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return m;
+	}
+	/**
+	 * load all modmanuals with specific exrulestitle
+	 * @param exRulesTitle
+	 * @return
+	 */
+	public static List<ModManual> loadAllModManuals(String exRulesTitle) {
+		Connection con = null;
+		List<ModManual> m = new LinkedList<ModManual>();
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM modManual WHERE exRulesTitle = '" + exRulesTitle + "'";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			
+			
+			while(rs.next()){
+				String modManTitle = rs.getString("modManTitle");
+				String description = rs.getString("description");
+				String _exRulesTitle = rs.getString("exRulesTitle");
+				Date date = rs.getTimestamp("date");
+	
+				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
+				
+			}
+			
 			closeQuietly(rs);
 			closeQuietly(stmt);
 		} catch (SQLException e) {

@@ -39,9 +39,9 @@ public class CreateBean {
 	
 	public String checkSuccess(){
 		if(saveUser())
-			return "create-success";
+			return "admin-create-success";
 		else
-			return "create-failed";
+			return "admin-create-failed";
 	}
 
 	/**
