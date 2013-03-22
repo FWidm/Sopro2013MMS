@@ -11,3 +11,7 @@
      -moz-border-radius: 6px;
           border-radius: 6px;
 }
+.hero-unit {
+	width: 1000px !important;
+	height: 1000px !important;
+}
