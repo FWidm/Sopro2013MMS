@@ -5,7 +5,7 @@ import java.util.Date;
 public class ModManual {
 
 	private String modManTitle, description, exRulesTitle;
-	private Date date;
+	private Date deadline;
 	
 	public ModManual(){
 	
@@ -17,13 +17,13 @@ public class ModManual {
 	 * @param modManTitle
 	 * @param description
 	 * @param exRulesTitle
-	 * @param date
+	 * @param deadline
 	 */
-	public ModManual(String modManTitle, String description, String exRulesTitle, Date date){
+	public ModManual(String modManTitle, String description, String exRulesTitle, Date deadline){
 		this.modManTitle = modManTitle;
 		this.description = description;
 		this.exRulesTitle = exRulesTitle;
-		this.date = date;
+		this.deadline = deadline;
 	}
 	
 	/**
@@ -74,23 +74,23 @@ public class ModManual {
 	/**
 	 * @return the date
 	 */
-	public Date getDate() {
-		return date;
+	public Date getDeadline() {
+		return deadline;
 	}
 
 	/**
 	 * @param date
 	 *            the date to set
 	 */
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
 	}
 
 	@Override
 	public String toString() {
 		return "ModManual [modManTitle=" + modManTitle + ", description="
-				+ description + ", exRulesTitle=" + exRulesTitle + ", date="
-				+ date + "]";
+				+ description + ", exRulesTitle=" + exRulesTitle + ", deadline="
+				+ deadline + "]";
 	}
 
 }

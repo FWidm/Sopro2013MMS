@@ -20,7 +20,7 @@ public class DBModManual extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "INSERT INTO modManual VALUES('" + m.getModManTitle() + "', '" + m.getDescription() + "', '" + m.getExRulesTitle() + "', '" + m.getDate() + "')";
+			String update = "INSERT INTO modManual VALUES('" + m.getModManTitle() + "', '" + m.getDescription() + "', '" + m.getExRulesTitle() + "', '" + m.getDeadline() + "')";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -48,7 +48,7 @@ public class DBModManual extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE modManual SET modManTitle = '" + m.getModManTitle() + "', descriptiom = '" + m.getDescription() + "', exRulesTitle = '" + m.getExRulesTitle() + "', date = '" + m.getDate() +  "WHERE modManTitle = '" + modManTitle + "'";
+			String update = "UPDATE modManual SET modManTitle = '" + m.getModManTitle() + "', descriptiom = '" + m.getDescription() + "', exRulesTitle = '" + m.getExRulesTitle() + "', deadline = '" + m.getDeadline() +  "WHERE modManTitle = '" + modManTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -86,7 +86,7 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String exRulesTitle = rs.getString("exRulesTitle");
-				Date date = rs.getTimestamp("date");
+				Date date = rs.getTimestamp("deadline");
 	
 				m = new ModManual(modManTitle, description, exRulesTitle, date);
 			}
@@ -115,13 +115,11 @@ public class DBModManual extends DBManager{
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			
-			
-			
 			while(rs.next()){
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				Date date = rs.getTimestamp("date");
+				Date date = rs.getTimestamp("deadline");
 	
 				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
 				
