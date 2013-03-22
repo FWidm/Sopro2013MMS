@@ -1,5 +1,8 @@
 package data;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -30,6 +33,7 @@ public class User {
 		//TODO remove sysout, add notification or email for the user email.
 		//something like notify(email user, String generated PW)
 		System.out.println(generatedPass);
+		printUserList(email,generatedPass);
 		
 		try {
 			this.password = util.PasswordHash.createHash(generatedPass);
@@ -39,6 +43,17 @@ public class User {
 		}
 		this.role = role;
 		this.email = email;
+	}
+
+	private void printUserList(String mail, String pass) {
+        try {
+            BufferedWriter out = new BufferedWriter (new FileWriter("user-logins.txt",true));
+			out.write(mail+" : "+pass+"\r\n");
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
