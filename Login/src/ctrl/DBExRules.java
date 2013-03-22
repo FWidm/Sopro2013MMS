@@ -13,7 +13,7 @@ public class DBExRules extends DBManager{
 	 * Save an ExRule to the database
 	 * @param er
 	 */
-	public static void saveExRules(ExRules er) {
+	public static void saveUser(ExRules er) {
 		Connection con = null;		
 		try {
 			con = openConnection();
@@ -40,7 +40,7 @@ public class DBExRules extends DBManager{
 	 * Delete an ExRule with given title
 	 * @param exRulesTitle
 	 */
-	public static void deleteExRules(String exRulesTitle) {
+	public static void deleteUser(String exRulesTitle) {
 		Connection con = null;		
 		try {
 			con = openConnection();
@@ -117,17 +117,5 @@ public class DBExRules extends DBManager{
 			closeQuietly(con);
 		}
 		return er;
-	}
-	/**
-	 * Class test
-	 * create new ExRules
-	 * 
-	 * @param args - not used
-	 */
-	public static void main(String[] args){
-		ExRules er=new ExRules("Informatik PO2010");
-		saveExRules(er);
-		System.out.println(er.getExRulesTitle());
-		er=loadExRules("Informatik PO2010");
 	}
 }

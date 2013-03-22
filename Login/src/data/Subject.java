@@ -3,7 +3,7 @@ package data;
 public class Subject {
 	
 	private int version; 
-	private String subTite, modTitle, description, aim; 
+	private String subTitle, modTitle, description, aim; 
 	private int ects; 
 	private boolean ack;
 	/**
@@ -15,11 +15,11 @@ public class Subject {
 	 * @param ects
 	 * @param ack
 	 */
-	public Subject(int version, String subTite, String modTitle,
+	public Subject(int version, String subTitle, String modTitle,
 			String description, String aim, int ects, boolean ack) {
 		super();
 		this.version = version;
-		this.subTite = subTite;
+		this.subTitle = subTitle;
 		this.modTitle = modTitle;
 		this.description = description;
 		this.aim = aim;
@@ -42,13 +42,13 @@ public class Subject {
 	 * @return the subTite
 	 */
 	public String getSubTite() {
-		return subTite;
+		return subTitle;
 	}
 	/**
 	 * @param subTite the subTite to set
 	 */
 	public void setSubTite(String subTite) {
-		this.subTite = subTite;
+		this.subTitle = subTite;
 	}
 	/**
 	 * @return the modTitle

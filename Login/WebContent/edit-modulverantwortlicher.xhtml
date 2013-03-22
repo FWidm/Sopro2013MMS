@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>Edit Modulverantwortlicher</title>
+	<link href="./css/bootstrap.css" rel="stylesheet" />
+</h:head>
+<h:body>
+	<fieldset>
+		<div class="container">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<a class="brand" href="#">Modulverantwortlicher</a>
+					<ul class="nav">
+						<li><a href="#">Start</a></li>
+						<li class="active"><a href="#">Bearbeiten</a></li>
+						<li><a href="#">Nachrichten</a></li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="hero-unit">
+				<div class="container">
+
+					<table width="250" border="0" cellpadding="2" align="right">
+						<tr>
+							<td colspan="2"><h2>Bearbeiten</h2></td>
+						</tr>
+						<tr>
+							<!-- Module(String modTitle, String description...) { -->
+							<!-- SubjectSubject(int version, String subTitle, String modTitle, String description, String aim, int ects, boolean ack) { -->
+							<td><h:outputText value="Titel: " /></td>
+						</tr>
+						<tr>
+							<td><h:inputText id="modTitle"
+									value="#{EditModulverantwortlicherBean.modTitle}"
+									styleClass="input_text" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="left"><h:outputText
+									value="Beschreibung:  " />
+								<h:inputTextarea id="modDesc"
+									value="#{EditModulverantwortlicherBean.modDesc}"
+									styleClass="input_text" style="height: 109px; width: 700px; "/>
+
+							</td>
+						</tr>
+					</table>
+					<table width="160" border="1" cellpadding="2" align="left"
+						style="width: 160px; height: 300px">
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+					<table width="160" border="0" cellpadding="2" align="left"
+						style="width: 160px; height: 30px">
+						<tr>
+							<form>
+							<td><input type="radio" name="Modul" value="module" checked="checked" />Modul<input type="radio" name="Fach" value="subject" />Fach</td>
+							</form>
+						</tr>
+						<tr>
+							<td><h:commandButton
+									action="#{EditModulverantwortlicherBean.checkSuccessModule}"
+									value="Speichern" type="submit" class="btn btn-primary" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</h:body>
+</html>
