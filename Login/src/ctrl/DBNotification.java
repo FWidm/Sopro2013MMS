@@ -158,7 +158,7 @@ public class DBNotification extends DBManager {
 	
 	public static void main (String[] args){
 		Notification notif = new Notification("test3","test4",
-				new Timestamp(System.currentTimeMillis()), "hallooo", "mongo","vollmongo");
+				new Timestamp(System.currentTimeMillis()), "Edited: Modulverantwortlicher", "edit","ausstehend");
 		saveNotification(notif);
 		System.out.println("saved");
 		List<Notification> notifs = loadNotification("test3","test4");
