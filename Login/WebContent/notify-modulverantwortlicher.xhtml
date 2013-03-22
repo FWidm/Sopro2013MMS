@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
 <h:head>
 	<title>Notify Modulverantwortlicher</title>
 	<link href="./css/bootstrap.css" rel="stylesheet" />
@@ -29,53 +30,52 @@
 		width="80%" height="700" name="Content Fiew"> </iframe> -->
 	<h3>Default ScrollPanel</h3>
 	<form>
-		<p:scrollPanel mode="native">
-			<h:panelGrid>
-				<div class="hero-unit">
-					<div class="container">
+		<div style="float: left; width: 30%; overflow: auto;">balabala</div>
+		<div style="overflow: auto; width: 70%;">
+			<div class="hero-unit">
+				<div class="container">
 
-						<table width="250" border="0" cellpadding="2" align="center">
-							<tr>
-								<td colspan="2"><h2>Bearbeiten</h2></td>
-							</tr>
-							<tr>
-								<!-- Module(String modTitle, String description...) { -->
-								<!-- SubjectSubject(int version, String subTitle, String modTitle, String description, String aim, int ects, boolean ack) { -->
-								<td><h:outputText value="Titel: " /></td>
-							</tr>
-							<tr>
-								<td><h:inputText id="modTitle"
-										value="#{EditModulverantwortlicherBean.modTitle}"
-										styleClass="input_text" /></td>
-							</tr>
-							<tr>
-								<td colspan="2" align="left"><h:outputText
-										value="Beschreibung:  " /> <h:inputTextarea id="modDesc"
-										value="#{EditModulverantwortlicherBean.modDesc}"
-										styleClass="input_text" style="height: 109px; width: 700px; " />
+					<table width="250" border="0" cellpadding="2" align="center">
+						<tr>
+							<td colspan="2"><h2>Bearbeiten</h2></td>
+						</tr>
+						<tr>
+							<!-- Module(String modTitle, String description...) { -->
+							<!-- SubjectSubject(int version, String subTitle, String modTitle, String description, String aim, int ects, boolean ack) { -->
+							<td><h:outputText value="Titel: " /></td>
+						</tr>
+						<tr>
+							<td><h:inputText id="modTitle"
+									value="#{EditModulverantwortlicherBean.modTitle}"
+									styleClass="input_text" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="left"><h:outputText
+									value="Beschreibung:  " /> <h:inputTextarea id="modDesc"
+									value="#{EditModulverantwortlicherBean.modDesc}"
+									styleClass="input_text" style="height: 109px; width: 700px; " />
 
-								</td>
-							</tr>
-						</table>
-						<table width="160" border="0" cellpadding="2" align="center"
-							style="width: 160px; height: 30px">
-							<tr>
+							</td>
+						</tr>
+					</table>
+					<table width="160" border="0" cellpadding="2" align="center"
+						style="width: 160px; height: 30px">
+						<tr>
 
-								<td><input type="radio" name="Modul" value="module"
-									checked="checked" />Modul<input type="radio" name="Fach"
-									value="subject" />Fach</td>
+							<td><input type="radio" name="Modul" value="module"
+								checked="checked" />Modul<input type="radio" name="Fach"
+								value="subject" />Fach</td>
 
-							</tr>
-							<tr>
-								<td><h:commandButton
-										action="#{EditModulverantwortlicherBean.checkSuccessModule}"
-										value="Speichern" type="submit" class="btn btn-primary" /></td>
-							</tr>
-						</table>
-					</div>
+						</tr>
+						<tr>
+							<td><h:commandButton
+									action="#{EditModulverantwortlicherBean.checkSuccessModule}"
+									value="Speichern" type="submit" class="btn btn-primary" /></td>
+						</tr>
+					</table>
 				</div>
-			</h:panelGrid>
-		</p:scrollPanel>
+			</div>
+		</div>
 	</form>
 </body>
 </html>
