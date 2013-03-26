@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.ExRules;
 
@@ -13,7 +15,7 @@ public class DBExRules extends DBManager{
 	 * Save an ExRule to the database
 	 * @param er
 	 */
-	public static void saveUser(ExRules er) {
+	public static void saveExRule(ExRules er) {
 		Connection con = null;		
 		try {
 			con = openConnection();
@@ -40,7 +42,7 @@ public class DBExRules extends DBManager{
 	 * Delete an ExRule with given title
 	 * @param exRulesTitle
 	 */
-	public static void deleteUser(String exRulesTitle) {
+	public static void deleteExRule(String exRulesTitle) {
 		Connection con = null;		
 		try {
 			con = openConnection();
@@ -107,6 +109,35 @@ public class DBExRules extends DBManager{
 			if(rs.next()) {
 				String eRT = rs.getString("exRulesTitle");	
 				er = new ExRules(eRT);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return er;
+	}
+	
+	/**
+	 * loads all exRules
+	 * @return
+	 */
+	public static List<ExRules> loadExRules() {
+		List<ExRules> er = new LinkedList<ExRules>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM exRules";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String eRT = rs.getString("exRulesTitle");
+				er.add(new ExRules(eRT));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
