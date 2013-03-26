@@ -20,12 +20,8 @@
 				<p:layout style="min-width:400px;min-height:500px;" id="layout"> <!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
 				    <p:layoutUnit position="west" resizable="true" size="150" minSize="150" maxSize="300" header="Modulelist" collapsible="true">
 				    	<h:form>
-				        <p:dataList id="dataList" value="#{TemplateBean.titles}" var="iterator">
-				        	<p:commandButton value="#{iterator}" actionListener="#{TemplateBean.loadModMan}" ajax="false">
-				        		<f:attribute name="action" value="#{iterator}" />
-				        	</p:commandButton>
-				        </p:dataList>
-				        </h:form>
+				    		<p:menu model="#{TemplateBean.model}" />
+				    	</h:form> 
 				    </p:layoutUnit>
 				    <p:layoutUnit position="center" header="Modulemanual">
 				        <p:layout style="min-width:400px;min-height:100px;">

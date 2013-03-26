@@ -1,13 +1,19 @@
 package server;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+
+import org.primefaces.component.behavior.ajax.AjaxBehavior;
+import org.primefaces.component.menu.Menu;
+import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.component.submenu.Submenu;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
 
 import ctrl.DBExRules;
 import ctrl.DBModManual;
@@ -18,30 +24,61 @@ import data.Module;
 
 @ManagedBean(name="TemplateBean")
 @RequestScoped
-public class TemplateBean {
+public class TemplateBean implements ActionListener {
 	
 	private String exRules, modMan, module;
 	private List<ExRules> exRulesList;
 	private List<ModManual> modManList;
 	private List<Module> moduleList;
-	private List<String> titles;
+	private MenuModel model;
 	
 	public TemplateBean() {
-		titles = new LinkedList<String>();
+		
+		model = new DefaultMenuModel();
+		Submenu submenu = new Submenu();
+		submenu.setLabel("Pruefungsordnung");
+		
 		exRulesList = DBExRules.loadExRules();
+		
 		for(int i = 0; i < exRulesList.size(); i++) {
-			titles.add(exRulesList.get(i).getExRulesTitle());
+			MenuItem m = new MenuItem();
+			m.setValue(exRulesList.get(i).getExRulesTitle());
+			m.setAjax(true);
+			
+			m.addActionListener(this);
+			submenu.getChildren().add(m);
 		}
+		
+		model.addSubmenu(submenu);
+		
+		
 	}
 	
-	public void loadModMan(ActionEvent event) {
-		String exRulesTitle = (String)event.getComponent().getAttributes().get("action");
-		System.out.println(exRulesTitle);
-		titles = new LinkedList<String>();
+	public void loadModMan(String exRulesTitle) {
+		exRules = exRulesTitle;
+		
 		modManList = DBModManual.loadAllModManuals(exRulesTitle);
+		
+		Submenu submenu = new Submenu();
+		submenu.setLabel(exRulesTitle);
+		
 		for(int i = 0; i < modManList.size(); i++) {
-			titles.add(modManList.get(i).getModManTitle());
+			MenuItem m = new MenuItem();
+			m.setValue(modManList.get(i).getModManTitle());
+			m.addActionListener(this);
+			submenu.getChildren().add(m);
 		}
+		
+		model = new DefaultMenuModel();
+		model.addSubmenu(submenu);
+	}
+	
+	@Override
+	public void processAction(ActionEvent arg0) throws AbortProcessingException {
+		// TODO Auto-generated method stub
+		System.out.println((String)((MenuItem)arg0.getSource()).getValue());
+		loadModMan((String)((MenuItem)arg0.getSource()).getValue());
+		
 	}
 
 	/**
@@ -129,17 +166,17 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @return the titles
+	 * @return the model
 	 */
-	public List<String> getTitles() {
-		return titles;
+	public MenuModel getModel() {
+		return model;
 	}
 
 	/**
-	 * @param titles the titles to set
+	 * @param model the model to set
 	 */
-	public void setTitles(List<String> titles) {
-		this.titles = titles;
+	public void setModel(MenuModel model) {
+		this.model = model;
 	}
 	
 }
