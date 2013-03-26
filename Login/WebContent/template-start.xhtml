@@ -4,41 +4,51 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-	
-	<h:head>
-		<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
-		<title>Insert title here</title>
-		
-		<link rel="stylesheet" href="./css/bootstrap.css" />
-		<link rel="stylesheet" href="./css/template.css" />
-		
-	</h:head>
-	
-	<h:body> <!-- body -->
-		<p:tabView> <!-- TabView -->
-			<p:tab title="Start"> <!-- Begin of first tab // Start -->
-				<p:layout style="min-width:400px;min-height:500px;" id="layout"> <!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
-				    <p:layoutUnit position="west" resizable="true" size="150" minSize="150" maxSize="300" header="Modulelist" collapsible="true">
-				    	<h:form>
-				    		<p:menu model="#{TemplateBean.model}" />
-				    	</h:form> 
-				    </p:layoutUnit>
-				    <p:layoutUnit position="center" header="Modulemanual">
-				        <p:layout style="min-width:400px;min-height:100px;">
-				        	<p:layoutUnit position="center" header="Modulemanual">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+	<title>Insert title here</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.css" />
+	<link rel="stylesheet" href="./css/template.css" />
+
+</h:head>
+
+<h:body>
+	<!-- body -->
+	<h:form>
+		<p:tabView>
+			<!-- TabView -->
+			<p:tab title="Start">
+				<!-- Begin of first tab // Start -->
+				<p:layout style="min-width:400px;min-height:500px;" id="layout">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="150"
+						minSize="150" maxSize="300" header="Modulelist" collapsible="true">
+
+						<p:menu id="list-menu" model="#{TemplateBean.model}"/>
+
+					</p:layoutUnit>
+					<p:layoutUnit position="center" header="Modulemanual">
+						<p:layout style="min-width:400px;min-height:100px;">
+							<p:layoutUnit position="center" header="Modulemanual">
 				        		Center
 				    		</p:layoutUnit>
-				        	<p:layoutUnit position="south" resizable="false" size="70">
+							<p:layoutUnit position="south" resizable="false" size="70">
 				        		South
 				    		</p:layoutUnit>
-				        </p:layout>
-				    </p:layoutUnit>
-				</p:layout>			
-			</p:tab> <!-- End first tab // Start -->
-			
+						</p:layout>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<!-- End first tab // Start -->
+
 			<p:tab title="Edit"></p:tab>
 			<p:tab title="Notification"></p:tab>
-		</p:tabView> <!-- End TabView -->
-	</h:body> <!-- End body -->
-	
+		</p:tabView>
+		<!-- End TabView -->
+	</h:form>
+</h:body>
+<!-- End body -->
+
 </html>

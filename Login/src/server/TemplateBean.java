@@ -2,14 +2,11 @@ package server;
 
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.bean.SessionScoped;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
-import org.primefaces.component.behavior.ajax.AjaxBehavior;
-import org.primefaces.component.menu.Menu;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
@@ -23,7 +20,7 @@ import data.ModManual;
 import data.Module;
 
 @ManagedBean(name="TemplateBean")
-@RequestScoped
+@SessionScoped
 public class TemplateBean implements ActionListener {
 	
 	private String exRules, modMan, module;
@@ -44,7 +41,7 @@ public class TemplateBean implements ActionListener {
 			MenuItem m = new MenuItem();
 			m.setValue(exRulesList.get(i).getExRulesTitle());
 			m.setAjax(true);
-			
+			m.setUpdate("list-menu");
 			m.addActionListener(this);
 			submenu.getChildren().add(m);
 		}
@@ -64,6 +61,8 @@ public class TemplateBean implements ActionListener {
 		
 		for(int i = 0; i < modManList.size(); i++) {
 			MenuItem m = new MenuItem();
+			m.setAjax(true);
+			m.setUpdate("list-menu");
 			m.setValue(modManList.get(i).getModManTitle());
 			m.addActionListener(this);
 			submenu.getChildren().add(m);
