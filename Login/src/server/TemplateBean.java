@@ -3,21 +3,16 @@ package server;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 import ctrl.DBExRules;
-import ctrl.DBModManual;
-
 import data.ExRules;
 import data.ModManual;
 import data.Module;
+import data.Subject;
 
 @ManagedBean(name="TemplateBean")
 @SessionScoped
@@ -27,6 +22,7 @@ public class TemplateBean {
 	private List<ExRules> exRulesList;
 	private List<ModManual> modManList;
 	private List<Module> moduleList;
+	private List<Subject> subjectList;
 	private MenuModel model;
 	
 	public TemplateBean() {
@@ -145,6 +141,20 @@ public class TemplateBean {
 	 */
 	public void setModel(MenuModel model) {
 		this.model = model;
+	}
+
+	/**
+	 * @return the subjectList
+	 */
+	public List<Subject> getSubjectList() {
+		return subjectList;
+	}
+
+	/**
+	 * @param subjectList the subjectList to set
+	 */
+	public void setSubjectList(List<Subject> subjectList) {
+		this.subjectList = subjectList;
 	}
 	
 }
