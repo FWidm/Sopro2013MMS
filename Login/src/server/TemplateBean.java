@@ -21,7 +21,7 @@ import data.Module;
 
 @ManagedBean(name="TemplateBean")
 @SessionScoped
-public class TemplateBean implements ActionListener {
+public class TemplateBean {
 	
 	private String exRules, modMan, module;
 	private List<ExRules> exRulesList;
@@ -42,44 +42,13 @@ public class TemplateBean implements ActionListener {
 			m.setValue(exRulesList.get(i).getExRulesTitle());
 			m.setAjax(true);
 			m.setUpdate("list-menu");
-			m.addActionListener(this);
+			m.addActionListener(new TemplateActionListener());
 			submenu.getChildren().add(m);
 		}
 		
 		model.addSubmenu(submenu);
-		
-		
 	}
 	
-	public void loadModMan(String exRulesTitle) {
-		exRules = exRulesTitle;
-		
-		modManList = DBModManual.loadAllModManuals(exRulesTitle);
-		
-		Submenu submenu = new Submenu();
-		submenu.setLabel(exRulesTitle);
-		
-		for(int i = 0; i < modManList.size(); i++) {
-			MenuItem m = new MenuItem();
-			m.setAjax(true);
-			m.setUpdate("list-menu");
-			m.setValue(modManList.get(i).getModManTitle());
-			m.addActionListener(this);
-			submenu.getChildren().add(m);
-		}
-		
-		model = new DefaultMenuModel();
-		model.addSubmenu(submenu);
-	}
-	
-	@Override
-	public void processAction(ActionEvent arg0) throws AbortProcessingException {
-		// TODO Auto-generated method stub
-		System.out.println((String)((MenuItem)arg0.getSource()).getValue());
-		loadModMan((String)((MenuItem)arg0.getSource()).getValue());
-		
-	}
-
 	/**
 	 * @return the exRules
 	 */
