@@ -144,7 +144,7 @@ public class DBModule extends DBManager {
 	}
 	
 	public static void main(String[] args) {
-		List<Module> modules = loadModulesByManTitle("Informatik");
+		List<Module> modules = loadModulesByManTitle("Medieninformatik");
 		System.out.println(modules.get(0).getModTitle());
 	}
 }
