@@ -5,11 +5,8 @@ import javax.faces.bean.RequestScoped;
 
 import ctrl.DBModule;
 import ctrl.DBSubject;
-import ctrl.DBUser;
-
 import data.Module;
 import data.Subject;
-import data.User;
 
 @ManagedBean(name = "EditModulverantwortlicherBean")
 @RequestScoped
@@ -18,6 +15,7 @@ public class EditModulverantwortlicherBean {
 	private int version, ects;
 	private boolean ack;
 
+	@SuppressWarnings("unused")
 	private Module loadModul(String modTitle) {
 		return DBModule.loadModule(modTitle);
 	}
@@ -38,6 +36,7 @@ public class EditModulverantwortlicherBean {
 			return "create";
 	}
 
+	@SuppressWarnings("unused")
 	private Subject loadSubject(int version, String subTitle, String modTitle) {
 		return DBSubject.loadSubject(version, subTitle, modTitle);
 	}
