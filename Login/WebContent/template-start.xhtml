@@ -25,18 +25,63 @@
 					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
 					<p:layoutUnit position="west" resizable="true" size="215"
 						minSize="215" maxSize="400" header="Modulelist" collapsible="true">
-						
-						<p:menu id="list-menu" model="#{TemplateBean.model}"/>
+
+						<p:menu id="list-menu" model="#{TemplateBean.model}" />
 
 					</p:layoutUnit>
 					<p:layoutUnit position="center" header="Modulemanual">
 						<p:layout style="min-width:400px;min-height:100px;">
 							<p:layoutUnit position="center" header="Modulemanual">
-				        		Center
+				        		<h:outputText id="output" value="Center with content to Print/Download" />
 				    		</p:layoutUnit>
 							<p:layoutUnit position="south" resizable="false" size="70">
-				        		South
-				    		</p:layoutUnit>
+								<p:panelGrid columns="4">
+									<p:commandButton type="push" value="Drucken" title="Drucken"
+										image="ui-icon-print">
+										<p:printer target="output" />
+									</p:commandButton>
+									<button type="submit">
+										<img src="./Image/arrowUp.svg" style="width: 40px;" />
+									</button>
+									<button type="submit">
+										<img src="./Image/arrowDown.svg" style="width: 40px;" />
+									</button>
+									<p:commandButton type="push" value="Download" title="Download"
+										image="ui-icon-disk">
+										<p:fileDownload value="#{fileBean.file}" />
+									</p:commandButton>
+								</p:panelGrid>
+
+								<!-- Same buttons but different layout -->
+								<!-- <p:layout style="min-width:400px;min-height:70px;"
+									id="layoutButtons">
+									
+									<p:layoutUnit position="west" resizable="false" border="false"
+										style="min-height:40px;
+										min-width:112px;">
+										<p:commandButton type="push" value="Drucken" title="Drucken"
+											image="ui-icon-print" />
+									</p:layoutUnit>
+									<p:layoutUnit position="center" resizable="false" size="70">
+										<button type="submit">
+											<img src="./Image/arrowUp.svg" style="width: 40px;" />
+										</button>
+										<button type="submit">
+											<img src="./Image/arrowDown.svg" style="width: 40px;" />
+										</button>
+									</p:layoutUnit>
+									<p:layoutUnit position="east" resizable="false"
+										style="min-height:40px;
+										min-width:100px;">
+										<p:commandButton type="push" value="Download" title="Download"
+											image="ui-icon-disk">
+											<p:fileDownload value="#{fileBean.file}" />
+											no such file or bean exists already
+										</p:commandButton>
+									</p:layoutUnit>
+								</p:layout> -->
+
+							</p:layoutUnit>
 						</p:layout>
 					</p:layoutUnit>
 				</p:layout>
