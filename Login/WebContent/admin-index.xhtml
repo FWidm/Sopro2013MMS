@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+	<title>Admin Panel</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.css" />
+	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/mms.css" />
+
+</h:head>
+
+<h:body>
+	<!-- body -->
+	<div style="height: 120px;">
+		<p:graphicImage value="/Image/logo_100_sw.jpg"
+			style="position:absolute; top:20px; right:20px;" />
+	</div>
+
+		<p:tabView id="tabview-admin">
+			<!-- TabView -->
+			<p:tab title="Create User">
+				<!-- Begin of first tab // Start -->
+				<p:layout style="min-width:400px;min-height:500px;"
+					id="create-layout">
+					<p:layoutUnit position="center" header="Adminpanel">
+						<h:form id="create-frame">
+							<table class="admin-create-t" width="250" border="0"
+								cellpadding="2">
+								<tr>
+									<td colspan="2"><h2>Create User</h2></td>
+								</tr>
+								<tr>
+									<!-- User(String email, String name, String firstname, String role...) { -->
+									<td><h:outputText value="name: " /> <h:inputText
+											id="name" value="#{CreateBean.name}" styleClass="input_text" /></td>
+								</tr>
+								<tr>
+									<td><h:outputText value="firstname:  " /> <h:inputText
+											id="firstname" value="#{CreateBean.firstname}"
+											styleClass="input_text" /></td>
+								</tr>
+								<tr>
+									<td><h:outputText value="email: " /> <h:inputText
+											id="email" value="#{CreateBean.email}"
+											styleClass="input_text" /></td>
+								</tr>
+								<tr>
+									<td><h:outputText value="role:  " /> <p:selectOneMenu
+											value="#{CreateBean.role}">
+											<f:selectItem itemLabel="Auswahl:" itemValue="-1" />
+											<f:selectItem itemLabel="Administrator" itemValue="1" />
+											<f:selectItem itemLabel="Modulverantwortlicher" itemValue="2" />
+											<f:selectItem itemLabel="Dezernat" itemValue="3" />
+											<f:selectItem itemLabel="Redakteur" itemValue="4" />
+										</p:selectOneMenu></td>
+								</tr>
+								<tr>
+									<td colspan="2" align="right"><p:commandButton
+											actionListener="#{CreateBean.saveUser}" value="create" /></td>
+								</tr>
+							</table>
+							<p:messages id="messages" showDetail="true" autoUpdate="true"
+								closable="true" />
+						</h:form>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<!-- End first tab // Start -->
+			<p:tab title="Delete User" id="tab-delete">
+				<p:layout style="min-width:400px;min-height:500px;"
+					id="delete-layout">
+					
+					<p:layoutUnit position="center" header="Adminpanel">
+						<h:form id="delete-frame">
+							<table class="admin-create-t" width="250" border="0"
+								cellpadding="2">
+								<tr>
+									<td><h:outputText value="User role  " /> <p:selectOneMenu
+											value="#{CreateBean.role}">
+											<f:selectItem itemLabel="Alle Rollen" itemValue="-1" />
+											<f:selectItem itemLabel="Administrator" itemValue="1" />
+											<f:selectItem itemLabel="Modulverantwortlicher" itemValue="2" />
+											<f:selectItem itemLabel="Dezernat" itemValue="3" />
+											<f:selectItem itemLabel="Redakteur" itemValue="4" />
+										</p:selectOneMenu></td>
+								</tr>
+								<tr>
+									<td><p:commandButton
+											actionListener="#{CreateBean.findUser}" value="find" update=":tabview-admin:delete-frame:users" /></td>
+								</tr>
+							</table>
+							<br/>
+							<br />
+
+							<p:dataTable id="users" var="user" value="#{CreateBean.userList}"
+								style="width:700px">
+								<!--  
+								<p:ajax event="rowSelect" listener="#{CreateBean.onRowSelect}"
+									update=":form:display :form:growl"
+									oncomplete="carDialog.show()" />
+								<p:ajax event="rowUnselect"
+									listener="#{tableBean.onRowUnselect}" update=":form:growl" />
+								-->
+								<p:column headerText="Name" style="width:24%">
+									<h:outputText value="#{user.name}" />
+								</p:column>
+								<p:column headerText="Vorname" style="width:24%">
+									<h:outputText value="#{user.firstname}" />
+								</p:column>
+								<p:column headerText="Email" style="width:24%">
+									<h:outputText value="#{user.email}" />
+								</p:column>
+								<p:column headerText="Rolle" style="width:24%">
+									<h:outputText value="#{user.role}" />
+								</p:column>
+								<p:column style="width:4%">
+									<p:commandButton icon="ui-icon-trash"
+										actionListener="#{CreateBean.deleteUser}"
+										update=":tabview-admin:delete-frame:users">
+										<f:param name="email" value="#{user.email}" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<p:tab title="Notification"></p:tab>
+		</p:tabView>
+		<!-- End TabView -->
+</h:body>
+<!-- End body -->
+
+</html>

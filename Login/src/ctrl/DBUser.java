@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.User;
 
@@ -113,6 +115,68 @@ public class DBUser extends DBManager {
 	
 				u = new User(email, password, name, firstname, role);
 			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return u;
+	}
+	
+	public static List<User> loadUsersByRole(String role){
+		List<User> u = new LinkedList<User>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM user WHERE role = '" + role + "'";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String email = rs.getString("email");
+				String password = rs.getString("password");
+				String name = rs.getString("name");
+				String firstname = rs.getString("firstname");
+				String urole = rs.getString("role");
+	
+				u.add(new User(email, password, name, firstname, urole));
+			}
+			
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return u;
+	}
+	
+	public static List<User> loadAllUsers() {
+		List<User> u = new LinkedList<User>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM user";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String email = rs.getString("email");
+				String password = rs.getString("password");
+				String name = rs.getString("name");
+				String firstname = rs.getString("firstname");
+				String urole = rs.getString("role");
+	
+				u.add(new User(email, password, name, firstname, urole));
+			}
+			
 			closeQuietly(rs);
 			closeQuietly(stmt);
 		} catch (SQLException e) {
