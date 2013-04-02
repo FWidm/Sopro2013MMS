@@ -31,6 +31,8 @@ public class NotificationBean {
 	private String action;
 	private String status;
 	private List<Notification> notificationList;
+	private Notification selectedNotification; 
+	private String strTimeStamp; 
 
 	@PostConstruct
 	void init() {
@@ -44,6 +46,22 @@ public class NotificationBean {
 	 */
 	public void loadNotifications() {
 		setNotificationList(DBNotification.loadNotification());
+	}
+	
+	/**
+	 * loads the selected notification 
+	 */
+	public void selectNotification() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		this.recipientEmail = fc.getExternalContext().getRequestParameterMap()
+				.get("recipientEmail");
+		this.senderEmail = fc.getExternalContext().getRequestParameterMap()
+				.get("senderEmail");
+		this.strTimeStamp = fc.getExternalContext().getRequestParameterMap()
+				.get("timeStamp");
+		Timestamp ts = Timestamp.valueOf(strTimeStamp);
+		System.out.println("notification from: " + senderEmail + " to " + recipientEmail + " at: " + ts);
+		setSelectedNotification(DBNotification.loadNotification(recipientEmail, senderEmail, ts));
 	}
 
 	/**
@@ -150,5 +168,20 @@ public class NotificationBean {
 	public void setNotificationList(List<Notification> notificationList) {
 		this.notificationList = notificationList;
 	}
+
+	/**
+	 * @return the selectedNotification
+	 */
+	public Notification getSelectedNotification() {
+		return selectedNotification;
+	}
+
+	/**
+	 * @param selectedNotification the selectedNotification to set
+	 */
+	public void setSelectedNotification(Notification selectedNotification) {
+		this.selectedNotification = selectedNotification;
+	}
+	
 
 }

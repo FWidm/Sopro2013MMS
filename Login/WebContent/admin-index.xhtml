@@ -132,33 +132,42 @@
 			</p:layout>
 		</p:tab>
 
-		<p:tab title="Notification">
+		<p:tab title="notifications">
 			<p:layout style="min-width:400px;min-height:500px;"
 				id="notify-layout">
-				<p:layoutUnit position="center" header="Adminpanel"></p:layoutUnit>
 
 				<p:layoutUnit position="west" resizable="true" size="215"
 					minSize="215" maxSize="400" header="Nachrichten" collapsible="true">
 					<h:form id="Notification-Panel">
 
-						<p:selectOneListbox id="notifications" 
-							value="#{NotificationBean.notificationList}" var="n"
+						<p:selectOneListbox id="list"
+							value="#{NotificationBean.selectedNotification}" var="n"
 							style="height:400px;width:200px">
 							<f:selectItems value="#{NotificationBean.notificationList}"
 								var="notification" itemLabel="#{notification.senderEmail}"
-								itemValue="#{notificationList.senderEmail}" />
+								itemValue="#{notification}"
+								actionListener="#{NotificationBean.selectNotification}"
+								update=" :tabview-admin:notify-layout:message" />
 
 							<p:column>
-								<p:graphicImage
-									value="/Image/Notification/#{n.status}.png"
+								<p:graphicImage value="/Image/Notification/#{n.status}.png"
 									style="width: 40px;" />
 							</p:column>
 							<p:column>
 								#{n.senderEmail} - #{n.status} 
 							</p:column>
+
 						</p:selectOneListbox>
 					</h:form>
 				</p:layoutUnit>
+
+				<p:layoutUnit position="center" header="Adminpanel">
+					<h:outputText value="Nachricht: " />
+					<h:outputText id="message"
+						value="#{NotificationBean.selectedNotification.message}" />
+
+				</p:layoutUnit>
+
 			</p:layout>
 		</p:tab>
 	</p:tabView>

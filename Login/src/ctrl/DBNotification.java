@@ -196,6 +196,46 @@ public class DBNotification extends DBManager {
 		return notif;
 	}
 
+	public static Notification loadNotification(String recipientEmail,
+			String senderEmail, Timestamp timeStamp) {
+		Notification notif = null;
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM notification WHERE recipientEmail = '"
+					+ recipientEmail
+					+ "' AND "
+					+ "senderEmail = '"
+					+ senderEmail
+					+ "' AND "
+					+ "timeStamp = "
+					+ timeStamp
+					+ ";";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String recEm = rs.getString("recipientEmail");
+				String senEm = rs.getString("senderEmail");
+				Timestamp timS = rs.getTimestamp("timeStamp");
+				String mess = rs.getString("message");
+				String act = rs.getString("action");
+				String stat = rs.getString("status");
+
+				notif = new Notification(recEm, senEm, timS, mess, act, stat);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return notif;
+	}
+
 	public static void main(String[] args) {
 		Notification notif = new Notification("test3", "test4", new Timestamp(
 				System.currentTimeMillis()), "Edited: Modulverantwortlicher",
