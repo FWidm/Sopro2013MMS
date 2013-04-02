@@ -75,7 +75,7 @@ public class LoginBean {
 		if (email == "" || password == "")
 			return false;
 		if (loadUser(email)) {
-			// todo validatePassFILLER => remove filler
+			// TODO validatePassFILLER => remove filler
 			try {
 				if (email.equalsIgnoreCase(dbUser.getEmail())
 						&& PasswordHash.validatePassword(password,

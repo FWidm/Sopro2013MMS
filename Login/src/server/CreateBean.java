@@ -24,7 +24,7 @@ public class CreateBean {
 	private int role;
 	private static int passLength = 10;
 	private List<User> userList;
-
+	
 	@PostConstruct
 	public void init() {
 		userList = new LinkedList<User>();
@@ -52,8 +52,7 @@ public class CreateBean {
 			String stringRole = decodeRole(role);
 			User tmp = new User(email, name, firstname, stringRole, passLength);
 			System.out.println(tmp.toString());
-			// TODO reenable save
-			// DBUser.saveUser(tmp);
+			DBUser.saveUser(tmp);
 			System.out.println(success);
 			addMessage("User Created", "User with the email: '" + email
 					+ "' and role: '" + stringRole + "' was created.");
@@ -64,7 +63,13 @@ public class CreateBean {
 				+ success);
 		addErrorMessage("Email exists", "Email '" + email
 				+ "' is already in the database - please doublecheck.");
-
+	}
+	
+	private void actualizeUserList(String lastRole){
+		if (lastRole == null)
+			setUserList(DBUser.loadAllUsers());
+		else
+			setUserList(DBUser.loadUsersByRole(lastRole));
 	}
 
 	/**
@@ -75,19 +80,17 @@ public class CreateBean {
 	 * @param action
 	 */
 	public void findUser(ActionEvent action) {
-		String stringRole = decodeRole(role);
-		System.out.println(stringRole + " " + role);
-		if (stringRole == null)
-			setUserList(DBUser.loadAllUsers());
-		else
-			setUserList(DBUser.loadUsersByRole(stringRole));
-
+		String lastRole = decodeRole(role);
+		System.out.println(lastRole + " " + role);
+		actualizeUserList(lastRole);
+		System.out.println("<<"+lastRole);
 	}
 
 	/**
 	 * Deletes the User that is selected in the table
 	 */
-	public void deleteUser() {
+	public void deleteUser(ActionEvent action) {
+		String lastRole = decodeRole(role);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		this.email = fc.getExternalContext().getRequestParameterMap()
 				.get("email");
@@ -95,7 +98,8 @@ public class CreateBean {
 		// missing to do this until now.
 		DBUser.deleteUser(email);
 		System.out.println(email);
-		setUserList(DBUser.loadUsersByRole("admin"));
+		System.out.println(">>"+lastRole);
+		actualizeUserList(lastRole);
 	}
 
 	/**
