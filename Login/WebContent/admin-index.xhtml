@@ -99,7 +99,7 @@
 						<br />
 
 						<p:dataTable id="users" var="user" value="#{CreateBean.userList}"
-							style="width:700px">
+							style="width:700px" scrollable="true" scrollHeight="250">
 							<!--  
 								<p:ajax event="rowSelect" listener="#{CreateBean.onRowSelect}"
 									update=":form:display :form:growl"
@@ -107,19 +107,19 @@
 								<p:ajax event="rowUnselect"
 									listener="#{tableBean.onRowUnselect}" update=":form:growl" />
 								-->
-							<p:column headerText="Name" style="width:24%">
+							<p:column headerText="Name" footerText="">
 								<h:outputText value="#{user.name}" />
 							</p:column>
-							<p:column headerText="Vorname" style="width:24%">
+							<p:column headerText="Vorname" footerText="">
 								<h:outputText value="#{user.firstname}" />
 							</p:column>
-							<p:column headerText="Email" style="width:24%">
+							<p:column headerText="Email" footerText="">
 								<h:outputText value="#{user.email}" />
 							</p:column>
-							<p:column headerText="Rolle" style="width:24%">
+							<p:column headerText="Rolle" footerText="">
 								<h:outputText value="#{user.role}" />
 							</p:column>
-							<p:column style="width:4%">
+							<p:column style="width:40px" footerText="">
 								<p:commandButton icon="ui-icon-trash"
 									actionListener="#{CreateBean.deleteUser}"
 									update=":tabview-admin:delete-frame:users">
