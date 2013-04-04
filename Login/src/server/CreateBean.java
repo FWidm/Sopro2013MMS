@@ -11,14 +11,15 @@ import ctrl.DBUser;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.RowEditEvent;
 
+//Changed to Sessionscope - if in doubt revert to RequestScoped
 @ManagedBean(name = "CreateBean")
-@RequestScoped
+@SessionScoped
 public class CreateBean {
 
 	private String firstname, name, email;
@@ -26,7 +27,11 @@ public class CreateBean {
 	private int role;
 	private static int passLength = 10;
 	private List<User> userList;
+	private User selectedUser;
 
+	/**
+	 * Equivalent to a constructor
+	 */
 	@PostConstruct
 	public void init() {
 		userList = new LinkedList<User>();
@@ -67,6 +72,11 @@ public class CreateBean {
 				+ "' is already in the database - please doublecheck.");
 	}
 
+	/**
+	 * function that refreshes the UserList for delete and edit user
+	 * 
+	 * @param lastRole
+	 */
 	private void actualizeUserList(String lastRole) {
 		if (lastRole == null)
 			setUserList(DBUser.loadAllUsers());
@@ -74,6 +84,12 @@ public class CreateBean {
 			setUserList(DBUser.loadUsersByRole(lastRole));
 	}
 
+	/**
+	 * Event Triggered when the accept icon is clicked on edit User tab -
+	 * updates with new Values
+	 * 
+	 * @param event
+	 */
 	public void onEdit(RowEditEvent event) {
 		User updateUser = (User) event.getObject();
 		FacesMessage msg = new FacesMessage("User Edited",
@@ -85,8 +101,13 @@ public class CreateBean {
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
 
+	/**
+	 * Event triggered when editing user is cancelled
+	 * 
+	 * @param event
+	 */
 	public void onCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("Car Cancelled",
+		FacesMessage msg = new FacesMessage("User edit cancelled",
 				((User) event.getObject()).getEmail());
 
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
@@ -105,9 +126,15 @@ public class CreateBean {
 		actualizeUserList(lastRole);
 		System.out.println("<<" + lastRole);
 	}
-
+	
+	public void resetForm(){
+		firstname=name=email=null;
+		role=-1;
+	}
+	
 	/**
-	 * Deletes the User that is selected in the table
+	 * Deletes the User that is selected in the table - call this if using
+	 * RequestScope as variables get cleared in this Scope after Method calls
 	 */
 	public void deleteUser(ActionEvent action) {
 		String lastRole = decodeRole(role);
@@ -120,6 +147,16 @@ public class CreateBean {
 		System.out.println(email);
 		System.out.println(">>" + lastRole);
 		actualizeUserList(lastRole);
+	}
+	/**
+	 * Alternative for SessionScoped - deleted
+	 */
+	public void deleteRow() {
+		System.out.println(selectedUser);
+		DBUser.deleteUser(selectedUser.getEmail());
+		System.out.println(selectedUser.getEmail());
+		System.out.println(">>" + selectedUser.getRole());
+		actualizeUserList(selectedUser.getRole());
 	}
 
 	/**
@@ -261,6 +298,21 @@ public class CreateBean {
 	 */
 	public void setUserList(List<User> userList) {
 		this.userList = userList;
+	}
+
+	/**
+	 * @return the selectedUser
+	 */
+	public User getSelectedUser() {
+		return selectedUser;
+	}
+
+	/**
+	 * @param selectedUser
+	 *            the selectedUser to set
+	 */
+	public void setSelectedUser(User selectedUser) {
+		this.selectedUser = selectedUser;
 	}
 
 }

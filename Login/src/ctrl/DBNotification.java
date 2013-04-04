@@ -164,7 +164,46 @@ public class DBNotification extends DBManager {
 		}
 		return notif;
 	}
+	/**
+	 * Loads all notification that were sent or recieved by one user.
+	 * @param email
+	 * @return
+	 */
+	public static List<Notification> loadNotification(String email) {
+		List<Notification> notif = new LinkedList<Notification>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM notification WHERE recipientEmail = '"
+					+ email
+					+ "' OR "
+					+ "senderEmail = '"
+					+ email + "'";
 
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String recEm = rs.getString("recipientEmail");
+				String senEm = rs.getString("senderEmail");
+				Timestamp timS = rs.getTimestamp("timeStamp");
+				String mess = rs.getString("message");
+				String act = rs.getString("action");
+				String stat = rs.getString("status");
+
+				notif.add(new Notification(recEm, senEm, timS, mess, act, stat));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return notif;
+	}
+	
 	public static List<Notification> loadNotification() {
 		List<Notification> notif = new LinkedList<Notification>();
 		Connection con = null;

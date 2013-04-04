@@ -61,6 +61,10 @@
 							</tr>
 							<tr>
 								<td colspan="2" align="right"><p:commandButton
+										icon="ui-icon-trash" value="reset fields"
+										update=":tabview-admin:create-frame"
+										action="#{CreateBean.resetForm}" /> <p:commandButton
+										icon="ui-icon-plusthick"
 										actionListener="#{CreateBean.saveUser}" value="create" /></td>
 							</tr>
 						</table>
@@ -91,7 +95,7 @@
 							<tr>
 								<td><p:commandButton
 										actionListener="#{CreateBean.findUser}" value="find"
-										update=":tabview-admin:delete-frame:users" /></td>
+										update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame" /></td>
 							</tr>
 						</table>
 						<br />
@@ -113,14 +117,27 @@
 							</p:column>
 							<p:column style="width:40px" footerText="">
 								<p:commandButton icon="ui-icon-trash"
-									actionListener="#{CreateBean.deleteUser}"
-									update=":tabview-admin:delete-frame:users">
-									<f:param name="email" value="#{user.email}" />
+									oncomplete="deleteDlg.show();"
+									update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame:users">
+									<f:setPropertyActionListener value="#{user}"
+										target="#{CreateBean.selectedUser}" />
 								</p:commandButton>
+
 							</p:column>
 						</p:dataTable>
 					</h:form>
+
 				</p:layoutUnit>
+				<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
+					header="Delete" message="Delete this ?" width="400"
+					modal="true" closable="false" severity="alert">
+					<h:panelGroup layout="block" style="text-align: right">
+						<p:commandButton value="Yes" action="#{CreateBean.deleteRow}"
+							oncomplete="deleteDlg.hide();"
+							update=":tabview-admin:delete-frame:users" />
+						<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+					</h:panelGroup>
+				</p:confirmDialog>
 			</p:layout>
 		</p:tab>
 		<p:tab title="Edit user">
@@ -142,7 +159,7 @@
 							<tr>
 								<td><p:commandButton
 										actionListener="#{CreateBean.findUser}" value="find"
-										update=":tabview-admin:edit-frame:users" /></td>
+										update=":tabview-admin:delete-frame,:tabview-admin:edit-frame:users" /></td>
 							</tr>
 						</table>
 						<br />
@@ -152,12 +169,12 @@
 							<!-- if emails should be updated to - do something in the listener method specified below
 							<p:ajax event="rowEditInit" listener="#{TemplateBean.testInit}"
                                 update=":form:messages" />
-							 -->							
+							 -->
 							<p:ajax event="rowEdit" listener="#{CreateBean.onEdit}"
-								update=":tabview-admin:edit-frame:users" />
+								update=":tabview-admin:edit-frame:users,:tabview-admin:delete-frame" />
 
 							<p:ajax event="rowEditCancel" listener="#{CreateBean.onCancel}"
-								update=":tabview-admin:edit-frame:users" />
+								update=":tabview-admin:edit-frame:users,:tabview-admin:delete-frame" />
 
 							<p:column headerText="Name" footerText="" style="width:24%">
 								<p:cellEditor>
@@ -182,7 +199,7 @@
 							</p:column>
 
 							<p:column headerText="Email" footerText="" style="width:24%">
-										<h:outputText value="#{user.email}" />
+								<h:outputText value="#{user.email}" />
 							</p:column>
 
 							<p:column headerText="Rolle" footerText="" style="width:24%">
@@ -191,7 +208,13 @@
 										<h:outputText value="#{user.role}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText value="#{user.role}" style="width:100%" />
+										<h:selectOneMenu value="#{user.role}">
+											<f:selectItem itemLabel="Alle Rollen" itemValue="-1" />
+											<f:selectItem itemLabel="Administrator" itemValue="Administrator" />
+											<f:selectItem itemLabel="Modulverantwortlicher" itemValue="Modulverantwortlicher" />
+											<f:selectItem itemLabel="Dezernat" itemValue="Dezernat" />
+											<f:selectItem itemLabel="Redakteur" itemValue="Redakteur" />
+										</h:selectOneMenu>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
