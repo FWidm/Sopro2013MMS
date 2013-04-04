@@ -15,6 +15,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.event.RowEditEvent;
+
 @ManagedBean(name = "CreateBean")
 @RequestScoped
 public class CreateBean {
@@ -24,7 +26,7 @@ public class CreateBean {
 	private int role;
 	private static int passLength = 10;
 	private List<User> userList;
-	
+
 	@PostConstruct
 	public void init() {
 		userList = new LinkedList<User>();
@@ -64,12 +66,30 @@ public class CreateBean {
 		addErrorMessage("Email exists", "Email '" + email
 				+ "' is already in the database - please doublecheck.");
 	}
-	
-	private void actualizeUserList(String lastRole){
+
+	private void actualizeUserList(String lastRole) {
 		if (lastRole == null)
 			setUserList(DBUser.loadAllUsers());
 		else
 			setUserList(DBUser.loadUsersByRole(lastRole));
+	}
+
+	public void onEdit(RowEditEvent event) {
+		User updateUser = (User) event.getObject();
+		FacesMessage msg = new FacesMessage("User Edited",
+				((User) event.getObject()).toString());
+		if (DBUser.loadUser(updateUser.getEmail()) != null) {
+			System.out.println(updateUser.toString());
+			DBUser.updateUser(updateUser, updateUser.getEmail());
+		}
+		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
+	}
+
+	public void onCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("Car Cancelled",
+				((User) event.getObject()).getEmail());
+
+		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
 
 	/**
@@ -83,7 +103,7 @@ public class CreateBean {
 		String lastRole = decodeRole(role);
 		System.out.println(lastRole + " " + role);
 		actualizeUserList(lastRole);
-		System.out.println("<<"+lastRole);
+		System.out.println("<<" + lastRole);
 	}
 
 	/**
@@ -98,7 +118,7 @@ public class CreateBean {
 		// missing to do this until now.
 		DBUser.deleteUser(email);
 		System.out.println(email);
-		System.out.println(">>"+lastRole);
+		System.out.println(">>" + lastRole);
 		actualizeUserList(lastRole);
 	}
 
@@ -130,7 +150,7 @@ public class CreateBean {
 	 * @param msg
 	 */
 	public void addErrorMessage(String title, String msg) {
-		FacesContext.getCurrentInstance().addMessage(null,
+		FacesContext.getCurrentInstance().addMessage("create-messages",
 				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
 	}
 
@@ -141,7 +161,7 @@ public class CreateBean {
 	 * @param msg
 	 */
 	public void addMessage(String title, String msg) {
-		FacesContext.getCurrentInstance().addMessage(null,
+		FacesContext.getCurrentInstance().addMessage("create-messages",
 				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
 

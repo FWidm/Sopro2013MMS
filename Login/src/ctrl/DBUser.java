@@ -75,9 +75,11 @@ public class DBUser extends DBManager {
 			Statement stmt = con.createStatement();
 			String update = "UPDATE user SET email = '" + u.getEmail() + "', password = '" + u.getPassword() + "', name = '" + u.getName() + "', firstname = '" + u.getFirstname() + "', role = '" + u.getRole() + "' " + "WHERE email = '" + email + "'";
 			con.setAutoCommit(false);
+			System.out.println(update);
 			stmt.executeUpdate(update);
 			try {
 				con.commit();
+				System.out.println("committed");
 			} catch (SQLException exc) {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
 				System.out.println("COMMIT fehlgeschlagen - "
