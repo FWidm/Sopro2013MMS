@@ -40,8 +40,6 @@ public class CreateBean {
 		userList = new LinkedList<User>();
 		userList = DBUser.loadAllUsers();
 		login = findBean("LoginBean");
-		loggedInUser=login.getDbUser();
-		System.out.println(loggedInUser.toString());
 	}
 
 	/**
@@ -58,18 +56,23 @@ public class CreateBean {
 	}
 
 	public void checkAdmin(ComponentSystemEvent event) {
+		if (loggedInUser == null) {
+			loggedInUser = login.getDbUser();
+			System.out.println(loggedInUser.toString());
+		}
+
 		System.out.println("checkAdmin");
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc
 				.getApplication().getNavigationHandler();
 
-		if (loggedInUser==null||loggedInUser.getRole() != "Administrator") {
-			System.out.println("not admin, reroute to login");	
-			nav.performNavigation("login");
+		if (loggedInUser == null || loggedInUser.getRole() != "Administrator") {
+			System.out.println("not admin, reroute to login");
+			nav.performNavigation("index");
 			return;
 		}
-		System.out.println("User is:"+loggedInUser.toString());
+		System.out.println("User is:" + loggedInUser.toString());
 	}
 
 	/**
