@@ -9,11 +9,13 @@ import data.User;
 import ctrl.DBUser;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ComponentSystemEvent;
 
 import org.primefaces.event.RowEditEvent;
 
@@ -21,13 +23,14 @@ import org.primefaces.event.RowEditEvent;
 @ManagedBean(name = "CreateBean")
 @SessionScoped
 public class CreateBean {
-
+	private User loggedInUser;
 	private String firstname, name, email;
 	private boolean success = true;
 	private int role;
 	private static int passLength = 10;
 	private List<User> userList;
 	private User selectedUser;
+	private LoginBean login;
 
 	/**
 	 * Equivalent to a constructor
@@ -36,6 +39,37 @@ public class CreateBean {
 	public void init() {
 		userList = new LinkedList<User>();
 		userList = DBUser.loadAllUsers();
+		login = findBean("LoginBean");
+		loggedInUser=login.getDbUser();
+		System.out.println(loggedInUser.toString());
+	}
+
+	/**
+	 * finds the bean with corresponding name
+	 * 
+	 * @param beanName
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T findBean(String beanName) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		return (T) context.getApplication().evaluateExpressionGet(context,
+				"#{" + beanName + "}", Object.class);
+	}
+
+	public void checkAdmin(ComponentSystemEvent event) {
+		System.out.println("checkAdmin");
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc
+				.getApplication().getNavigationHandler();
+
+		if (loggedInUser==null||loggedInUser.getRole() != "Administrator") {
+			System.out.println("not admin, reroute to login");	
+			nav.performNavigation("login");
+			return;
+		}
+		System.out.println("User is:"+loggedInUser.toString());
 	}
 
 	/**
@@ -126,12 +160,12 @@ public class CreateBean {
 		actualizeUserList(lastRole);
 		System.out.println("<<" + lastRole);
 	}
-	
-	public void resetForm(){
-		firstname=name=email=null;
-		role=-1;
+
+	public void resetForm() {
+		firstname = name = email = null;
+		role = -1;
 	}
-	
+
 	/**
 	 * Deletes the User that is selected in the table - call this if using
 	 * RequestScope as variables get cleared in this Scope after Method calls
@@ -148,6 +182,7 @@ public class CreateBean {
 		System.out.println(">>" + lastRole);
 		actualizeUserList(lastRole);
 	}
+
 	/**
 	 * Alternative for SessionScoped - deleted
 	 */

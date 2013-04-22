@@ -44,7 +44,21 @@ public class User {
 		this.role = role;
 		this.email = email;
 	}
-
+	
+	public void resetPassword(int length){
+		String generatedPass=util.PasswordGen.generatePassword(length);
+		//TODO remove sysout, add notification or email for the user email.
+		//something like notify(email user, String generated PW)
+		System.out.println(generatedPass);
+		printUserList(email,generatedPass);
+		try {
+			this.password = util.PasswordHash.createHash(generatedPass);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			System.out.println("User.java @ line 32 - create Hash went wrong");
+			e.printStackTrace();
+		}
+	}
+	
 	private void printUserList(String mail, String pass) {
         try {
             BufferedWriter out = new BufferedWriter (new FileWriter("user-logins.txt",true));

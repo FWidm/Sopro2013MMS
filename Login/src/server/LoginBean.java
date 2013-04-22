@@ -12,21 +12,30 @@ import data.User;
 import ctrl.DBUser;
 
 import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 import util.PasswordHash;
 
 @ManagedBean(name = "LoginBean")
-@RequestScoped
+@SessionScoped
 public class LoginBean {
 	private String email;
 	private String password;
 	private User dbUser;
 	private boolean loggedIn = false;
 	private String msg;
+	FacesContext fc;
+	ConfigurableNavigationHandler nav;
+
+	public LoginBean() {
+		fc = FacesContext.getCurrentInstance();
+		nav = (ConfigurableNavigationHandler) fc.getApplication()
+				.getNavigationHandler();
+	}
 
 	/**
 	 * loads the user with the specified email from the database
@@ -57,13 +66,29 @@ public class LoginBean {
 	 * 
 	 * @return either success page or the login-failed page
 	 */
-	public String checkSuccess() {
+	public void checkSuccess() {
 		if (checkValidUser()) {
 			loggedIn = true;
-			return ("login-success");
+			nav.performNavigation("login-success");
+		} else {
+			loggedIn = false;
+			addErrorMessage("login", "Login failed", "Please check your input.");
 		}
-		loggedIn = false;
-		return ("login-failed");
+	}
+
+	public void resetUserPass() {
+		String currentmail=email;
+		System.out.println("reset! " + currentmail);
+		if (loadUser(currentmail)) {
+			User tmp = DBUser.loadUser(currentmail);
+			System.out.println("reset password of user: " + tmp.toString());
+			addMessage("login",	"Reset success!",currentmail
+							+ " your password reset was successful - check your emails.");
+			tmp.resetPassword(10);
+			DBUser.updateUser(tmp, currentmail);
+		} else
+			addErrorMessage("login", "User does not Exist!",
+					"reset could not be completed - check your input");
 	}
 
 	/**
@@ -99,25 +124,43 @@ public class LoginBean {
 		return false;
 	}
 
-	public String fwdCreateNewUser() {
-		return "admin-create";
-
-	}
-
 	public void checkLoggedIn(ComponentSystemEvent event) {
 		System.out.println("checkLoggedIn");
-		FacesContext fc = FacesContext.getCurrentInstance();
-		ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc
-				.getApplication().getNavigationHandler();
 
 		if (!loggedIn) {
 			nav.performNavigation("login");
 		}
 		switch (dbUser.getRole()) {
-			case "Administrator": {
-				nav.performNavigation("admin-index");
-			}
+		case "Administrator": {
+			nav.performNavigation("admin-index");
 		}
+		}
+	}
+
+	/**
+	 * if anything goes wrong - display an Error. - target null equals all
+	 * message and growl elements else you can distinct messages through the
+	 * "for=<target>" in the xhtml
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addErrorMessage(String target, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(target,
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
+	}
+
+	/**
+	 * Informs the User via message. - target null equals all message and growl
+	 * elements else you can distinct messages through the "for=<target>" in the
+	 * xhtml
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addMessage(String target, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(target,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
 
 	/**
