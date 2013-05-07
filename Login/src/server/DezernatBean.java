@@ -45,8 +45,6 @@ public class DezernatBean {
 		if(selected!=null){
 			System.out.println(selected.getSubTitle());
 			fieldList=DBField.loadFieldforDezernat(selected.getSubTitle());
-			for(int i=0; i<10;i++)
-			fieldList.add(new Field(""+i, i, ""+i, ""+i, "Usability-Gründen sondern aus reinem Marketing-Gedanken eingeführt hat und versucht durchzudrücken.Wenn dies eine technische Unmöglichkeit oder ein enormer Aufwand gewesen wäre die Dualität einzubauen, würde ja keiner etwas sagen, aber dass es auch anderes gegangen wäre zeigt ja der Registry-Hack in der Win8-Beta."+(long)i*i*i*i*i*i*i+"\r\n"+i*i*i));
 		}
 	}
 	
