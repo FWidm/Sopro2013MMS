@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="refresh" content="30" />
+	<title>MMS Index</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.css" />
+	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/mms.css" />
+
+</h:head>
+<!-- body -->
+<h:body>
+	<div style="height: 120px;">
+		<p:graphicImage value="/Image/logo_100_sw.jpg"
+			style="position:absolute; top:20px; right:20px;" />
+	</div>
+
+	<p:tabView id="tabview-login">
+		<!-- TabView -->
+		<p:tab title="Login">
+			<h:form id="login_frame">
+				<table width="250" border="0" cellpadding="2" align="center">
+					<tr>
+						<td colspan="2"><h2>MMSLogin</h2></td>
+					</tr>
+					<tr>
+						<!-- required erzeugt die errorMSG die unten angezeigt wird, falls das Feld leer ist -->
+						<td><h:outputText value="email: " /> <h:inputText id="email"
+								value="#{LoginBean.email}" /></td>
+						<td><h:outputText value="Password:  " /> <h:inputSecret
+								id="password" value="#{LoginBean.password}" /></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="right"><p:commandButton id="resetpw"
+								value="forgot password"
+								onclick="confirmation.show();return false;">
+							</p:commandButton> <p:commandButton action="#{LoginBean.checkSuccess}"
+								value="Login" type="submit" /></td>
+					</tr>
+				</table>
+				<p:messages id="login-messages" showDetail="true" autoUpdate="true"
+					for="login" />
+				<h:outputText value="#{LoginBean.msg}" />
+			</h:form>
+		</p:tab>
+		<p:tab title="Modulhandbuch">
+		</p:tab>
+	</p:tabView>
+	<h:form>
+		<p:confirmDialog id="confirmDialog"
+			message="Are you sure about resetting your password?"
+			header="Reset Password" severity="alert" widgetVar="confirmation">
+
+			<p:commandButton id="decline" value="decline"
+				onclick="confirmation.hide()" type="button" />
+			<p:commandButton id="confirm" value="reset"
+				update=":tabview-login:login_frame:login-messages"
+				oncomplete="confirmation.hide()" action="#{LoginBean.resetUserPass}" />
+
+		</p:confirmDialog>
+	</h:form>
+</h:body>
+</html>

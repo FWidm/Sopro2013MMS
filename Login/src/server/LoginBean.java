@@ -75,7 +75,10 @@ public class LoginBean {
 			addErrorMessage("login", "Login failed", "Please check your input.");
 		}
 	}
-
+	
+	/**
+	 * Resets the password of the selected user
+	 */
 	public void resetUserPass() {
 		String currentmail=email;
 		System.out.println("reset! " + currentmail);
