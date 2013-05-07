@@ -43,8 +43,8 @@
 			</p:outputPanel>
 			<br />
 			<p:commandButton id="confirm" value="Accept Changes"
-			actionListener="#{DezernatBean.acceptChanges}"
-			update=":form:tabview-dezernat:subjects"
+				actionListener="#{DezernatBean.acceptChanges}"
+				update=":form:tabview-dezernat:subjects :form:tabview-dezernat:messages-approve"
 				oncomplete="reviewDialog.hide()" />
 			<p:commandButton id="decline" value="Not Yet"
 				onclick="reviewDialog.hide()" type="button" />
@@ -59,7 +59,6 @@
 					id="changes-layout">
 
 					<p:layoutUnit id="changeUnit" position="center">
-						<p:growl id="messages" showDetail="true" />
 
 						<p:dataTable id="subjects" var="sub"
 							value="#{DezernatBean.subjectList}" scrollable="true"
@@ -91,7 +90,8 @@
 								</div>
 							</f:facet>
 						</p:dataTable>
-
+						<p:messages id="messages-approve" for="approve" showDetail="true" autoUpdate="true"
+							closable="true"/>
 					</p:layoutUnit>
 
 				</p:layout>

@@ -3,8 +3,10 @@ package server;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import ctrl.DBField;
@@ -50,10 +52,34 @@ public class DezernatBean {
 	
 	public void acceptChanges(ActionEvent e){
 		System.out.println(selected.getSubTitle()+" is accepted!");
-		DBSubject.updateSubjectAck(true,selected.getVersion(), selected.getSubTitle(), selected.getModTitle());
-		subjectList.remove(selected);
+		if(DBSubject.updateSubjectAck(true,selected.getVersion(), selected.getSubTitle(), selected.getModTitle())){
+			subjectList.remove(selected);
+			addMessage("approve","Success:" ,"Change published!");
+		}
+		addErrorMessage("approve", "Failed", "An SQL Error Occured in 'updateSubjectAck'@DBSubject, call the Administrator for further help and note this message.");
 	}
 	
+	/**
+	 * if anything goes wrong - display an Error
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addErrorMessage(String toFor,String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
+	}
+
+	/**
+	 * Informs the User via message.
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addMessage(String toFor,String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
+	}
 	/**
 	 * @return the fieldList
 	 */

@@ -231,7 +231,7 @@ public class DBSubject extends DBManager {
 		return subs;
 	}
 
-	public static void updateSubjectAck(boolean b, int version,
+	public static boolean updateSubjectAck(boolean b, int version,
 			String subTitle, String modTitle) {
 		Connection con = null;
 		try {
@@ -257,7 +257,9 @@ public class DBSubject extends DBManager {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 	
 }
