@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+	<title>Admin Panel</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.css" />
+	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/mms.css" />
+
+</h:head>
+
+<h:body>
+	<!-- body -->
+	<div style="height: 120px;">
+		<p:graphicImage value="/Image/logo_100_sw.jpg"
+			style="position:absolute; top:20px; right:20px;" />
+	</div>
+
+	<h:form id="form">
+
+		<!-- Dialog for the review button -->
+		<p:dialog id="reviewDialog" appendToBody="true"
+			header="Selected Details for '#{DezernatBean.selected.subTitle}'"
+			showEffect="fade" widgetVar="reviewDialog" modal="true">
+			<p:outputPanel id="documentPanel">
+				<p:scrollPanel style="max-height:480px;max-width:800px">
+					<div style="margin: 10px;">
+						<ui:repeat var="iterator" value="#{DezernatBean.fieldList}">
+							<h4>#{iterator.fieldTitle} :</h4>
+							 #{iterator.description}
+							<br />
+							<br />
+						</ui:repeat>
+					</div>
+				</p:scrollPanel>
+			</p:outputPanel>
+			<br />
+			<p:commandButton id="confirm" value="Yes Sure"
+			actionListener="#{DezernatBean.acceptChanges}"
+			update=":form:tabview-dezernat:subjects"
+				oncomplete="reviewDialog.hide()" />
+			<p:commandButton id="decline" value="Not Yet"
+				onclick="reviewDialog.hide()" type="button" />
+		</p:dialog>
+
+
+		<p:tabView id="tabview-dezernat">
+			<!-- TabView -->
+			<p:tab title="Approve Changes">
+
+				<p:layout style="min-width:400px;min-height:500px;"
+					id="changes-layout">
+
+					<p:layoutUnit id="changeUnit" position="center">
+						<p:growl id="messages" showDetail="true" />
+
+						<p:dataTable id="subjects" var="sub"
+							value="#{DezernatBean.subjectList}" scrollable="true"
+							rowKey="#{sub.subTitle}" scrollHeight="250"
+							selection="#{DezernatBean.selected}" selectionMode="single">
+							<f:facet name="header">
+							select a row, then click the button to review the details
+							</f:facet>
+							<p:column headerText="Name" footerText="">
+								<h:outputText value="#{sub.subTitle}" />
+							</p:column>
+							<p:column headerText="Module" footerText="">
+								<h:outputText value="#{sub.modTitle}" />
+							</p:column>
+							<p:column headerText="Description" footerText="">
+								<h:outputText value="#{sub.description}" />
+							</p:column>
+							<p:column headerText="ECTS" footerText="" style="width:40px">
+								<h:outputText value="#{sub.ects}" />
+							</p:column>
+							<p:column headerText="Aims" footerText="">
+								<h:outputText value="#{sub.aim}" />
+							</p:column>
+							<f:facet name="footer">
+								<div align="right">
+									<p:commandButton value="review" icon="ui-icon-search"
+										actionListener="#{DezernatBean.loadFields}"
+										update=":form:reviewDialog" oncomplete="reviewDialog.show();" />
+								</div>
+							</f:facet>
+						</p:dataTable>
+
+					</p:layoutUnit>
+
+				</p:layout>
+
+			</p:tab>
+			<p:tab title="Notifications">
+			</p:tab>
+		</p:tabView>
+		<!-- End TabView -->
+	</h:form>
+</h:body>
+<!-- End body -->
+
+</html>

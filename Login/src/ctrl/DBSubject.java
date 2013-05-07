@@ -22,7 +22,7 @@ public class DBSubject extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "INSERT INTO subject VALUES(" + sub.getVersion()
-					+ ", '" + sub.getSubTite() + "', '" + sub.getModTitle()
+					+ ", '" + sub.getSubTitle() + "', '" + sub.getModTitle()
 					+ "', '" + sub.getDescription() + "', '" + sub.getAim()
 					+ "', " + sub.getEcts() + ", " + sub.isAck() + ")";
 			con.setAutoCommit(false);
@@ -55,7 +55,7 @@ public class DBSubject extends DBManager {
 			Statement stmt = con.createStatement();
 			String update = "DELETE FROM subject WHERE version = "
 					+ sub.getVersion() + " AND " + "subTitle = '"
-					+ sub.getSubTite() + "' AND " + "modTitle = '"
+					+ sub.getSubTitle() + "' AND " + "modTitle = '"
 					+ sub.getModTitle() + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
@@ -91,7 +91,7 @@ public class DBSubject extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "UPDATE subject SET version = " + sub.getVersion()
-					+ ", subTitle = '" + sub.getSubTite() + "', modTitle = '"
+					+ ", subTitle = '" + sub.getSubTitle() + "', modTitle = '"
 					+ sub.getModTitle() + "', description = '"
 					+ sub.getDescription() + "', aim = '" + sub.getAim() + ", "
 					+ sub.getEcts() + ", " + sub.isAck() + ", "
@@ -193,7 +193,71 @@ public class DBSubject extends DBManager {
 	
 	public static void main(String[] args) {
 		List<Subject> modMans = loadSubject(0, "Algorithmen und Datenstrukturen");
-		System.out.println(modMans.get(0).getSubTite());
+		System.out.println(modMans.get(0).getSubTitle());
+	}
+	/**
+	 * get all previously unchecked subjects
+	 * @return
+	 */
+	public static List<Subject> loadSubjectsforDezernat() {
+		List<Subject> subs = new LinkedList<Subject>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM subject WHERE ack=FALSE";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				int ver = rs.getInt("version");
+				String subT = rs.getString("subTitle");
+				String modT = rs.getString("modTitle");
+				String desc = rs.getString("description");
+				String aim = rs.getString("aim");
+				int ects = rs.getInt("ects");
+				boolean ack = rs.getBoolean("ack");
+
+				subs.add(new Subject(ver, subT, modT, desc, aim, ects, ack));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return subs;
+	}
+
+	public static void updateSubjectAck(boolean b, int version,
+			String subTitle, String modTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+
+			String update = "UPDATE subject SET ack="+ b
+					+ " WHERE version = " + version + " AND " + "subTitle = '"
+					+ subTitle + "' AND " + " modTitle = '" + modTitle + "'";
+			System.out.println(update);
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

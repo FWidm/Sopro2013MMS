@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import data.Field;
 /**
@@ -152,6 +154,37 @@ public class DBField extends DBManager {
 			closeQuietly(con);
 		}
 		return f;
+	}
+
+	public static List<Field> loadFieldforDezernat(String subT) {
+			List<Field> fields = new LinkedList<Field>();
+			Connection con = null;
+			try {
+				con = openConnection();
+				Statement stmt = con.createStatement();
+				String query = "SELECT * FROM field  WHERE subTitle = '"+subT+"'";
+
+				ResultSet rs = stmt.executeQuery(query);
+
+				while (rs.next()) {
+					String fTitle = rs.getString("fieldTitle");
+					int version = Integer.parseInt(rs.getString("version"));
+					String subTitle = rs.getString("subTitle");
+					String modTitle = rs.getString("modTitle");
+					String description = rs.getString("description");
+
+					fields.add(new Field(fTitle, version, subTitle, modTitle, description));
+				}
+				closeQuietly(rs);
+				closeQuietly(stmt);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				closeQuietly(con);
+			}
+			return fields;
+		
 	}
 
 }

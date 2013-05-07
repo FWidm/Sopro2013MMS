@@ -41,7 +41,7 @@ public class Subject {
 	/**
 	 * @return the subTite
 	 */
-	public String getSubTite() {
+	public String getSubTitle() {
 		return subTitle;
 	}
 	/**

@@ -86,7 +86,7 @@ public class TemplateActionListener implements ActionListener {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
 				m.setUpdate("list-menu");
-				m.setValue(bean.getSubjectList().get(i).getSubTite());
+				m.setValue(bean.getSubjectList().get(i).getSubTitle());
 				m.addActionListener(this);
 				module.getChildren().add(m);
 			}
