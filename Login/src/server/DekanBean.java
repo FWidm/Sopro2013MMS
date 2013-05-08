@@ -1,11 +1,16 @@
 package server;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -17,7 +22,6 @@ import data.ModManual;
 
 
 
-
 //Changed to Sessionscope - if in doubt revert to RequestScoped
 @ManagedBean(name = "DekanBean")
 @SessionScoped
@@ -25,15 +29,22 @@ public class DekanBean {
 	
 	private List<ModManual> modManualList;
 	private LoginBean login;
+	private boolean success = true;
 	private String modManTitle, description;
 	private int exRules;
-	private Date deadLine;
+	private String deadline;
+	private Date date;
+	
+	// 
+	SimpleDateFormat sdf;
 	
 	/**
 	 * Equivalent to a constructor
 	 */
 	@PostConstruct
 	public void init() {
+		// is used to parse date
+		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		modManualList = new LinkedList<ModManual>();
 		modManualList = DBModManual.loadAllModManuals();
 		login = findBean("LoginBean");
@@ -54,18 +65,77 @@ public class DekanBean {
 	
 	public void resetFields() {
 		modManTitle = description = null;
-		deadLine = null;
+		deadline = null;
 		exRules = -1;
 	}
 	
 	/**
-	 * saves the user with the specified email from the database
+	 * saves the ModManual to the database
 	 * 
 	 * @param email
 	 * @return boolean
 	 */
 	public void saveModManual(ActionEvent action) {
-		System.out.println("saveModManual");
+		success = true;
+		if (modManTitle.isEmpty() || description.isEmpty() || exRules == -1 || date == null) {
+			success = false;
+			addErrorMessage("Empty Field error: ", "Fields may not be empty - be sure to edit every field.");
+			System.out.println(success);			
+			return;
+		}	
+
+		if (DBModManual.loadModManual(modManTitle) == null) {
+			// parse date to sql compatible format
+			deadline = sdf.format(date);
+			String exRules = decodeExRules();
+			DBModManual.saveModManual(new ModManual(modManTitle, description, exRules, deadline));
+			System.out.println(success);
+			addMessage("Module manual created: ", "" + modManTitle + ", " + exRules + ", " + deadline);
+			return;
+		}
+		
+		success = false;
+		System.out.println("error - modMantitle already exists: " + modManTitle + " " + success);
+		addErrorMessage("Module manual title already exists: ", "'" + modManTitle + "' is already in the database - please doublecheck.");
+	}
+	
+	/**
+	 * Translates numbers into Strings that are way more readable
+	 * 
+	 * @param rol
+	 * @return
+	 */
+	private String decodeExRules() {
+		switch (exRules) {
+		case 1:
+			return "PO2010";
+		case 2:
+			return "PO2012";
+		default:
+			return null;
+		}
+	}
+	
+	/**
+	 * if anything goes wrong - display an Error
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addErrorMessage(String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage("dekan-messages",
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
+	}
+
+	/**
+	 * Informs the User via message.
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addMessage(String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage("dekan-messages",
+				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
 	
 	/**
@@ -97,19 +167,34 @@ public class DekanBean {
 	}
 
 
-
 	/**
-	 * @return the deadLine
+	 * @return the deadline
 	 */
-	public Date getDeadLine() {
-		return deadLine;
+	public String getDeadline() {
+		return deadline;
 	}
 
 	/**
-	 * @param deadLine the deadLine to set
+	 * @param deadline the deadline to set
 	 */
-	public void setDeadLine(Date deadLine) {
-		this.deadLine = deadLine;
+	public void setDeadline(String deadline) {
+		this.deadline = deadline;
+	}
+	
+	
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**

@@ -35,31 +35,28 @@
 								<td colspan="2"><h2>Create module manual</h2></td>
 							</tr>
 							<tr>
-								<!-- User(String email, String name, String firstname, String role...) { -->
-								<td><h:outputText value="module manual title: " /> <h:inputText id="modManTitle"
-										value="#{DekanBean.modManTitle}" styleClass="input_text" /></td>
+								<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) { -->
+								<td><h:outputText value="module manual title: " />
+								<h:inputText id="modManTitle" value="#{DekanBean.modManTitle}" styleClass="input_text" /></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="description:  " /> <h:inputText
-										id="description" value="#{DekanBean.description}"
-										styleClass="input_text" /></td>
+								<td><h:outputText value="description:  " />
+								<h:inputText id="description" value="#{DekanBean.description}" styleClass="input_text" /></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="examination rules: " /> <p:selectOneMenu
-										value="#{DekanBean.exRules}">
+								<td><h:outputText value="examination rules: " />
+								<p:selectOneMenu value="#{DekanBean.exRules}">
 										<f:selectItem itemLabel="examination rules" itemValue="-1" />
 										<f:selectItem itemLabel="PO2010" itemValue="1" />
 										<f:selectItem itemLabel="PO2012" itemValue="2" />
-									</p:selectOneMenu></td>
+								</p:selectOneMenu></td>	
 							</tr>
-							<tr>							
-								<td>  
-								<h:outputText value="dead line: " />
-    							<p:calendar value="#{DekanBean.deadLine}" id="popupCal" />
-  								</td>
+							<tr>														
+								<td><h:outputText value="deadline: " />
+    							<p:calendar value="#{DekanBean.date}" id="popupCal" /></td>
 							</tr>							
 							<tr>
-								<td colspan="2" align="right">
+								<td colspan="2" align="left">
 									<p:commandButton
 									icon="ui-icon-trash" value="reset fields"
 									update=":tabview-dekan:dekan-frame"
@@ -70,7 +67,7 @@
 									actionListener="#{DekanBean.saveModManual}" value="create" /></td>
 							</tr>
 						</table>
-						<p:messages id="create-messages" for="create-messages"
+						<p:messages id="dekan-messages" for="dekan-messages"
 							showDetail="true" autoUpdate="true" closable="true" />
 					</h:form>
 				</p:layoutUnit>

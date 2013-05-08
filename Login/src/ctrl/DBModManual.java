@@ -86,7 +86,7 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String exRulesTitle = rs.getString("exRulesTitle");
-				Date date = rs.getTimestamp("deadline");
+				String date = rs.getString("deadline");
 	
 				m = new ModManual(modManTitle, description, exRulesTitle, date);
 			}
@@ -119,7 +119,7 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				Date date = rs.getTimestamp("deadline");
+				String date = rs.getString("deadline");
 	
 				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
 				
@@ -155,7 +155,7 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				Date date = rs.getTimestamp("deadline");
+				String date = rs.getString("deadline");
 	
 				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
 				
