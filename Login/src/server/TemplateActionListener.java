@@ -23,7 +23,7 @@ public class TemplateActionListener implements ActionListener {
 		if(bean.getExRules() == null) {
 			bean.setExRules(itemValue);
 			
-			bean.setModManList(DBModManual.loadAllModManuals(itemValue));
+			bean.setModManList(DBModManual.loadModManuals(itemValue));
 			
 			Submenu exRules = new Submenu();
 			exRules.setLabel(itemValue);

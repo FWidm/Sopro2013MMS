@@ -1,11 +1,8 @@
 package server;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import ctrl.DBModManual;
-
 import data.ModManual;
 
 
@@ -31,7 +27,7 @@ public class DekanBean {
 	private LoginBean login;
 	private boolean success = true;
 	private String modManTitle, description;
-	private int exRules;
+	private int exRulesTitle;
 	private String deadline;
 	private Date date;
 	
@@ -66,7 +62,7 @@ public class DekanBean {
 	public void resetFields() {
 		modManTitle = description = null;
 		deadline = null;
-		exRules = -1;
+		exRulesTitle = -1;
 	}
 	
 	/**
@@ -77,7 +73,7 @@ public class DekanBean {
 	 */
 	public void saveModManual(ActionEvent action) {
 		success = true;
-		if (modManTitle.isEmpty() || description.isEmpty() || exRules == -1 || date == null) {
+		if (modManTitle.isEmpty() || description.isEmpty() || exRulesTitle == -1 || date == null) {
 			success = false;
 			addErrorMessage("Empty Field error: ", "Fields may not be empty - be sure to edit every field.");
 			System.out.println(success);			
@@ -100,13 +96,24 @@ public class DekanBean {
 	}
 	
 	/**
+	 * function that refreshes the ModManualsList for and edit mode
+	 */
+	public void actualizeModManualList() {
+		String exRules = decodeExRules();
+		if (exRules == null)
+			setModManualList(DBModManual.loadAllModManuals());
+		else
+			setModManualList(DBModManual.loadModManuals(exRules));
+	}
+	
+	/**
 	 * Translates numbers into Strings that are way more readable
 	 * 
 	 * @param rol
 	 * @return
 	 */
 	private String decodeExRules() {
-		switch (exRules) {
+		switch (exRulesTitle) {
 		case 1:
 			return "PO2010";
 		case 2:
@@ -212,18 +219,20 @@ public class DekanBean {
 	}
 
 	/**
-	 * @return the exRules
+	 * @return the exRulesTitle
 	 */
-	public int getExRules() {
-		return exRules;
+	public int getExRulesTitle() {
+		return exRulesTitle;
 	}
 
 	/**
-	 * @param exRules the exRules to set
+	 * @param exRulesTitle the exRulesTitle to set
 	 */
-	public void setExRules(int exRules) {
-		this.exRules = exRules;
+	public void setExRulesTitle(int exRulesTitle) {
+		this.exRulesTitle = exRulesTitle;
 	}
+
+	
 
 	
 	

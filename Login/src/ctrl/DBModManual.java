@@ -105,7 +105,7 @@ public class DBModManual extends DBManager{
 	 * @param exRulesTitle
 	 * @return
 	 */
-	public static List<ModManual> loadAllModManuals(String exRulesTitle) {
+	public static List<ModManual> loadModManuals(String exRulesTitle) {
 		Connection con = null;
 		List<ModManual> m = new LinkedList<ModManual>();
 		try {
@@ -119,7 +119,7 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				String date = rs.getString("deadline");
+				String date = rs.getTimestamp("deadline").toString();
 	
 				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
 				
@@ -147,7 +147,7 @@ public class DBModManual extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM modManual WHERE exRulesTitle";
+			String query = "SELECT * FROM modManual";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			
@@ -155,7 +155,7 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				String date = rs.getString("deadline");
+				String date = rs.getTimestamp("deadline").toString();
 	
 				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
 				
@@ -173,7 +173,7 @@ public class DBModManual extends DBManager{
 	}
 	
 	public static void main(String[] args) {
-		List<ModManual> modMans = loadAllModManuals("PO2012");
+		List<ModManual> modMans = loadModManuals("PO2012");
 		System.out.println(modMans.get(0).getExRulesTitle());
 	}
 	
