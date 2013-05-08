@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -16,7 +18,9 @@ import data.ModManual;
 
 
 
-
+//Changed to Sessionscope - if in doubt revert to RequestScoped
+@ManagedBean(name = "DekanBean")
+@SessionScoped
 public class DekanBean {
 	
 	private List<ModManual> modManualList;
