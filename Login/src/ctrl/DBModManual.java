@@ -101,7 +101,7 @@ public class DBModManual extends DBManager{
 		return m;
 	}
 	/**
-	 * load all modmanuals with specific exrulestitle
+	 * load all module manuals with specific exrulestitle
 	 * @param exRulesTitle
 	 * @return
 	 */
@@ -112,6 +112,42 @@ public class DBModManual extends DBManager{
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String query = "SELECT * FROM modManual WHERE exRulesTitle = '" + exRulesTitle + "'";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()){
+				String modManTitle = rs.getString("modManTitle");
+				String description = rs.getString("description");
+				String _exRulesTitle = rs.getString("exRulesTitle");
+				Date date = rs.getTimestamp("deadline");
+	
+				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
+				
+			}
+			
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return m;
+	}
+	
+	/**
+	 * load all module manuals
+	 * @param exRulesTitle
+	 * @return
+	 */
+	public static List<ModManual> loadAllModManuals() {
+		Connection con = null;
+		List<ModManual> m = new LinkedList<ModManual>();
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM modManual WHERE exRulesTitle";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			

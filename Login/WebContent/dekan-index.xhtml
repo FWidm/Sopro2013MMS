@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="refresh" content="30" />
+	<title>Dekan Index</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.css" />
+	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/mms.css" />
+
+</h:head>
+<!-- body -->
+<h:body>
+	<div style="height: 120px;">
+		<p:graphicImage value="/Image/logo_100_sw.jpg"
+			style="position:absolute; top:20px; right:20px;" />
+	</div>
+
+	<p:tabView id="tabview-dekan">
+		<!-- TabView -->
+		<p:tab title="Create module manual">
+			<!-- Begin of first tab // Start -->
+			<p:layout style="min-width:400px;min-height:500px;"
+				id="dekan-layout">
+				<p:layoutUnit position="center" header="Dekanpanel">
+					<h:form id="dekan-frame">
+						<table class="admin-create-t" width="250" border="0"
+							cellpadding="2">
+							<tr>
+								<td colspan="2"><h2>Create module manual</h2></td>
+							</tr>
+							<tr>
+								<!-- User(String email, String name, String firstname, String role...) { -->
+								<td><h:outputText value="module manual title: " /> <h:inputText id="modManTitle"
+										value="#{DekanBean.modManTitle}" styleClass="input_text" /></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="description:  " /> <h:inputText
+										id="description" value="#{DekanBean.description}"
+										styleClass="input_text" /></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="examination rules: " /> <p:selectOneMenu
+										value="#{DekanBean.exRules}">
+										<f:selectItem itemLabel="examination rules" itemValue="-1" />
+										<f:selectItem itemLabel="PO2010" itemValue="1" />
+										<f:selectItem itemLabel="PO2012" itemValue="2" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>							
+								<td>  
+								<h:outputText value="dead line: " />
+    							<p:calendar value="#{DekanBean.deadLine}" id="popupCal" />
+  								</td>
+							</tr>							
+							<tr>
+								<td colspan="2" align="right">
+									<p:commandButton
+									icon="ui-icon-trash" value="reset fields"
+									update=":tabview-dekan:dekan-frame"
+									action="#{DekanBean.resetFields}" /> 
+									
+									<p:commandButton
+									icon="ui-icon-plusthick"
+									actionListener="#{DekanBean.saveModManual}" value="create" /></td>
+							</tr>
+						</table>
+						<p:messages id="create-messages" for="create-messages"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</h:form>
+				</p:layoutUnit>
+			</p:layout>
+		</p:tab>
+		
+	</p:tabView>
+	<!-- End TabView -->
+
+</h:body>
+</html>

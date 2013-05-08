@@ -1,5 +1,5 @@
 /**
- * 1=admin, 2=Modulverantw. , 3=Dezernat, 4=Redakteur
+ * 1=admin, 2=Modulverantw. , 3=Dezernat, 4=Redakteur, 5=Dekan
  */
 package server;
 
@@ -213,6 +213,8 @@ public class CreateBean {
 			return "Dezernat";
 		case 4:
 			return "Redakteur";
+		case 5:
+			return "Dekan";
 		default:
 			return null;
 		}
