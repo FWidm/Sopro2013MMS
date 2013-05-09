@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,16 +12,20 @@ import java.util.List;
 import data.ModManual;
 
 public class DBModManual extends DBManager{
+	
+	// is used to parse date
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	/**
 	 * Save a modManual to the database
 	 * @param m
 	 */
 	public static void saveModManual(ModManual m) {
+		
 		Connection con = null;		
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "INSERT INTO modManual VALUES('" + m.getModManTitle() + "', '" + m.getDescription() + "', '" + m.getExRulesTitle() + "', '" + m.getDeadline() + "')";
+			String update = "INSERT INTO modManual VALUES('" + m.getModManTitle() + "', '" + m.getDescription() + "', '" + m.getExRulesTitle() + "', '" + sdf.format(m.getDeadline()) + "')";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -48,7 +53,7 @@ public class DBModManual extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE modManual SET modManTitle = '" + m.getModManTitle() + "', descriptiom = '" + m.getDescription() + "', exRulesTitle = '" + m.getExRulesTitle() + "', deadline = '" + m.getDeadline() +  "WHERE modManTitle = '" + modManTitle + "'";
+			String update = "UPDATE modManual SET modManTitle = '" + m.getModManTitle() + "', description = '" + m.getDescription() + "', exRulesTitle = '" + m.getExRulesTitle() + "', deadline = '" + sdf.format(m.getDeadline()) + "'" +  "WHERE modManTitle = '" + modManTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -86,9 +91,9 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String exRulesTitle = rs.getString("exRulesTitle");
-				String date = rs.getString("deadline");
+				Date deadline = rs.getDate("deadline");
 	
-				m = new ModManual(modManTitle, description, exRulesTitle, date);
+				m = new ModManual(modManTitle, description, exRulesTitle, deadline);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -119,9 +124,9 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				String date = rs.getTimestamp("deadline").toString();
+				Date deadline = rs.getDate("deadline");
 	
-				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
+				m.add(new ModManual(modManTitle, description, _exRulesTitle, deadline));
 				
 			}
 			
@@ -155,9 +160,9 @@ public class DBModManual extends DBManager{
 				String modManTitle = rs.getString("modManTitle");
 				String description = rs.getString("description");
 				String _exRulesTitle = rs.getString("exRulesTitle");
-				String date = rs.getTimestamp("deadline").toString();
+				Date deadline = rs.getDate("deadline");
 	
-				m.add(new ModManual(modManTitle, description, _exRulesTitle, date));
+				m.add(new ModManual(modManTitle, description, _exRulesTitle, deadline));
 				
 			}
 			

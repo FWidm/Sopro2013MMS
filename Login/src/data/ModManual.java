@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class ModManual {
 
-	private String modManTitle, description, exRulesTitle, deadline;
+	private String modManTitle, description, exRulesTitle;
+	private Date deadline;
 	
 	public ModManual(){
 	
@@ -18,7 +19,7 @@ public class ModManual {
 	 * @param exRulesTitle
 	 * @param deadline
 	 */
-	public ModManual(String modManTitle, String description, String exRulesTitle, String deadline){
+	public ModManual(String modManTitle, String description, String exRulesTitle, Date deadline){
 		this.modManTitle = modManTitle;
 		this.description = description;
 		this.exRulesTitle = exRulesTitle;
@@ -73,7 +74,7 @@ public class ModManual {
 	/**
 	 * @return the date
 	 */
-	public String getDeadline() {
+	public Date getDeadline() {
 		return deadline;
 	}
 
@@ -81,7 +82,7 @@ public class ModManual {
 	 * @param date
 	 *            the date to set
 	 */
-	public void setDeadline(String deadline) {
+	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
 	}
 

@@ -53,7 +53,7 @@
 							</tr>
 							<tr>														
 								<td><h:outputText value="deadline: " />
-    							<p:calendar value="#{DekanBean.date}" id="popupCal" /></td>
+    							<p:calendar value="#{DekanBean.deadline}" id="popupCal1" /></td>
 							</tr>							
 							<tr>
 								<td colspan="2" align="left">
@@ -102,11 +102,15 @@
 							<p:ajax event="rowEditInit" listener="#{TemplateBean.testInit}"
                                 update=":form:messages" />
 							 -->
+							<p:ajax event="rowEdit" listener="#{DekanBean.onEdit}"
+								update=":tabview-dekan:dekan-edit-frame:modManuals" />
+
+							<p:ajax event="rowEditCancel" listener="#{DekanBean.onCancel}"
+								update=":tabview-dekan:dekan-edit-frame:modManuals" />
 
 
 
-
-							<p:column headerText="Title" footerText="" style="width:24%">
+							<p:column headerText="Title" footerText="" style="width:25%">
 								<p:cellEditor>
 									<f:facet name="output">
 										<h:outputText value="#{modManual.modManTitle}" />
@@ -117,7 +121,7 @@
 								</p:cellEditor>
 							</p:column>
 
-							<p:column headerText="Description" footerText="" style="width:24%">
+							<p:column headerText="Description" footerText="" style="width:40%">
 								<p:cellEditor>
 									<f:facet name="output">
 										<h:outputText value="#{modManual.description}" />
@@ -128,7 +132,7 @@
 								</p:cellEditor>
 							</p:column>
 
-							<p:column headerText="Examination rules" footerText="" style="width:24%">
+							<p:column headerText="Examination rules" footerText="" style="width:18%">
 								<p:cellEditor>
 									<f:facet name="output">
 										<h:outputText value="#{modManual.exRulesTitle}" />
@@ -142,11 +146,18 @@
 								</p:cellEditor>
 							</p:column>
 							
-							<p:column headerText="Deadline" footerText="" style="width:24%">
-								<h:outputText value="#{modManual.deadline}" />
+							<p:column headerText="Deadline" footerText="" style="width:13%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{modManual.deadline}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:calendar value="#{modManual.deadline}" id="popupCal2" />
+									</f:facet>
+								</p:cellEditor>								
 							</p:column>
 
-							<p:column style="width:6%">
+							<p:column style="width:4%">
 								<p:rowEditor />
 							</p:column>
 						</p:dataTable>

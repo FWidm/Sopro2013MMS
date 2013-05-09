@@ -13,8 +13,12 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.event.RowEditEvent;
+
 import ctrl.DBModManual;
+import ctrl.DBUser;
 import data.ModManual;
+import data.User;
 
 
 
@@ -28,10 +32,9 @@ public class DekanBean {
 	private boolean success = true;
 	private String modManTitle, description;
 	private int exRulesTitle;
-	private String deadline;
-	private Date date;
+
+	private Date deadline;
 	
-	// 
 	SimpleDateFormat sdf;
 	
 	/**
@@ -73,7 +76,7 @@ public class DekanBean {
 	 */
 	public void saveModManual(ActionEvent action) {
 		success = true;
-		if (modManTitle.isEmpty() || description.isEmpty() || exRulesTitle == -1 || date == null) {
+		if (modManTitle.isEmpty() || description.isEmpty() || exRulesTitle == -1 || deadline == null) {
 			success = false;
 			addErrorMessage("Empty Field error: ", "Fields may not be empty - be sure to edit every field.");
 			System.out.println(success);			
@@ -81,8 +84,6 @@ public class DekanBean {
 		}	
 
 		if (DBModManual.loadModManual(modManTitle) == null) {
-			// parse date to sql compatible format
-			deadline = sdf.format(date);
 			String exRules = decodeExRules();
 			DBModManual.saveModManual(new ModManual(modManTitle, description, exRules, deadline));
 			System.out.println(success);
@@ -104,6 +105,32 @@ public class DekanBean {
 			setModManualList(DBModManual.loadAllModManuals());
 		else
 			setModManualList(DBModManual.loadModManuals(exRules));
+	}
+	
+	/**
+	 * Event Triggered when the accept icon is clicked on edit module manual tab -
+	 * updates with new Values
+	 * 
+	 * @param event
+	 */
+	public void onEdit(RowEditEvent event) {
+		ModManual m = (ModManual) event.getObject();
+		FacesMessage msg = new FacesMessage("User Edited", ((ModManual) event.getObject()).toString());
+		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
+			System.out.println(m.toString());
+			DBModManual.updateModManual(m, m.getModManTitle());
+		}
+		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
+	}
+
+	/**
+	 * Event triggered when editing user is cancelled
+	 * 
+	 * @param event
+	 */
+	public void onCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("User edit cancelled", ((ModManual) event.getObject()).getModManTitle());
+		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
 	
 	/**
@@ -173,35 +200,18 @@ public class DekanBean {
 		this.modManTitle = modManTitle;
 	}
 
-
 	/**
 	 * @return the deadline
 	 */
-	public String getDeadline() {
+	public Date getDeadline() {
 		return deadline;
 	}
 
 	/**
 	 * @param deadline the deadline to set
 	 */
-	public void setDeadline(String deadline) {
+	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
-	}
-	
-	
-
-	/**
-	 * @return the date
-	 */
-	public Date getDate() {
-		return date;
-	}
-
-	/**
-	 * @param date the date to set
-	 */
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	/**
