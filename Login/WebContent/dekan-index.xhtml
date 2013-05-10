@@ -108,17 +108,8 @@
 							<p:ajax event="rowEditCancel" listener="#{DekanBean.onCancel}"
 								update=":tabview-dekan:dekan-edit-frame:modManuals" />
 
-
-
-							<p:column headerText="Title" footerText="" style="width:25%">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{modManual.modManTitle}" />
-									</f:facet>
-									<f:facet name="input">
-										<p:inputText value="#{modManual.modManTitle}" style="width:100%" />
-									</f:facet>
-								</p:cellEditor>
+							<p:column headerText="Title" footerText="" style="width:25%">								
+								<h:outputText value="#{modManual.modManTitle}" />		
 							</p:column>
 
 							<p:column headerText="Description" footerText="" style="width:40%">

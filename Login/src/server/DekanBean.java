@@ -28,7 +28,6 @@ import data.User;
 public class DekanBean {
 	
 	private List<ModManual> modManualList;
-	private LoginBean login;
 	private boolean success = true;
 	private String modManTitle, description;
 	private int exRulesTitle;
@@ -46,21 +45,8 @@ public class DekanBean {
 		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		modManualList = new LinkedList<ModManual>();
 		modManualList = DBModManual.loadAllModManuals();
-		login = findBean("LoginBean");
 	}
 	
-	/**
-	 * finds the bean with corresponding name
-	 * 
-	 * @param beanName
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T findBean(String beanName) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		return (T) context.getApplication().evaluateExpressionGet(context,
-				"#{" + beanName + "}", Object.class);
-	}
 	
 	public void resetFields() {
 		modManTitle = description = null;
@@ -84,7 +70,7 @@ public class DekanBean {
 		}	
 
 		if (DBModManual.loadModManual(modManTitle) == null) {
-			String exRules = decodeExRules();
+			String exRules = decodeExRulesTitle();
 			DBModManual.saveModManual(new ModManual(modManTitle, description, exRules, deadline));
 			System.out.println(success);
 			addMessage("Module manual created: ", "" + modManTitle + ", " + exRules + ", " + deadline);
@@ -100,11 +86,11 @@ public class DekanBean {
 	 * function that refreshes the ModManualsList for and edit mode
 	 */
 	public void actualizeModManualList() {
-		String exRules = decodeExRules();
-		if (exRules == null)
+		String exRulesTitle = decodeExRulesTitle();
+		if (exRulesTitle == null)
 			setModManualList(DBModManual.loadAllModManuals());
 		else
-			setModManualList(DBModManual.loadModManuals(exRules));
+			setModManualList(DBModManual.loadModManuals(exRulesTitle));
 	}
 	
 	/**
@@ -114,6 +100,7 @@ public class DekanBean {
 	 * @param event
 	 */
 	public void onEdit(RowEditEvent event) {
+		
 		ModManual m = (ModManual) event.getObject();
 		FacesMessage msg = new FacesMessage("User Edited", ((ModManual) event.getObject()).toString());
 		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
@@ -121,6 +108,7 @@ public class DekanBean {
 			DBModManual.updateModManual(m, m.getModManTitle());
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
+		actualizeModManualList();
 	}
 
 	/**
@@ -139,7 +127,7 @@ public class DekanBean {
 	 * @param rol
 	 * @return
 	 */
-	private String decodeExRules() {
+	private String decodeExRulesTitle() {
 		switch (exRulesTitle) {
 		case 1:
 			return "PO2010";
@@ -242,8 +230,4 @@ public class DekanBean {
 		this.exRulesTitle = exRulesTitle;
 	}
 
-	
-
-	
-	
 }
