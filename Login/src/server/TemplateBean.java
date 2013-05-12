@@ -59,6 +59,9 @@ public class TemplateBean {
 	 * @param sub
 	 */
 	public void handleSubject(Subject sub) {
+		//TODO Paste your event handling here
+		
+		//Only Test and can be removed
 		System.out.println(sub.getSubTitle());
 	}
 	
@@ -69,7 +72,11 @@ public class TemplateBean {
 	 * @param mod
 	 */
 	public void handleModule(Module mod) {
+		//TODO Paste your event handling here
+		
+		//Only Test and can be removed
 		System.out.println(mod.getModTitle());
+		System.out.println(mod.getDescription());
 	}
 	
 	/**
@@ -79,6 +86,9 @@ public class TemplateBean {
 	 * @param modMan
 	 */
 	public void handleModManual(ModManual modMan) {
+		//TODO Paste your event handling here
+		
+		//Only Test and can be removed
 		System.out.println(modMan.getModManTitle());
 	}
 	
@@ -89,6 +99,9 @@ public class TemplateBean {
 	 * @param rule
 	 */
 	public void handleExRule(ExRules rule) {
+		//TODO Paste your event handling here
+		
+		//Only Test and can be removed
 		System.out.println(rule.getExRulesTitle());
 	}
 	
