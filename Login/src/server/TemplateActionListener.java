@@ -10,6 +10,7 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
+import ctrl.DBExRules;
 import ctrl.DBModManual;
 import ctrl.DBModule;
 import ctrl.DBSubject;
@@ -53,6 +54,8 @@ public class TemplateActionListener implements ActionListener {
 			}
 			
 			bean.setModel(model);
+			
+			bean.handleExRule(DBExRules.loadExRules(itemValue));
 		}
 		else if(bean.getModMan() == null) {
 			
@@ -92,6 +95,8 @@ public class TemplateActionListener implements ActionListener {
 			}
 			
 			bean.setModel(model);
+			
+			bean.handleModManual(DBModManual.loadModManual(itemValue));
 		}
 		else if(bean.getModule() == null) {
 			
@@ -137,6 +142,8 @@ public class TemplateActionListener implements ActionListener {
 			}
 			
 			bean.setModel(model);
+			
+			bean.handleModule(DBModule.loadModule(itemValue));
 		}
 		else {
 			MenuModel backModel = new DefaultMenuModel();
@@ -187,7 +194,6 @@ public class TemplateActionListener implements ActionListener {
 	public void processAction(ActionEvent arg0) throws AbortProcessingException {
 		// TODO Auto-generated method stub
 		refreshMenu((String)((MenuItem)arg0.getSource()).getValue());
-		System.out.println((String)((MenuItem)arg0.getSource()).getValue());
 	}
 	
     @SuppressWarnings("unchecked")

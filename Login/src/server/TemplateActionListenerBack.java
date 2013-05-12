@@ -131,7 +131,6 @@ public class TemplateActionListenerBack implements ActionListener {
 	public void processAction(ActionEvent arg0) throws AbortProcessingException {
 		// TODO Auto-generated method stub
 		refreshMenu((String)((MenuItem)arg0.getSource()).getValue());
-		System.out.println((String)((MenuItem)arg0.getSource()).getValue());
 	}
 	
     @SuppressWarnings("unchecked")

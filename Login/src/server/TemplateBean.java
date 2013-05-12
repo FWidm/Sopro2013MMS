@@ -59,7 +59,37 @@ public class TemplateBean {
 	 * @param sub
 	 */
 	public void handleSubject(Subject sub) {
-		
+		System.out.println(sub.getSubTitle());
+	}
+	
+	/**
+	 * this method is called when clicking a Module in the menu
+	 * parameter is the clicked module
+	 * 
+	 * @param mod
+	 */
+	public void handleModule(Module mod) {
+		System.out.println(mod.getModTitle());
+	}
+	
+	/**
+	 * this method is called when clicking a ModManual in the menu
+	 * parameter is the clicked modManual
+	 * 
+	 * @param modMan
+	 */
+	public void handleModManual(ModManual modMan) {
+		System.out.println(modMan.getModManTitle());
+	}
+	
+	/**
+	 * this method is called when clicking a ExRule in the menu
+	 * parameter is the clicked exRule
+	 * 
+	 * @param rule
+	 */
+	public void handleExRule(ExRules rule) {
+		System.out.println(rule.getExRulesTitle());
 	}
 	
 	/**
