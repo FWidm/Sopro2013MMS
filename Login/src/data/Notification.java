@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class Notification {
 	private String recipientEmail;
 	private String senderEmail;
-	private Timestamp 	timeStamp;
+	private Timestamp timeStamp;
 	private String message;
 	private String action;
 	private String status;

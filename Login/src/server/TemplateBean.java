@@ -18,18 +18,25 @@ import data.Subject;
 @SessionScoped
 public class TemplateBean {
 	
+	public static final String PRUEFORDNUNG = "Prüfungsordnungen";
+	public static final String MODMANUAL = "Modulhandbücher";
+	public static final String MODULE = "Module";
+	public static final String FAECHER = "Fächer";
+	
 	private String exRules, modMan, module;
 	private List<ExRules> exRulesList;
 	private List<ModManual> modManList;
 	private List<Module> moduleList;
 	private List<Subject> subjectList;
-	private MenuModel model;
+	private MenuModel model, backModel;
 	
 	public TemplateBean() {
 		
+		backModel = new DefaultMenuModel();
+		
 		model = new DefaultMenuModel();
 		Submenu submenu = new Submenu();
-		submenu.setLabel("Pruefungsordnung");
+		submenu.setLabel(PRUEFORDNUNG);
 		
 		exRulesList = DBExRules.loadExRules();
 		
@@ -37,14 +44,38 @@ public class TemplateBean {
 			MenuItem m = new MenuItem();
 			m.setValue(exRulesList.get(i).getExRulesTitle());
 			m.setAjax(true);
-			m.setUpdate("list-menu");
+			m.setUpdate("list-menu back-menu");
 			m.addActionListener(new TemplateActionListener());
 			submenu.getChildren().add(m);
 		}
-		
 		model.addSubmenu(submenu);
+		
 	}
 	
+	/**
+	 * this method is called when clicking a Subject in the menu
+	 * parameter is the clicked subject
+	 * 
+	 * @param sub
+	 */
+	public void handleSubject(Subject sub) {
+		
+	}
+	
+	/**
+	 * @return the backModel
+	 */
+	public MenuModel getBackModel() {
+		return backModel;
+	}
+
+	/**
+	 * @param backModel the backModel to set
+	 */
+	public void setBackModel(MenuModel backModel) {
+		this.backModel = backModel;
+	}
+
 	/**
 	 * @return the exRules
 	 */

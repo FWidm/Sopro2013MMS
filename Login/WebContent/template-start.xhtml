@@ -25,7 +25,8 @@
 					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
 					<p:layoutUnit position="west" resizable="true" size="215"
 						minSize="215" maxSize="400" header="Modulelist" collapsible="true">
-
+						
+						<p:menu id="back-menu" model="#{TemplateBean.backModel}" />
 						<p:menu id="list-menu" model="#{TemplateBean.model}" />
 
 					</p:layoutUnit>
