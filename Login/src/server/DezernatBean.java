@@ -36,7 +36,7 @@ public class DezernatBean {
 			}
 			
 			Map.put(s, fieldList);
-			System.out.println(fieldList.toString());
+			if(!(fieldList==null))System.out.println(fieldList.toString());
 		}
 		System.out.println(subjectList.toString());
 	}
