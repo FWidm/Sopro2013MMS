@@ -2,6 +2,13 @@ package data;
 
 public class ModAccess {
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ModAccess [modTitle=" + modTitle + ", email=" + email + "]";
+	}
 	private String modTitle;
 	private String email;
 	

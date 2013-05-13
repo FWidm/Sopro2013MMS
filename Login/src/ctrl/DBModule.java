@@ -147,4 +147,29 @@ public class DBModule extends DBManager {
 		List<Module> modules = loadModulesByManTitle("Medieninformatik");
 		System.out.println(modules.get(0).getModTitle());
 	}
+
+	public static List<String> loadAllModuleTitles() {
+		List<String> m=new LinkedList<String>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM module";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String title = rs.getString("modTitle");
+				m.add(title);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return m;
+	}
 }
