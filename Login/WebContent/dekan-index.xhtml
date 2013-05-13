@@ -35,7 +35,7 @@
 								<td colspan="2"><h2>Create module manual</h2></td>
 							</tr>
 							<tr>
-								<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) { -->
+								<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
 								<td><h:outputText value="module manual title: " />
 								<h:inputText id="modManTitle" value="#{DekanBean.modManTitle}" styleClass="input_text" /></td>
 							</tr>
@@ -158,6 +158,26 @@
 				</p:layoutUnit>
 			</p:layout>
 
+		</p:tab>
+		
+		<p:tab title="Create examination rules">
+			<!-- Begin of first tab // Start -->
+			<p:layout style="min-width:400px;min-height:500px;"
+				id="exRules-layout">
+				<p:layoutUnit position="center" header="Dekanpanel">
+					<h:form id="exRules-frame">
+						<table class="admin-create-t" width="250" border="0"
+							cellpadding="2">
+							<tr>
+								<td colspan="2"><h2>Create examination rules</h2></td>
+							</tr>
+							
+						</table>
+						<p:messages id="dekan-messages" for="dekan-messages"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</h:form>
+				</p:layoutUnit>
+			</p:layout>
 		</p:tab>
 		
 	</p:tabView>
