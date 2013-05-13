@@ -56,7 +56,7 @@ public class DezernatBean {
 			subjectList.remove(selected);
 			addMessage("approve","Success:" ,"Change published!");
 		}
-		addErrorMessage("approve", "Failed", "An SQL Error Occured in 'updateSubjectAck'@DBSubject, call the Administrator for further help and note this message.");
+		else addErrorMessage("approve", "Failed", "An SQL Error Occured in 'updateSubjectAck'@DBSubject, call the Administrator for further help and note this message.");
 	}
 	
 	/**
