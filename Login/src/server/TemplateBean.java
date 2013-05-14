@@ -8,44 +8,47 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import ctrl.DBExRules;
+import ctrl.DBField;
 import data.ExRules;
+import data.Field;
 import data.ModManual;
 import data.Module;
 import data.Subject;
 import data.TemplateActionListener;
 
-@ManagedBean(name="TemplateBean")
+@ManagedBean(name = "TemplateBean")
 @SessionScoped
 public class TemplateBean {
-	
+
 	public static final String PRUEFORDNUNG = "Prüfungsordnungen";
 	public static final String MODMANUAL = "Modulhandbücher";
 	public static final String MODULE = "Module";
 	public static final String FAECHER = "Fächer";
-	
-	//Add your tag id's for ajax-update on menuItemClick here.
+
+	// Add your tag id's for ajax-update on menuItemClick here.
 	public static final String UPDATE_AJAX = "list-menu back-menu scrollPanel";
-	
+
 	private String exRules, modMan, module;
 	private List<ExRules> exRulesList;
 	private List<ModManual> modManList;
 	private List<Module> moduleList;
 	private List<Subject> subjectList;
+	List<Field> fieldList;
 	private MenuModel model, backModel;
-	
-	private String title, description, aim, ects;
-	private boolean titleVisible, descriptionVisible, aimVisible, ectsVisible;
-	
+
+	private String title, description, ects, aim;
+	private boolean mainVisible, ectsAimVisible, addInfoVisible;
+
 	public TemplateBean() {
 		backModel = new DefaultMenuModel();
-		
+
 		model = new DefaultMenuModel();
 		Submenu submenu = new Submenu();
 		submenu.setLabel(PRUEFORDNUNG);
-		
+
 		exRulesList = DBExRules.loadAllExRules();
-		
-		for(int i = 0; i < exRulesList.size(); i++) {
+
+		for (int i = 0; i < exRulesList.size(); i++) {
 			MenuItem m = new MenuItem();
 			m.setValue(exRulesList.get(i).getExRulesTitle());
 			m.setAjax(true);
@@ -54,91 +57,82 @@ public class TemplateBean {
 			submenu.getChildren().add(m);
 		}
 		model.addSubmenu(submenu);
-		
+
 	}
-	
+
 	/**
-	 * this method is called when clicking a Subject in the menu
-	 * parameter is the clicked subject
+	 * this method is called when clicking a Subject in the menu parameter is
+	 * the clicked subject
 	 * 
 	 * @param sub
 	 */
 	public void handleSubject(Subject sub) {
-		//TODO Paste your event handling here
+		// TODO Paste your event handling here
+		fieldList = DBField.loadFieldforDezernat(sub.getSubTitle());
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());
 		aim = sub.getAim();
-		titleVisible = true;
-		descriptionVisible = true;
-		ectsVisible = true;
-		aimVisible = true;
-		//Only Test and can be removed
+		mainVisible = true;
+		ectsAimVisible = true;
+		addInfoVisible = true;
+		// Only Test and can be removed
 		System.out.println(sub.getSubTitle());
 	}
-	
+
 	/**
-	 * this method is called when clicking a Module in the menu
-	 * parameter is the clicked module
+	 * this method is called when clicking a Module in the menu parameter is the
+	 * clicked module
 	 * 
 	 * @param mod
 	 */
 	public void handleModule(Module mod) {
-		//TODO Paste your event handling here
+		// TODO Paste your event handling here
 		title = mod.getModTitle();
 		description = mod.getDescription();
-		ects = "";
-		aim = "";
-		titleVisible = true;
-		descriptionVisible = true;
-		ectsVisible = false;
-		aimVisible = false;
-		//Only Test and can be removed
+		mainVisible = true;
+		ectsAimVisible = false;
+		addInfoVisible = false;
+		// Only Test and can be removed
 		System.out.println(mod.getModTitle());
 		System.out.println(mod.getDescription());
 	}
-	
+
 	/**
-	 * this method is called when clicking a ModManual in the menu
-	 * parameter is the clicked modManual
+	 * this method is called when clicking a ModManual in the menu parameter is
+	 * the clicked modManual
 	 * 
 	 * @param modMan
 	 */
 	public void handleModManual(ModManual modMan) {
-		//TODO Paste your event handling here
+		// TODO Paste your event handling here
 		title = modMan.getModManTitle();
 		description = modMan.getDescription();
-		ects = "";
-		aim = "";
-		titleVisible = true;
-		descriptionVisible = true;
-		ectsVisible = false;
-		aimVisible = false;
-		//Only Test and can be removed
+		mainVisible = true;
+		ectsAimVisible = false;
+		addInfoVisible = false;
+		// Only Test and can be removed
 		System.out.println(modMan.getModManTitle());
-		
+
 	}
-	
+
 	/**
-	 * this method is called when clicking a ExRule in the menu
-	 * parameter is the clicked exRule
+	 * this method is called when clicking a ExRule in the menu parameter is the
+	 * clicked exRule
 	 * 
 	 * @param rule
 	 */
 	public void handleExRule(ExRules rule) {
-		//TODO Paste your event handling here
+		// TODO Paste your event handling here
 		title = rule.getExRulesTitle();
 		description = "";
-		ects = "";
-		aim = "";
-		titleVisible = true;
-		descriptionVisible = false;
-		ectsVisible = false;
-		aimVisible = false;
-		//Only Test and can be removed
+		mainVisible = true;
+		ectsAimVisible = false;
+		addInfoVisible = false;
+		// Only Test and can be removed
 		System.out.println(rule.getExRulesTitle());
 	}
-	
+
 	/**
 	 * @return the backModel
 	 */
@@ -147,7 +141,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param backModel the backModel to set
+	 * @param backModel
+	 *            the backModel to set
 	 */
 	public void setBackModel(MenuModel backModel) {
 		this.backModel = backModel;
@@ -161,7 +156,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param exRules the exRules to set
+	 * @param exRules
+	 *            the exRules to set
 	 */
 	public void setExRules(String exRules) {
 		this.exRules = exRules;
@@ -175,7 +171,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param modMan the modMan to set
+	 * @param modMan
+	 *            the modMan to set
 	 */
 	public void setModMan(String modMan) {
 		this.modMan = modMan;
@@ -189,7 +186,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param module the module to set
+	 * @param module
+	 *            the module to set
 	 */
 	public void setModule(String module) {
 		this.module = module;
@@ -203,7 +201,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param exRulesList the exRulesList to set
+	 * @param exRulesList
+	 *            the exRulesList to set
 	 */
 	public void setExRulesList(List<ExRules> exRulesList) {
 		this.exRulesList = exRulesList;
@@ -217,7 +216,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param modManList the modManList to set
+	 * @param modManList
+	 *            the modManList to set
 	 */
 	public void setModManList(List<ModManual> modManList) {
 		this.modManList = modManList;
@@ -231,7 +231,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param moduleList the moduleList to set
+	 * @param moduleList
+	 *            the moduleList to set
 	 */
 	public void setModuleList(List<Module> moduleList) {
 		this.moduleList = moduleList;
@@ -245,7 +246,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param model the model to set
+	 * @param model
+	 *            the model to set
 	 */
 	public void setModel(MenuModel model) {
 		this.model = model;
@@ -259,10 +261,26 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param subjectList the subjectList to set
+	 * @param subjectList
+	 *            the subjectList to set
 	 */
 	public void setSubjectList(List<Subject> subjectList) {
 		this.subjectList = subjectList;
+	}
+
+	/**
+	 * @return the fieldList
+	 */
+	public List<Field> getFieldList() {
+		return fieldList;
+	}
+
+	/**
+	 * @param fieldList
+	 *            the fieldList to set
+	 */
+	public void setFieldList(List<Field> fieldList) {
+		this.fieldList = fieldList;
 	}
 
 	/**
@@ -273,7 +291,8 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -287,24 +306,11 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	/**
-	 * @return the aim
-	 */
-	public String getAim() {
-		return aim;
-	}
-
-	/**
-	 * @param aim the aim to set
-	 */
-	public void setAim(String aim) {
-		this.aim = aim;
 	}
 
 	/**
@@ -315,65 +321,71 @@ public class TemplateBean {
 	}
 
 	/**
-	 * @param ects the ects to set
+	 * @param ects
+	 *            the ects to set
 	 */
 	public void setEcts(String ects) {
 		this.ects = ects;
 	}
 
 	/**
-	 * @return the titleVisible
+	 * @return the aim
 	 */
-	public boolean isTitleVisible() {
-		return titleVisible;
+	public String getAim() {
+		return aim;
 	}
 
 	/**
-	 * @param titleVisible the titleVisible to set
+	 * @param aim
+	 *            the aim to set
 	 */
-	public void setTitleVisible(boolean titleVisible) {
-		this.titleVisible = titleVisible;
+	public void setAim(String aim) {
+		this.aim = aim;
 	}
 
 	/**
-	 * @return the descriptionVisible
+	 * @return the mainVisible
 	 */
-	public boolean isDescriptionVisible() {
-		return descriptionVisible;
+	public boolean isMainVisible() {
+		return mainVisible;
 	}
 
 	/**
-	 * @param descriptionVisible the descriptionVisible to set
+	 * @param mainVisible
+	 *            the mainVisible to set
 	 */
-	public void setDescriptionVisible(boolean descriptionVisible) {
-		this.descriptionVisible = descriptionVisible;
+	public void setMainVisible(boolean mainVisible) {
+		this.mainVisible = mainVisible;
 	}
 
 	/**
-	 * @return the aimVisible
+	 * @return the ectsAimVisible
 	 */
-	public boolean isAimVisible() {
-		return aimVisible;
+	public boolean isEctsAimVisible() {
+		return ectsAimVisible;
 	}
 
 	/**
-	 * @param aimVisible the aimVisible to set
+	 * @param ectsAimVisible
+	 *            the ectsAimVisible to set
 	 */
-	public void setAimVisible(boolean aimVisible) {
-		this.aimVisible = aimVisible;
+	public void setEctsAimVisible(boolean ectsAimVisible) {
+		this.ectsAimVisible = ectsAimVisible;
 	}
 
 	/**
-	 * @return the ectsVisible
+	 * @return the addInfoVisible
 	 */
-	public boolean isEctsVisible() {
-		return ectsVisible;
+	public boolean isAddInfoVisible() {
+		return addInfoVisible;
 	}
 
 	/**
-	 * @param ectsVisible the ectsVisible to set
+	 * @param addInfoVisible
+	 *            the addInfoVisible to set
 	 */
-	public void setEctsVisible(boolean ectsVisible) {
-		this.ectsVisible = ectsVisible;
+	public void setAddInfoVisible(boolean addInfoVisible) {
+		this.addInfoVisible = addInfoVisible;
 	}
+
 }

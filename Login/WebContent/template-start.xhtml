@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
@@ -21,7 +22,9 @@
 			<!-- TabView -->
 			<p:tab title="Start" id="tabStart">
 				<!-- Begin of first tab // Start -->
-				<p:layout style="min-width:800px; min-height:600px; max-height:600px;" id="gblLayout">
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;"
+					id="gblLayout">
 					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
 					<p:layoutUnit position="west" resizable="true" size="215"
 						minSize="215" header="Modulelist" collapsible="true">
@@ -32,35 +35,37 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center" id="content" header="Modulemanual">
-						<p:scrollPanel id="scrollPanel" style="min-width:400px; min-height:470px;">
-							<p:panel id="pnlTitle" header="Titel" toggleable="true"
-								toggleSpeed="500" visible="#{TemplateBean.titleVisible}">
+						<p:scrollPanel id="scrollPanel" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel id="pnlTitle" header="#{TemplateBean.title}"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.mainVisible}">
 	
-								<h:outputText value="#{TemplateBean.title}" />
-								
+								#{TemplateBean.description}
+							
+							</p:panel>
+							<p:panel id="pnlEcts" header="Leistungspunkte und Lernziele"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.ectsAimVisible}">
+
+								<strong>leistungspunkte:</strong> #{TemplateBean.ects}<br />
+								<br />
+								<strong>Lernziele:</strong> #{TemplateBean.aim}
 	
 							</p:panel>
-							<p:panel id="pnlEcts" header="Leistungspunkte" toggleable="true"
-								toggleSpeed="500" visible="#{TemplateBean.ectsVisible}">
-	
-								<h:outputText value="#{TemplateBean.ects}" />
-	
-							</p:panel>
-							<p:panel id="pnlDescription" header="Beschreibung" toggleable="true"
-								toggleSpeed="500" visible="#{TemplateBean.descriptionVisible}">
-	
-								<h:outputText value="#{TemplateBean.description}" />
-	
-							</p:panel>
-							<p:panel id="pnlAim" header="Lernziele" toggleable="true"
-								toggleSpeed="500" visible="#{TemplateBean.aimVisible}">
-	
-								<h:outputText value="#{TemplateBean.aim}" />
-	
+							<p:panel id="pnlDescription" header="Zusaetzliche Informationen"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.addInfoVisible}">
+
+								<ui:repeat var="iterator" value="#{TemplateBean.fieldList}">
+									<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+									<strong>Beschreibung: </strong>#{iterator.description}<br />
+									<br />
+								</ui:repeat>
 							</p:panel>
 						</p:scrollPanel>
 					</p:layoutUnit>
-					
+
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
 							<p:commandButton type="push" value="Drucken" title="Drucken"
