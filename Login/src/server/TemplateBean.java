@@ -13,6 +13,7 @@ import data.ExRules;
 import data.ModManual;
 import data.Module;
 import data.Subject;
+import data.TemplateActionListener;
 
 @ManagedBean(name="TemplateBean")
 @SessionScoped
@@ -90,6 +91,7 @@ public class TemplateBean {
 		
 		//Only Test and can be removed
 		System.out.println(modMan.getModManTitle());
+		
 	}
 	
 	/**

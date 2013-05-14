@@ -1,4 +1,4 @@
-package server;
+package data;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -9,6 +9,8 @@ import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
+
+import server.TemplateBean;
 
 import ctrl.DBExRules;
 import ctrl.DBModManual;
