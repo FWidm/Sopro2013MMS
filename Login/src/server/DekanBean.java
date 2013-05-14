@@ -15,8 +15,10 @@ import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.RowEditEvent;
 
+import ctrl.DBExRules;
 import ctrl.DBModManual;
 import ctrl.DBUser;
+import data.ExRules;
 import data.ModManual;
 import data.User;
 
@@ -31,8 +33,10 @@ public class DekanBean {
 	private boolean success = true;
 	private String modManTitle, description;
 	private int exRulesTitle;
-
 	private Date deadline;
+	
+	private List<ExRules> exRulesList;
+	private String exRules;
 	
 	SimpleDateFormat sdf;
 	
@@ -45,9 +49,13 @@ public class DekanBean {
 		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		modManualList = new LinkedList<ModManual>();
 		modManualList = DBModManual.loadAllModManuals();
+		exRulesList = new LinkedList<ExRules>();
+		exRulesList = DBExRules.loadAllExRules();
 	}
 	
-	
+	/**
+	 * reset modManTitle, description, deadline and exRulesTitle
+	 */
 	public void resetFields() {
 		modManTitle = description = null;
 		deadline = null;
@@ -55,10 +63,15 @@ public class DekanBean {
 	}
 	
 	/**
+	 * reset exRules to null
+	 */
+	public void resetField() {
+		exRules = null;
+	}
+	
+	/**
 	 * saves the ModManual to the database
 	 * 
-	 * @param email
-	 * @return boolean
 	 */
 	public void saveModManual(ActionEvent action) {
 		success = true;
@@ -83,7 +96,34 @@ public class DekanBean {
 	}
 	
 	/**
-	 * function that refreshes the ModManualsList for and edit mode
+	 * saves the examination rules to the database
+	 * 
+	 */
+	public void saveExRules(ActionEvent action) {
+		success = true;
+		System.out.println("**** " + exRules);
+		if (exRules == "") {
+			success = false;
+			addErrorMessage("Empty Field error: ", "Field may not be empty.");
+			System.out.println(success);			
+			return;
+		}	
+
+		if (DBExRules.loadExRules(exRules) == null) {
+			DBExRules.saveExRule(new ExRules(exRules));
+			System.out.println(success);
+			addMessage("Examinatino rules created: ", exRules);
+			return;
+		}
+		
+		success = false;
+		System.out.println("error - exRules already exists: " + exRules + " " + success);
+		addErrorMessage("Examination rules title already exists: ", "'" + exRules + "' is already in the database - please doublecheck.");
+	}
+	
+	
+	/**
+	 * function that refreshes the ModManualsList for delete and edit mode
 	 */
 	public void actualizeModManualList() {
 		String exRulesTitle = decodeExRulesTitle();
@@ -124,8 +164,7 @@ public class DekanBean {
 	/**
 	 * Translates numbers into Strings that are way more readable
 	 * 
-	 * @param rol
-	 * @return
+	 * @return String
 	 */
 	private String decodeExRulesTitle() {
 		switch (exRulesTitle) {
@@ -136,6 +175,16 @@ public class DekanBean {
 		default:
 			return null;
 		}
+	}
+	
+	/**
+	 * function that refreshes the exRulesList for delete edit mode
+	 */
+	public void actualizeExRulesList() {
+		if (exRules == "")
+			setExRulesList(DBExRules.loadAllExRules());
+		else
+			setExRulesList(DBExRules.loadAllExRules(exRules));
 	}
 	
 	/**
@@ -229,5 +278,37 @@ public class DekanBean {
 	public void setExRulesTitle(int exRulesTitle) {
 		this.exRulesTitle = exRulesTitle;
 	}
+
+
+	/**
+	 * @return the exRules
+	 */
+	public String getExRules() {
+		return exRules;
+	}
+
+
+	/**
+	 * @param exRules the exRules to set
+	 */
+	public void setExRules(String exRules) {
+		this.exRules = exRules;
+	}
+
+	/**
+	 * @return the exRulesList
+	 */
+	public List<ExRules> getExRulesList() {
+		return exRulesList;
+	}
+
+	/**
+	 * @param exRulesList the exRulesList to set
+	 */
+	public void setExRulesList(List<ExRules> exRulesList) {
+		this.exRulesList = exRulesList;
+	}
+	
+	
 
 }

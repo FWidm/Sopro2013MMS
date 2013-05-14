@@ -43,7 +43,7 @@ public class TemplateBean {
 		Submenu submenu = new Submenu();
 		submenu.setLabel(PRUEFORDNUNG);
 		
-		exRulesList = DBExRules.loadExRules();
+		exRulesList = DBExRules.loadAllExRules();
 		
 		for(int i = 0; i < exRulesList.size(); i++) {
 			MenuItem m = new MenuItem();

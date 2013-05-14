@@ -125,13 +125,42 @@ public class DBExRules extends DBManager{
 	 * loads all exRules
 	 * @return
 	 */
-	public static List<ExRules> loadExRules() {
+	public static List<ExRules> loadAllExRules() {
 		List<ExRules> er = new LinkedList<ExRules>();
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String query = "SELECT * FROM exRules";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String eRT = rs.getString("exRulesTitle");
+				er.add(new ExRules(eRT));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return er;
+	}
+	
+	/**
+	 * loads all exRules
+	 * @return
+	 */
+	public static List<ExRules> loadAllExRules(String exRulesTitle) {
+		List<ExRules> er = new LinkedList<ExRules>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM exRules WHERE exRulesTitle = '" + exRulesTitle + "'";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			

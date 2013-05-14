@@ -6,7 +6,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
-	
+
 	<title>Dekan Index</title>
 
 	<link rel="stylesheet" href="./css/bootstrap.css" />
@@ -20,168 +20,243 @@
 		<p:graphicImage value="/Image/logo_100_sw.jpg"
 			style="position:absolute; top:20px; right:20px;" />
 	</div>
+	<p:tabView id="outer-tabview">
 
-	<p:tabView id="tabview-dekan">
-		<!-- TabView -->
-		<p:tab title="Create module manual">
-			<!-- Begin of first tab // Start -->
-			<p:layout style="min-width:400px;min-height:500px;"
-				id="dekan-layout">
-				<p:layoutUnit position="center" header="Dekanpanel">
-					<h:form id="dekan-frame">
-						<table class="admin-create-t" width="250" border="0"
-							cellpadding="2">
-							<tr>
-								<td colspan="2"><h2>Create module manual</h2></td>
-							</tr>
-							<tr>
-								<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
-								<td><h:outputText value="module manual title: " />
-								<h:inputText id="modManTitle" value="#{DekanBean.modManTitle}" styleClass="input_text" /></td>
-							</tr>
-							<tr>
-								<td><h:outputText value="description:  " />
-								<h:inputText id="description" value="#{DekanBean.description}" styleClass="input_text" /></td>
-							</tr>
-							<tr>
-								<td><h:outputText value="examination rules: " />
-								<p:selectOneMenu value="#{DekanBean.exRulesTitle}">
-										<f:selectItem itemLabel="examination rules" itemValue="-1" />
-										<f:selectItem itemLabel="PO2010" itemValue="1" />
-										<f:selectItem itemLabel="PO2012" itemValue="2" />
-								</p:selectOneMenu></td>	
-							</tr>
-							<tr>														
-								<td><h:outputText value="deadline: " />
-    							<p:calendar value="#{DekanBean.deadline}" id="popupCal1" /></td>
-							</tr>							
-							<tr>
-								<td colspan="2" align="left">
-									<p:commandButton
-									icon="ui-icon-trash" value="reset fields"
-									update=":tabview-dekan:dekan-frame"
-									action="#{DekanBean.resetFields}" /> 
-									
-									<p:commandButton
-									icon="ui-icon-plusthick"
-									actionListener="#{DekanBean.saveModManual}" value="create" /></td>
-							</tr>
-						</table>
-						<p:messages id="dekan-messages" for="dekan-messages"
-							showDetail="true" autoUpdate="true" closable="true" />
-					</h:form>
-				</p:layoutUnit>
-			</p:layout>
+		<p:tab title="Module manual">
+
+			<p:tabView id="tabview-modManual">
+				<!-- TabView -->
+				<p:tab title="Create">
+					<!-- Begin of first tab // Start -->
+					<p:layout style="min-width:400px;min-height:500px;"
+						id="dekan-layout">
+						<p:layoutUnit position="center">
+							<h:form id="dekan-frame">
+								<table width="250" border="0" cellpadding="2">
+									<tr>
+										<td colspan="2"><h2>Create module manual</h2></td>
+									</tr>
+									<tr>
+										<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
+										<td><h:outputText value="module manual title: " /> <h:inputText
+												id="modManTitle" value="#{DekanBean.modManTitle}"
+												styleClass="input_text" /></td>
+									</tr>
+									<tr>
+										<td><h:outputText value="description:  " /> <h:inputText
+												id="description" value="#{DekanBean.description}"
+												styleClass="input_text" /></td>
+									</tr>
+									<tr>
+										<td><h:outputText value="examination rules: " /> <p:selectOneMenu
+												value="#{DekanBean.exRulesTitle}">
+												<f:selectItem itemLabel="examination rules" itemValue="-1" />
+												<f:selectItem itemLabel="PO2010" itemValue="1" />
+												<f:selectItem itemLabel="PO2012" itemValue="2" />
+											</p:selectOneMenu></td>
+									</tr>
+									<tr>
+										<td><h:outputText value="deadline: " /> <p:calendar
+												value="#{DekanBean.deadline}" id="popupCal1" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left"><p:commandButton
+												icon="ui-icon-trash" value="reset fields"
+												update=":outer-tabview:tabview-modManual:dekan-frame"
+												action="#{DekanBean.resetFields}" /> <p:commandButton
+												icon="ui-icon-plusthick"
+												actionListener="#{DekanBean.saveModManual}" value="create" /></td>
+									</tr>
+								</table>
+								<p:messages id="dekan-messages" for="dekan-messages"
+									showDetail="true" autoUpdate="true" closable="true" />
+							</h:form>
+						</p:layoutUnit>
+					</p:layout>
+				</p:tab>
+
+				<p:tab title="Edit">
+					<p:layout style="min-width:400px;min-height:500px;"
+						id="edit-layout">
+
+						<p:layoutUnit position="center">
+							<h:form id="dekan-edit-frame">
+								<table class="admin-edit-t" width="250" border="0"
+									cellpadding="2">
+									<tr>
+										<td><h:outputText value="Examination rules  " /> <p:selectOneMenu
+												value="#{DekanBean.exRulesTitle}">
+												<f:selectItem itemLabel="All examination rules"
+													itemValue="-1" />
+												<f:selectItem itemLabel="PO2010" itemValue="1" />
+												<f:selectItem itemLabel="PO2012" itemValue="2" />
+											</p:selectOneMenu></td>
+									</tr>
+									<tr>
+										<td><p:commandButton
+												actionListener="#{DekanBean.actualizeModManualList}"
+												value="find"
+												update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
+									</tr>
+								</table>
+								<br />
+								<p:dataTable id="modManuals" var="modManual"
+									value="#{DekanBean.modManualList}" style="max-width:1024px"
+									scrollable="true" scrollHeight="250" editable="true">
+									<!-- if emails should be updated to - do something in the listener method specified below
+									<p:ajax event="rowEditInit" listener="#{TemplateBean.testInit}"
+		                                update=":form:messages" />
+									 -->
+									<p:ajax event="rowEdit" listener="#{DekanBean.onEdit}"
+										update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" />
+
+									<p:ajax event="rowEditCancel" listener="#{DekanBean.onCancel}"
+										update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" />
+
+									<p:column headerText="Title" footerText="" style="width:25%">
+										<h:outputText value="#{modManual.modManTitle}" />
+									</p:column>
+
+									<p:column headerText="Description" footerText=""
+										style="width:40%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText value="#{modManual.description}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText value="#{modManual.description}"
+													style="width:100%" />
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+
+									<p:column headerText="Examination rules" footerText=""
+										style="width:18%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText value="#{modManual.exRulesTitle}" />
+											</f:facet>
+											<f:facet name="input">
+												<h:selectOneMenu value="#{modManual.exRulesTitle}">
+													<f:selectItem itemLabel="PO2010" itemValue="PO2010" />
+													<f:selectItem itemLabel="PO2012" itemValue="PO2012" />
+												</h:selectOneMenu>
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+
+									<p:column headerText="Deadline" footerText="" style="width:13%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText value="#{modManual.deadline}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:calendar value="#{modManual.deadline}" id="popupCal2" />
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+
+									<p:column style="width:4%">
+										<p:rowEditor />
+									</p:column>
+								</p:dataTable>
+								<p:messages id="edit-messages" showDetail="true"
+									autoUpdate="true" for="edit-messages" />
+							</h:form>
+						</p:layoutUnit>
+					</p:layout>
+
+				</p:tab>
+
+
+
+			</p:tabView>
+			<!-- End TabView -->
 		</p:tab>
-		
-		<p:tab title="Edit module manual">
-			<p:layout style="min-width:400px;min-height:500px;" id="edit-layout">
 
-				<p:layoutUnit position="center" header="Dekanpanel">
-					<h:form id="dekan-edit-frame">
-						<table class="admin-edit-t" width="250" border="0" cellpadding="2">
-							<tr>
-								<td><h:outputText value="Examination rules  " /> <p:selectOneMenu
-										value="#{DekanBean.exRulesTitle}">
-										<f:selectItem itemLabel="All examination rules" itemValue="-1" />
-										<f:selectItem itemLabel="PO2010" itemValue="1" />
-										<f:selectItem itemLabel="PO2012" itemValue="2" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:commandButton
-										actionListener="#{DekanBean.actualizeModManualList}" value="find"
-										update=":tabview-dekan:dekan-edit-frame:modManuals" /></td>
-							</tr>
-						</table>
-						<br />
-						<p:dataTable id="modManuals" var="modManual" value="#{DekanBean.modManualList}"
-							style="max-width:1024px" scrollable="true" scrollHeight="250"
-							editable="true">
-							<!-- if emails should be updated to - do something in the listener method specified below
-							<p:ajax event="rowEditInit" listener="#{TemplateBean.testInit}"
-                                update=":form:messages" />
-							 -->
-							<p:ajax event="rowEdit" listener="#{DekanBean.onEdit}"
-								update=":tabview-dekan:dekan-edit-frame:modManuals" />
+		<p:tab title="Examination Rules">
+			<p:tabView id="tabview-exRules">
+				<p:tab title="Create">
+					<!-- Begin of first tab // Start -->
+					<p:layout style="min-width:400px;min-height:500px;"
+						id="exRules-create-layout">
+						<p:layoutUnit position="center">
+							<h:form id="exRules-create-frame">
+								<table width="250" border="0" cellpadding="2">
+									<tr>
+										<td colspan="2"><h2>Create examination rules</h2></td>
+									</tr>
+									<tr>
+										<!-- ExRules(String exRulesTitle) -->
+										<td><h:outputText value="examination rules title: " /> <h:inputText
+												id="exRules" value="#{DekanBean.exRules}"
+												styleClass="input_text" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left"><p:commandButton
+												icon="ui-icon-trash" value="reset field"
+												update=":outer-tabview:tabview-exRules:exRules-create-frame"
+												action="#{DekanBean.resetField}" /> <p:commandButton
+												icon="ui-icon-plusthick"
+												actionListener="#{DekanBean.saveExRules}" value="create" /></td>
+									</tr>
+								</table>
+								<p:messages id="dekan-messages" for="dekan-messages"
+									showDetail="true" autoUpdate="true" closable="true" />
+							</h:form>
+						</p:layoutUnit>
+					</p:layout>
+				</p:tab>
 
-							<p:ajax event="rowEditCancel" listener="#{DekanBean.onCancel}"
-								update=":tabview-dekan:dekan-edit-frame:modManuals" />
+				<p:tab title="Delete">
+					<!-- Begin of first tab // Start -->
+					<p:layout style="min-width:400px;min-height:500px;"
+						id="exRules-delete-layout">
+						<p:layoutUnit position="center">
+							<h:form id="exRules-delete-frame">
+								<table class="admin-delete-t" width="250" border="0"
+									cellpadding="2">
+									<tr>
+										<td><h:outputText value="Examination rules title" /> 
+											<p:selectOneMenu
+												value="#{DekanBean.exRules}">
+												<f:selectItem itemLabel="Alle" itemValue="-1" />
+												<f:selectItem itemLabel="PO2010" itemValue="1" />
+												<f:selectItem itemLabel="PO2012" itemValue="2" />
+											</p:selectOneMenu></td>
+									</tr>
+									<tr>
+										<td><p:commandButton
+												actionListener="#{DekanBean.actualizeExRulesList}" value="find"
+												update=":outer-tabview:tabview-exRules:exRules-delete-frame:exRules" /></td>
+									</tr>
+								</table>
+								<br />
+								<br />
 
-							<p:column headerText="Title" footerText="" style="width:25%">								
-								<h:outputText value="#{modManual.modManTitle}" />		
-							</p:column>
+								<p:dataTable id="exRules" var="exRules"
+									value="#{DekanBean.exRulesList}" style="max-width:1024px"
+									scrollable="true" scrollHeight="250">
+									<p:column headerText="Examination rules title" footerText="" style="width:24%">
+										<h:outputText value="#{exRules.exRulesTitle}" />
+									</p:column>
+									<p:column style="width:40px" footerText="">
+										<p:commandButton icon="ui-icon-trash"
+											oncomplete="deleteDlg.show();"
+											update=":outer-tabview:tabview-exRules:exRules-delete-frame:exRules">
+											<f:setPropertyActionListener value="#{exRules}"
+												target="#{DekanBean.exRules}" />
+										</p:commandButton>
 
-							<p:column headerText="Description" footerText="" style="width:40%">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{modManual.description}" />
-									</f:facet>
-									<f:facet name="input">
-										<p:inputText value="#{modManual.description}" style="width:100%" />
-									</f:facet>
-								</p:cellEditor>
-							</p:column>
-
-							<p:column headerText="Examination rules" footerText="" style="width:18%">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{modManual.exRulesTitle}" />
-									</f:facet>
-									<f:facet name="input">
-										<h:selectOneMenu value="#{modManual.exRulesTitle}">
-											<f:selectItem itemLabel="PO2010" itemValue="PO2010" />
-											<f:selectItem itemLabel="PO2012" itemValue="PO2012" />
-										</h:selectOneMenu>
-									</f:facet>
-								</p:cellEditor>
-							</p:column>
-							
-							<p:column headerText="Deadline" footerText="" style="width:13%">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{modManual.deadline}" />
-									</f:facet>
-									<f:facet name="input">
-										<p:calendar value="#{modManual.deadline}" id="popupCal2" />
-									</f:facet>
-								</p:cellEditor>								
-							</p:column>
-
-							<p:column style="width:4%">
-								<p:rowEditor />
-							</p:column>
-						</p:dataTable>
-						<p:messages id="edit-messages" showDetail="true" autoUpdate="true"
-							for="edit-messages" />
-					</h:form>
-				</p:layoutUnit>
-			</p:layout>
-
+									</p:column>
+								</p:dataTable>
+							</h:form>
+						</p:layoutUnit>
+					</p:layout>
+				</p:tab>
+			</p:tabView>
 		</p:tab>
-		
-		<p:tab title="Create examination rules">
-			<!-- Begin of first tab // Start -->
-			<p:layout style="min-width:400px;min-height:500px;"
-				id="exRules-layout">
-				<p:layoutUnit position="center" header="Dekanpanel">
-					<h:form id="exRules-frame">
-						<table class="admin-create-t" width="250" border="0"
-							cellpadding="2">
-							<tr>
-								<td colspan="2"><h2>Create examination rules</h2></td>
-							</tr>
-							
-						</table>
-						<p:messages id="dekan-messages" for="dekan-messages"
-							showDetail="true" autoUpdate="true" closable="true" />
-					</h:form>
-				</p:layoutUnit>
-			</p:layout>
-		</p:tab>
-		
+
 	</p:tabView>
-	<!-- End TabView -->
-
 </h:body>
 </html>

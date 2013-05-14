@@ -37,7 +37,7 @@ public class TemplateActionListenerBack implements ActionListener {
 			submenu.setLabel(TemplateBean.PRUEFORDNUNG);
 			model.addSubmenu(submenu);
 			
-			bean.setExRulesList(DBExRules.loadExRules());
+			bean.setExRulesList(DBExRules.loadAllExRules());
 			
 			for(int i = 0; i < bean.getExRulesList().size(); i++) {
 				MenuItem m = new MenuItem();
