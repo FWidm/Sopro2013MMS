@@ -43,7 +43,7 @@ public class TemplateActionListenerBack implements ActionListener {
 				MenuItem m = new MenuItem();
 				m.setValue(bean.getExRulesList().get(i).getExRulesTitle());
 				m.setAjax(true);
-				m.setUpdate("list-menu back-menu");
+				m.setUpdate(TemplateBean.UPDATE_AJAX);
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
 			}
@@ -61,7 +61,7 @@ public class TemplateActionListenerBack implements ActionListener {
 			backSubmenu.setLabel("Zurück zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
-			exRules.setUpdate("list-menu back-menu");
+			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
 			exRules.setValue(TemplateBean.PRUEFORDNUNG);
 			exRules.addActionListener(this);
 			backSubmenu.getChildren().add(exRules);
@@ -76,7 +76,7 @@ public class TemplateActionListenerBack implements ActionListener {
 			for(int i = 0; i < bean.getModManList().size(); i++) {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
-				m.setUpdate("list-menu back-menu");
+				m.setUpdate(TemplateBean.UPDATE_AJAX);
 				m.setValue(bean.getModManList().get(i).getModManTitle());
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
@@ -95,13 +95,13 @@ public class TemplateActionListenerBack implements ActionListener {
 			backSubmenu.setLabel("Zurück zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
-			exRules.setUpdate("list-menu back-menu");
+			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
 			exRules.setValue(TemplateBean.PRUEFORDNUNG);
 			exRules.addActionListener(this);
 			backSubmenu.getChildren().add(exRules);
 			MenuItem modMan = new MenuItem();
 			modMan.setAjax(true);
-			modMan.setUpdate("list-menu back-menu");
+			modMan.setUpdate(TemplateBean.UPDATE_AJAX);
 			modMan.setValue(TemplateBean.MODMANUAL);
 			modMan.addActionListener(this);
 			backSubmenu.getChildren().add(modMan);
@@ -116,7 +116,7 @@ public class TemplateActionListenerBack implements ActionListener {
 			for(int i = 0; i < bean.getModuleList().size(); i++) {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
-				m.setUpdate("list-menu back-menu");
+				m.setUpdate(TemplateBean.UPDATE_AJAX);
 				m.setValue(bean.getModuleList().get(i).getModTitle());
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
