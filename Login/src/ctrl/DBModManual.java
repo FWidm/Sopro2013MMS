@@ -15,6 +15,7 @@ public class DBModManual extends DBManager{
 	
 	// is used to parse date
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	/**
 	 * Save a modManual to the database
 	 * @param m
@@ -26,6 +27,34 @@ public class DBModManual extends DBManager{
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "INSERT INTO modManual VALUES('" + m.getModManTitle() + "', '" + m.getDescription() + "', '" + m.getExRulesTitle() + "', '" + sdf.format(m.getDeadline()) + "')";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * delete a modManual from the database
+	 * @param m
+	 */
+	public static void deleteModManual(String modManTitle) {
+		
+		Connection con = null;		
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM modManual WHERE modManTitle = '" + modManTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -116,7 +145,7 @@ public class DBModManual extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM modManual WHERE exRulesTitle = '" + exRulesTitle + "'";
+			String query = "SELECT * FROM modManual WHERE exRulesTitle LIKE '%" + exRulesTitle + "%'";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			

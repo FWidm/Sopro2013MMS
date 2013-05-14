@@ -151,7 +151,7 @@ public class DBExRules extends DBManager{
 	}
 	
 	/**
-	 * loads all exRules
+	 * loads all exRules with
 	 * @return
 	 */
 	public static List<ExRules> loadAllExRules(String exRulesTitle) {
@@ -160,7 +160,7 @@ public class DBExRules extends DBManager{
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM exRules WHERE exRulesTitle = '" + exRulesTitle + "'";
+			String query = "SELECT * FROM exRules WHERE exRulesTitle LIKE '%" + exRulesTitle + "%'";
 			
 			ResultSet rs = stmt.executeQuery(query);			
 			

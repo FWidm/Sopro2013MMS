@@ -34,9 +34,11 @@ public class DekanBean {
 	private String modManTitle, description;
 	private int exRulesTitle;
 	private Date deadline;
+	private ModManual currentMM;
 	
 	private List<ExRules> exRulesList;
 	private String exRules;
+	private ExRules currentER;
 	
 	SimpleDateFormat sdf;
 	
@@ -87,6 +89,8 @@ public class DekanBean {
 			DBModManual.saveModManual(new ModManual(modManTitle, description, exRules, deadline));
 			System.out.println(success);
 			addMessage("Module manual created: ", "" + modManTitle + ", " + exRules + ", " + deadline);
+			exRulesTitle = -1;
+			actualizeModManualList();
 			return;
 		}
 		
@@ -181,10 +185,28 @@ public class DekanBean {
 	 * function that refreshes the exRulesList for delete edit mode
 	 */
 	public void actualizeExRulesList() {
-		if (exRules == "")
+		String exRulesTitle = decodeExRulesTitle();
+		if (exRulesTitle == null)
 			setExRulesList(DBExRules.loadAllExRules());
 		else
-			setExRulesList(DBExRules.loadAllExRules(exRules));
+			setExRulesList(DBExRules.loadAllExRules(exRulesTitle));
+	}
+	
+	/**
+	 * deletes the exRule from the database, which was selected in the data table
+	 */
+	public void deleteModManual(){
+		DBModManual.deleteModManual(currentMM.getModManTitle());
+		exRulesTitle = -1;
+		actualizeModManualList();
+	}
+	
+	/**
+	 * deletes the exRule from the database, which was selected in the data table
+	 */
+	public void deleteExRules(){
+		DBExRules.deleteExRule(currentER.getExRulesTitle());
+		actualizeExRulesList();
 	}
 	
 	/**
@@ -307,6 +329,34 @@ public class DekanBean {
 	 */
 	public void setExRulesList(List<ExRules> exRulesList) {
 		this.exRulesList = exRulesList;
+	}
+
+	/**
+	 * @return the currentER
+	 */
+	public ExRules getCurrentER() {
+		return currentER;
+	}
+
+	/**
+	 * @param currentER the currentER to set
+	 */
+	public void setCurrentER(ExRules currentER) {
+		this.currentER = currentER;
+	}
+
+	/**
+	 * @return the currentMM
+	 */
+	public ModManual getCurrentMM() {
+		return currentMM;
+	}
+
+	/**
+	 * @param currentMM the currentMM to set
+	 */
+	public void setCurrentMM(ModManual currentMM) {
+		this.currentMM = currentMM;
 	}
 	
 	
