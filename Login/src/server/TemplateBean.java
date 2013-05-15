@@ -20,10 +20,10 @@ import data.TemplateActionListener;
 @SessionScoped
 public class TemplateBean {
 
-	public static final String PRUEFORDNUNG = "Prüfungsordnungen";
-	public static final String MODMANUAL = "Modulhandbücher";
+	public static final String PRUEFORDNUNG = "Pr\u00FCfungsordnungen";
+	public static final String MODMANUAL = "Modulhandb\u00FCcher";
 	public static final String MODULE = "Module";
-	public static final String FAECHER = "Fächer";
+	public static final String FAECHER = "F\u00E4cher";
 
 	// Add your tag id's for ajax-update on menuItemClick here.
 	public static final String UPDATE_AJAX = "list-menu back-menu scrollPanel";
