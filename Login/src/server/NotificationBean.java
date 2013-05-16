@@ -41,7 +41,36 @@ public class NotificationBean {
 		notificationList = new LinkedList<Notification>();
 		notificationList = DBNotification.loadNotification();
 	}
+	
+	/**
+	 * decline selected notification
+	 */
+	public void declineSelectedNotification(ActionEvent e) {
+		System.out.println("decline");
+		
+		if (selectedNotification != null) {
+			if(DBNotification.declineNotification(getSelectedNotification()))
+				System.out.println(selectedNotification.getMessage() + " was declined");
+			else System.out.println("nothing to decline");
+		} else
+			System.out.println("null");
+		loadNotifications();
+	}
 
+	/**
+	 * accepts selected notification
+	 */
+	public void acceptSelectedNotification(ActionEvent e) {
+		System.out.println("accept");
+		
+		if (selectedNotification != null) {
+			if(DBNotification.acceptNotification(getSelectedNotification()))
+				System.out.println(selectedNotification.getMessage() + " was accepted");
+			else System.out.println("nothing to accept");
+		} else
+			System.out.println("null");
+		loadNotifications();
+	}
 	// Currently unused method
 	// START********************************************************************
 	/**

@@ -245,15 +245,22 @@
 							rowKey="#{noti.timeStamp}" scrollHeight="400"
 							selection="#{NotificationBean.selectedNotification}"
 							selectionMode="single">
-							<p:ajax event="rowSelect"
-							update=":tabview-admin:notify-layout" />
+							<p:ajax event="rowSelect" update=":tabview-admin:notify-layout" />
 
 							<p:column>
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
 									 #{noti.senderEmail} 								
-							</p:column>						
-
+							</p:column>
+							<f:facet name="footer">
+								<div align="center">
+									<p:commandButton value="decline" icon="ui-icon-closethick"
+										actionListener="#{NotificationBean.declineSelectedNotification}"/>
+										<p:ajax event="rowSelect" update=":tabview-admin:notify-layout" />
+									<p:commandButton value="accept" icon="ui-icon-check" 
+									actionListener="#{NotificationBean.acceptSelectedNotification}"/>
+								</div>
+							</f:facet>
 						</p:dataTable>
 
 					</h:form>

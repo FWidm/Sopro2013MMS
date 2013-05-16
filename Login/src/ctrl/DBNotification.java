@@ -12,6 +12,14 @@ import data.Notification;
 
 public class DBNotification extends DBManager {
 	/**
+	 * Formats a timestamp
+	 */
+	static java.util.Date dt = new java.util.Date();
+
+	static java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss.0");
+
+	/**
 	 * Save a notification to the database
 	 * 
 	 * @param notif
@@ -51,7 +59,7 @@ public class DBNotification extends DBManager {
 	 * 
 	 * @param sub
 	 */
-	public static void deleteSubject(Notification notif) {
+	public static void deleteNotification(Notification notif) {
 		Connection con = null;
 		try {
 			con = openConnection();
@@ -79,8 +87,7 @@ public class DBNotification extends DBManager {
 	}
 
 	/**
-	 * Update a specific subject (identified by the version, subTitle and
-	 * modTitle) with the data from the subject object.
+	 * Update a specific notification
 	 * 
 	 * @param notif
 	 * @param recipientEmail
@@ -121,8 +128,79 @@ public class DBNotification extends DBManager {
 	}
 
 	/**
-	 * loads a notification based on the specific recipientEmail, senderEmail and
-	 * timeStamp
+	 * Update a specific notifications status to declined
+	 * 
+	 * @param Notification
+	 * @return boolean
+	 */
+	public static boolean declineNotification(Notification notif) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE notification SET status = 'declined' "
+					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
+					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
+					+ "' AND " + " timeStamp = '" + (Timestamp) notif.getTimeStamp() + "'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+				
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * Update a specific notifications status to accepted
+	 * 
+	 * @param Notification
+	 * @return boolean
+	 */
+	public static boolean acceptNotification(Notification notif) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE notification SET status = 'accepted' "
+					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
+					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
+					+ "' AND " + " timeStamp = '" + (Timestamp) notif.getTimeStamp() + "'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+				
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * loads a notification based on the specific recipientEmail, senderEmail
+	 * and timeStamp
 	 * 
 	 * @param recipientEmail
 	 * @param senderEmail
@@ -164,8 +242,10 @@ public class DBNotification extends DBManager {
 		}
 		return notif;
 	}
+
 	/**
 	 * Loads all notification that were sent or recieved by one user.
+	 * 
 	 * @param email
 	 * @return
 	 */
@@ -176,10 +256,7 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String query = "SELECT * FROM notification WHERE recipientEmail = '"
-					+ email
-					+ "' OR "
-					+ "senderEmail = '"
-					+ email + "'";
+					+ email + "' OR " + "senderEmail = '" + email + "'";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -203,7 +280,7 @@ public class DBNotification extends DBManager {
 		}
 		return notif;
 	}
-	
+
 	public static List<Notification> loadNotification() {
 		List<Notification> notif = new LinkedList<Notification>();
 		Connection con = null;
@@ -246,10 +323,10 @@ public class DBNotification extends DBManager {
 					+ recipientEmail
 					+ "' AND "
 					+ "senderEmail = '"
-					+ senderEmail +"'"
-					//+ "' AND "
-					//+ "timeStamp = "
-					//+ timeStamp
+					+ senderEmail + "'"
+					// + "' AND "
+					// + "timeStamp = "
+					// + timeStamp
 					+ ";";
 
 			ResultSet rs = stmt.executeQuery(query);
