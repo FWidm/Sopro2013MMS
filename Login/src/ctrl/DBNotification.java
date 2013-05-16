@@ -121,7 +121,7 @@ public class DBNotification extends DBManager {
 	}
 
 	/**
-	 * loads a subject based on the specific recipientEmail, senderEmail and
+	 * loads a notification based on the specific recipientEmail, senderEmail and
 	 * timeStamp
 	 * 
 	 * @param recipientEmail
@@ -246,10 +246,10 @@ public class DBNotification extends DBManager {
 					+ recipientEmail
 					+ "' AND "
 					+ "senderEmail = '"
-					+ senderEmail
-					+ "' AND "
-					+ "timeStamp = "
-					+ timeStamp
+					+ senderEmail +"'"
+					//+ "' AND "
+					//+ "timeStamp = "
+					//+ timeStamp
 					+ ";";
 
 			ResultSet rs = stmt.executeQuery(query);

@@ -17,6 +17,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import ctrl.DBField;
 import ctrl.DBNotification;
 import ctrl.DBUser;
 
@@ -32,12 +33,25 @@ public class NotificationBean {
 	private String status;
 	private List<Notification> notificationList;
 	private Notification selectedNotification; 
+	private Notification selectedMessage;
 	private String strTimeStamp; 
 
 	@PostConstruct
 	void init() {
 		notificationList = new LinkedList<Notification>();
 		notificationList = DBNotification.loadNotification();
+	}
+	/**
+	 * loads the selected notification
+	 *
+	 */
+	public void loadSelectedNotification(ActionEvent e) {
+		System.out.println("selected");
+		
+		if(selectedNotification!=null){
+			System.out.println(selectedNotification.getMessage());
+			selectedMessage = DBNotification.loadNotification(selectedNotification.getRecipientEmail(), selectedNotification.getSenderEmail(), selectedNotification.getTimeStamp());
+		}
 	}
 
 	/**
