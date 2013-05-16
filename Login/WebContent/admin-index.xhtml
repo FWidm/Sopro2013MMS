@@ -232,7 +232,7 @@
 
 		</p:tab>
 
-		<p:tab title="Notifications">
+		<p:tab title="notifications">
 			<p:layout style="min-width:400px;min-height:500px;"
 				id="notify-layout">
 
@@ -244,7 +244,7 @@
 							value="#{NotificationBean.notificationList}" scrollable="true"
 							rowKey="#{noti.timeStamp}" scrollHeight="400"
 							selection="#{NotificationBean.selectedNotification}"
-							selectionMode="single">
+							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect" update=":tabview-admin:notify-layout" />
 
 							<p:column>
@@ -255,10 +255,11 @@
 							<f:facet name="footer">
 								<div align="center">
 									<p:commandButton value="decline" icon="ui-icon-closethick"
-										actionListener="#{NotificationBean.declineSelectedNotification}"/>
-										<p:ajax event="rowSelect" update=":tabview-admin:notify-layout" />
-									<p:commandButton value="accept" icon="ui-icon-check" 
-									actionListener="#{NotificationBean.acceptSelectedNotification}"/>
+										actionListener="#{NotificationBean.declineSelectedNotification}" 
+										update=":tabview-admin:notify-layout"/>
+									<p:commandButton value="accept" icon="ui-icon-check"
+										actionListener="#{NotificationBean.acceptSelectedNotification}" 
+										update=":tabview-admin:notify-layout"/>
 								</div>
 							</f:facet>
 						</p:dataTable>

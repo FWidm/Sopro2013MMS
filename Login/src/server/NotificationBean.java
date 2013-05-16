@@ -41,6 +41,12 @@ public class NotificationBean {
 		notificationList = new LinkedList<Notification>();
 		notificationList = DBNotification.loadNotification();
 	}
+	/**
+	 * actualize notificationlist after declining or accepting
+	 */
+	private void actualizeNotificationList() {
+		setNotificationList(DBNotification.loadNotification());
+	}
 	
 	/**
 	 * decline selected notification
@@ -49,9 +55,11 @@ public class NotificationBean {
 		System.out.println("decline");
 		
 		if (selectedNotification != null) {
-			if(DBNotification.declineNotification(getSelectedNotification()))
+			if(DBNotification.declineNotification(getSelectedNotification())) {
+				selectedNotification.setStatus("accepted");
+				actualizeNotificationList();
 				System.out.println(selectedNotification.getMessage() + " was declined");
-			else System.out.println("nothing to decline");
+			} else System.out.println("nothing to decline");
 		} else
 			System.out.println("null");
 		loadNotifications();
@@ -64,9 +72,11 @@ public class NotificationBean {
 		System.out.println("accept");
 		
 		if (selectedNotification != null) {
-			if(DBNotification.acceptNotification(getSelectedNotification()))
+			if(DBNotification.acceptNotification(getSelectedNotification())) {
+				selectedNotification.setStatus("accepted");
+				actualizeNotificationList();
 				System.out.println(selectedNotification.getMessage() + " was accepted");
-			else System.out.println("nothing to accept");
+			} else System.out.println("nothing to accept");
 		} else
 			System.out.println("null");
 		loadNotifications();
