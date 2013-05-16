@@ -4,6 +4,11 @@ import java.sql.Timestamp;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+
+
+import javax.faces.application.FacesMessage;  
+import javax.faces.context.FacesContext;  
+import org.primefaces.event.TabChangeEvent; 
 import data.Notification;
 import data.User;
 
@@ -11,14 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.SelectEvent;
-
 import ctrl.DBField;
 import ctrl.DBNotification;
 import ctrl.DBUser;
@@ -60,6 +60,25 @@ public class NotificationBean {
 		} else
 			System.out.println("null");
 	}
+	/**
+	 * Creates the dialog of unread notifications and shows them on changing a tab
+	 */
+    public void onTabChange(TabChangeEvent event) {  
+    	System.out.println("tabchanged");
+    	boolean glbIsRead = false;
+    	String glbSender = new String();
+    	for(int i = 0; i < getNotificationList().size(); i++ ) {
+    		if(!getNotificationList().get(i).isRead()) {
+    			glbIsRead = true;
+    			glbSender += getNotificationList().get(i).getSenderEmail() + "\n"; //TODO Linebreak
+    		}
+    	}
+    	if(glbIsRead) {
+    		FacesMessage msg = new FacesMessage("There are unread messages!", glbSender );  
+  
+    		FacesContext.getCurrentInstance().addMessage(null, msg);  
+    	}
+    } 
 	
 	/**
 	 * decline selected notification
