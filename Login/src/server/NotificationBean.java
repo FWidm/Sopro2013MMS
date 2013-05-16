@@ -32,38 +32,37 @@ public class NotificationBean {
 	private String action;
 	private String status;
 	private List<Notification> notificationList;
-	private Notification selectedNotification; 
+	private Notification selectedNotification;
 	private Notification selectedMessage;
-	private String strTimeStamp; 
+	private String strTimeStamp;
 
 	@PostConstruct
 	void init() {
 		notificationList = new LinkedList<Notification>();
 		notificationList = DBNotification.loadNotification();
 	}
+
+	// Currently unused method
+	// START********************************************************************
 	/**
 	 * loads the selected notification
-	 *
+	 * 
 	 */
 	public void loadSelectedNotification(ActionEvent e) {
 		System.out.println("selected");
-		
-		if(selectedNotification!=null){
+
+		if (selectedNotification != null) {
 			System.out.println(selectedNotification.getMessage());
-			selectedMessage = DBNotification.loadNotification(selectedNotification.getRecipientEmail(), selectedNotification.getSenderEmail(), selectedNotification.getTimeStamp());
-		}
+			selectedMessage = DBNotification.loadNotification(
+					selectedNotification.getRecipientEmail(),
+					selectedNotification.getSenderEmail(),
+					selectedNotification.getTimeStamp());
+		} else
+			System.out.println("null");
 	}
 
 	/**
-	 * Loads all Notifications from the database
-	 * 
-	 */
-	public void loadNotifications() {
-		setNotificationList(DBNotification.loadNotification());
-	}
-	
-	/**
-	 * loads the selected notification 
+	 * loads the selected notification
 	 */
 	public void selectNotification() {
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -74,8 +73,20 @@ public class NotificationBean {
 		this.strTimeStamp = fc.getExternalContext().getRequestParameterMap()
 				.get("timeStamp");
 		Timestamp ts = Timestamp.valueOf(strTimeStamp);
-		System.out.println("notification from: " + senderEmail + " to " + recipientEmail + " at: " + ts);
-		setSelectedNotification(DBNotification.loadNotification(recipientEmail, senderEmail, ts));
+		System.out.println("notification from: " + senderEmail + " to "
+				+ recipientEmail + " at: " + ts);
+		setSelectedNotification(DBNotification.loadNotification(recipientEmail,
+				senderEmail, ts));
+	}
+
+	// Currently unused method
+	// END********************************************************************
+	/**
+	 * Loads all Notifications from the database
+	 * 
+	 */
+	public void loadNotifications() {
+		setNotificationList(DBNotification.loadNotification());
 	}
 
 	/**
@@ -191,10 +202,39 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param selectedNotification the selectedNotification to set
+	 * @param selectedNotification
+	 *            the selectedNotification to set
 	 */
 	public void setSelectedNotification(Notification selectedNotification) {
 		this.selectedNotification = selectedNotification;
+	}
+
+	/**
+	 * @return the selectedMessage
+	 */
+	public Notification getSelectedMessage() {
+		return selectedMessage;
+	}
+
+	/**
+	 * @param selectedMessage the selectedMessage to set
+	 */
+	public void setSelectedMessage(Notification selectedMessage) {
+		this.selectedMessage = selectedMessage;
+	}
+
+	/**
+	 * @return the strTimeStamp
+	 */
+	public String getStrTimeStamp() {
+		return strTimeStamp;
+	}
+
+	/**
+	 * @param strTimeStamp the strTimeStamp to set
+	 */
+	public void setStrTimeStamp(String strTimeStamp) {
+		this.strTimeStamp = strTimeStamp;
 	}
 	
 

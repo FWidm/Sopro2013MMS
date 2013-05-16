@@ -129,8 +129,8 @@
 
 				</p:layoutUnit>
 				<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
-					header="Delete" message="Delete this ?" width="400"
-					modal="true" closable="false" severity="alert">
+					header="Delete" message="Delete this ?" width="400" modal="true"
+					closable="false" severity="alert">
 					<h:panelGroup layout="block" style="text-align: right">
 						<p:commandButton value="Yes" action="#{CreateBean.deleteRow}"
 							oncomplete="deleteDlg.hide();"
@@ -209,8 +209,10 @@
 									</f:facet>
 									<f:facet name="input">
 										<h:selectOneMenu value="#{user.role}">
-											<f:selectItem itemLabel="Administrator" itemValue="Administrator" />
-											<f:selectItem itemLabel="Modulverantwortlicher" itemValue="Modulverantwortlicher" />
+											<f:selectItem itemLabel="Administrator"
+												itemValue="Administrator" />
+											<f:selectItem itemLabel="Modulverantwortlicher"
+												itemValue="Modulverantwortlicher" />
 											<f:selectItem itemLabel="Dezernat" itemValue="Dezernat" />
 											<f:selectItem itemLabel="Redakteur" itemValue="Redakteur" />
 										</h:selectOneMenu>
@@ -234,36 +236,35 @@
 			<p:layout style="min-width:400px;min-height:500px;"
 				id="notify-layout">
 
-				<p:layoutUnit position="west" resizable="true" size="215"
+				<p:layoutUnit position="west" resizable="true" size="400"
 					minSize="215" maxSize="400" header="Nachrichten" collapsible="true">
 					<h:form id="Notification-Panel">
 
-						<p:selectOneListbox id="list"
-							value="#{NotificationBean.selectedNotification}" var="n"
-							style="height:400px;width:200px">
-							<f:selectItems value="#{NotificationBean.notificationList}"
-								var="notification" itemLabel="#{notification.senderEmail}"
-								itemValue="#{notification}"
-								actionListener="#{NotificationBean.selectNotification}"
-								update=" :tabview-admin:notify-layout:message" />
+						<p:dataTable id="notifications" var="noti"
+							value="#{NotificationBean.notificationList}" scrollable="true"
+							rowKey="#{noti.timeStamp}" scrollHeight="400"
+							selection="#{NotificationBean.selectedNotification}"
+							selectionMode="single">
+							<p:ajax event="rowSelect"
+							update=":tabview-admin:notify-layout" />
 
 							<p:column>
-								<p:graphicImage value="/Image/Notification/#{n.status}.png"
+								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
-							</p:column>
-							<p:column>
-								#{n.senderEmail} - #{n.status} 
-							</p:column>
+									 #{noti.senderEmail} 								
+							</p:column>						
 
-						</p:selectOneListbox>
+						</p:dataTable>
+
 					</h:form>
 				</p:layoutUnit>
 
-				<p:layoutUnit position="center" header="Adminpanel">
-					<h:outputText value="Nachricht: " />
+				<p:layoutUnit position="center"
+					header="Date: #{NotificationBean.selectedNotification.timeStamp} 
+				Sender: #{NotificationBean.selectedNotification.senderEmail} 
+				Action: #{NotificationBean.selectedNotification.action}">
 					<h:outputText id="message"
 						value="#{NotificationBean.selectedNotification.message}" />
-
 				</p:layoutUnit>
 
 			</p:layout>
