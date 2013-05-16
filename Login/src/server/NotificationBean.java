@@ -17,6 +17,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.event.SelectEvent;
+
 import ctrl.DBField;
 import ctrl.DBNotification;
 import ctrl.DBUser;
@@ -46,6 +48,17 @@ public class NotificationBean {
 	 */
 	private void actualizeNotificationList() {
 		setNotificationList(DBNotification.loadNotification());
+	}
+	/**
+	 * Clicking on the tablerow sets isRead to true
+	 */
+	public void selectedNotificationIsRead(SelectEvent e) {
+		System.out.println("isRead");
+
+		if (selectedNotification != null) {
+			DBNotification.updateNotificationIsRead(getSelectedNotification());
+		} else
+			System.out.println("null");
 	}
 	
 	/**

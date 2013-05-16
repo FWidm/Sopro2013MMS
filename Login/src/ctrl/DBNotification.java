@@ -11,13 +11,6 @@ import java.util.List;
 import data.Notification;
 
 public class DBNotification extends DBManager {
-	/**
-	 * Formats a timestamp
-	 */
-	static java.util.Date dt = new java.util.Date();
-
-	static java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss.0");
 
 	/**
 	 * Save a notification to the database
@@ -33,7 +26,7 @@ public class DBNotification extends DBManager {
 					+ notif.getRecipientEmail() + "', '"
 					+ notif.getSenderEmail() + "', current_timestamp" + ", '"
 					+ notif.getMessage() + "', '" + notif.getAction() + "', '"
-					+ notif.getStatus() + "')";
+					+ notif.getStatus() + "', " + 0 + ")";
 			System.out.println(update);
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
@@ -85,6 +78,39 @@ public class DBNotification extends DBManager {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Update a specific notification to isRead = true
+	 * 
+	 * @param notif
+	 * 
+	 */
+	public static void updateNotificationIsRead(Notification notif) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE notification SET isRead = "
+					+ true  
+					+ " WHERE recipientEmail = '" + notif.getRecipientEmail() + "' AND "
+					+ "senderEmail = '" + notif.getSenderEmail() + "' AND "
+					+ " timeStamp = '" + (Timestamp) notif.getTimeStamp() +"';";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Update a specific notification
@@ -103,12 +129,12 @@ public class DBNotification extends DBManager {
 			String update = "UPDATE notification SET recipientEmail = '"
 					+ notif.getRecipientEmail() + "', senderEmail = '"
 					+ notif.getSenderEmail() + "', timeStamp = '"
-					+ notif.getTimeStamp() + "', message = '"
+					+ (Timestamp) notif.getTimeStamp() + "', message = '"
 					+ notif.getMessage() + "', action = '" + notif.getAction()
 					+ "', " + "status= '" + notif.getStatus() + "' ,'"
 					+ "WHERE recipientEmail = '" + recipientEmail + "' AND "
 					+ "senderEmail = '" + senderEmail + "' AND "
-					+ " timeStamp = " + timeStamp;
+					+ " timeStamp = '" + (Timestamp) timeStamp +"';";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -141,7 +167,8 @@ public class DBNotification extends DBManager {
 			String update = "UPDATE notification SET status = 'declined' "
 					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
 					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
-					+ "' AND " + " timeStamp = '" + (Timestamp) notif.getTimeStamp() + "'";
+					+ "' AND " + " timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp() + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -150,7 +177,7 @@ public class DBNotification extends DBManager {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
 				System.out.println("COMMIT fehlgeschlagen - "
 						+ "Rollback durchgefuehrt");
-				
+
 			} finally {
 				closeQuietly(stmt);
 				closeQuietly(con); // Abbau Verbindung zur Datenbank
@@ -162,6 +189,7 @@ public class DBNotification extends DBManager {
 		}
 		return true;
 	}
+
 	/**
 	 * Update a specific notifications status to accepted
 	 * 
@@ -176,7 +204,8 @@ public class DBNotification extends DBManager {
 			String update = "UPDATE notification SET status = 'accepted' "
 					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
 					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
-					+ "' AND " + " timeStamp = '" + (Timestamp) notif.getTimeStamp() + "'";
+					+ "' AND " + " timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp() + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -185,7 +214,7 @@ public class DBNotification extends DBManager {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
 				System.out.println("COMMIT fehlgeschlagen - "
 						+ "Rollback durchgefuehrt");
-				
+
 			} finally {
 				closeQuietly(stmt);
 				closeQuietly(con); // Abbau Verbindung zur Datenbank
@@ -229,8 +258,10 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
+				boolean isRead = rs.getBoolean("isRead");
 
-				notif.add(new Notification(recEm, senEm, timS, mess, act, stat));
+				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
+						isRead));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -267,8 +298,10 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
+				boolean isRead = rs.getBoolean("isRead");
 
-				notif.add(new Notification(recEm, senEm, timS, mess, act, stat));
+				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
+						isRead));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -298,8 +331,10 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
+				boolean isRead = rs.getBoolean("isRead");
 
-				notif.add(new Notification(recEm, senEm, timS, mess, act, stat));
+				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
+						isRead));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -323,11 +358,11 @@ public class DBNotification extends DBManager {
 					+ recipientEmail
 					+ "' AND "
 					+ "senderEmail = '"
-					+ senderEmail + "'"
-					// + "' AND "
-					// + "timeStamp = "
-					// + timeStamp
-					+ ";";
+					+ senderEmail
+					+ "'"
+					+ "' AND "
+					+ "timeStamp = "
+					+ (Timestamp) timeStamp + ";";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -338,8 +373,10 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
+				boolean isRead = rs.getBoolean("isRead");
 
-				notif = new Notification(recEm, senEm, timS, mess, act, stat);
+				notif = new Notification(recEm, senEm, timS, mess, act, stat,
+						isRead);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -355,7 +392,7 @@ public class DBNotification extends DBManager {
 	public static void main(String[] args) {
 		Notification notif = new Notification("test3", "test4", new Timestamp(
 				System.currentTimeMillis()), "Edited: Modulverantwortlicher",
-				"edit", "ausstehend");
+				"edit", "queued", false);
 		saveNotification(notif);
 		System.out.println("saved");
 		List<Notification> notifs = loadNotification("test3", "test4");

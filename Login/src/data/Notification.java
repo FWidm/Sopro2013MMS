@@ -9,6 +9,8 @@ public class Notification {
 	private String message;
 	private String action;
 	private String status;
+	private boolean isRead;
+
 	/**
 	 * @param recipientEmail
 	 * @param senderEmail
@@ -16,9 +18,11 @@ public class Notification {
 	 * @param message
 	 * @param action
 	 * @param status
+	 * @param isRead
 	 */
 	public Notification(String recipientEmail, String senderEmail,
-			Timestamp timeStamp, String message, String action, String status) {
+			Timestamp timeStamp, String message, String action, String status,
+			boolean isRead) {
 		super();
 		this.recipientEmail = recipientEmail;
 		this.senderEmail = senderEmail;
@@ -26,6 +30,7 @@ public class Notification {
 		this.message = message;
 		this.action = action;
 		this.status = status;
+		this.isRead = isRead;
 	}
 	/**
 	 * @return the recipientEmail
@@ -98,6 +103,18 @@ public class Notification {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	/**
+	 * @return the isRead
+	 */
+	public boolean isRead() {
+		return isRead;
+	}
+	/**
+	 * @param isRead the isRead to set
+	 */
+	public void setRead(boolean isRead) {
+		this.isRead = isRead;
 	}
 	
 	
