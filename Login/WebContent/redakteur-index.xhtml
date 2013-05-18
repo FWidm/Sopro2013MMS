@@ -33,35 +33,35 @@
 					<p:layoutUnit position="west" resizable="true" size="215"
 						minSize="215" header="Modulelist" collapsible="true">
 
-						<p:menu id="back-menu" model="#{TemplateBean.backModel}" />
-						<p:menu id="list-menu" model="#{TemplateBean.model}" />
+						<p:menu id="back-menu" model="#{RedakteurBean.backModel}" />
+						<p:menu id="list-menu" model="#{RedakteurBean.model}" />
 
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center" id="content" header="Modulemanual">
 						<p:scrollPanel id="scrollPanel" mode="native"
 							style="min-width:400px; min-height:470px;">
-							<p:panel id="pnlTitle" header="#{TemplateBean.title}"
+							<p:panel id="pnlTitle" header="#{RedakteurBean.title}"
 								toggleable="true" toggleSpeed="500"
-								visible="#{TemplateBean.mainVisible}">
+								visible="#{RedakteurBean.mainVisible}">
 	
-								#{TemplateBean.description}
+								#{RedakteurBean.description}
 							
 							</p:panel>
 							<p:panel id="pnlEcts" header="Leistungspunkte und Lernziele"
 								toggleable="true" toggleSpeed="500"
-								visible="#{TemplateBean.ectsAimVisible}">
+								visible="#{RedakteurBean.ectsAimVisible}">
 
-								<strong>Leistungspunkte:</strong> #{TemplateBean.ects}<br />
+								<strong>Leistungspunkte:</strong> #{RedakteurBean.ects}<br />
 								<br />
-								<strong>Lernziele:</strong> #{TemplateBean.aim}
+								<strong>Lernziele:</strong> #{RedakteurBean.aim}
 	
 							</p:panel>
 							<p:panel id="pnlDescription" header="Zusaetzliche Informationen"
 								toggleable="true" toggleSpeed="500"
-								visible="#{TemplateBean.addInfoVisible}">
+								visible="#{RedakteurBean.addInfoVisible}">
 
-								<ui:repeat var="iterator" value="#{TemplateBean.fieldList}">
+								<ui:repeat var="iterator" value="#{RedakteurBean.fieldList}">
 									<strong>Titel: </strong>#{iterator.fieldTitle}<br />
 									<strong>Beschreibung: </strong>#{iterator.description}<br />
 									<br />
