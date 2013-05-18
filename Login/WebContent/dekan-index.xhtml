@@ -21,6 +21,7 @@
 			style="position:absolute; top:20px; right:20px;" />
 	</div>
 	<p:tabView id="outer-tabview">
+		<p:ajax event="tabChange" listener="#{DekanBean.onTabChange}" update=":outer-tabview:tabview-exRules:exRules-create-frame"/> 
 
 		<p:tab title="Module manual">
 			<p:tabView id="tabview-modManual">
@@ -249,6 +250,8 @@
 		<p:tab title="Examination Rules">		
 			<p:tabView id="tabview-exRules">
 			
+				
+				
 				<p:tab title="Create">
 					<!-- Begin of first tab // Start -->
 					<p:layout style="min-width:400px;min-height:500px;"

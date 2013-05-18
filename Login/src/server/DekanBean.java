@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.TabChangeEvent;
 
 import ctrl.DBExRules;
 import ctrl.DBModManual;
@@ -54,6 +55,13 @@ public class DekanBean {
 		exRulesList = new LinkedList<ExRules>();
 		exRulesList = DBExRules.loadAllExRules();
 	}
+	
+	public void onTabChange(TabChangeEvent event) {  
+        FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: " + event.getTab().getTitle());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+        System.out.println("Tab Changed!");
+    }
 	
 	/**
 	 * reset modManTitle, description, deadline and exRulesTitle
