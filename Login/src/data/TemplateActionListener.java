@@ -31,7 +31,7 @@ public class TemplateActionListener implements ActionListener {
 			
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();
-			backSubmenu.setLabel("Zurück zu:");
+			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
 			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
@@ -66,7 +66,7 @@ public class TemplateActionListener implements ActionListener {
 			
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();
-			backSubmenu.setLabel("Zurück zu:");
+			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
 			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
@@ -107,7 +107,7 @@ public class TemplateActionListener implements ActionListener {
 			
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();
-			backSubmenu.setLabel("Zurück zu:");
+			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
 			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
@@ -150,7 +150,7 @@ public class TemplateActionListener implements ActionListener {
 		else {
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();
-			backSubmenu.setLabel("Zurück zu:");
+			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
 			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
