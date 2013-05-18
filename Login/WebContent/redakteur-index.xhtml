@@ -11,7 +11,7 @@
 	<title>Redakteur</title>
 
 	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/Redakteur.css" />
 
 </h:head>
 
@@ -25,6 +25,7 @@
 		<p:tabView scrollable="true">
 			<!-- TabView -->
 			<p:tab title="Start" id="tabStart">
+
 				<!-- Begin of first tab // Start -->
 				<p:layout
 					style="min-width:800px; min-height:600px; max-height:600px;"
@@ -52,7 +53,7 @@
 								toggleable="true" toggleSpeed="500"
 								visible="#{RedakteurBean.ectsAimVisible}">
 
-								<strong>Leistungspunkte:</strong> #{RedakteurBean.ects}<br />
+								<strong>leistungspunkte:</strong> #{RedakteurBean.ects}<br />
 								<br />
 								<strong>Lernziele:</strong> #{RedakteurBean.aim}
 	

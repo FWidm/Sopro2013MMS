@@ -14,7 +14,7 @@ import data.Field;
 import data.ModManual;
 import data.Module;
 import data.Subject;
-import data.TemplateActionListener;
+import data.RedakteurActionListener;
 
 @ManagedBean(name = "RedakteurBean")
 @SessionScoped
@@ -53,7 +53,7 @@ public class RedakteurBean {
 			m.setValue(exRulesList.get(i).getExRulesTitle());
 			m.setAjax(true);
 			m.setUpdate(UPDATE_AJAX);
-			m.addActionListener(new TemplateActionListener());
+			m.addActionListener(new RedakteurActionListener());
 			submenu.getChildren().add(m);
 		}
 		model.addSubmenu(submenu);
