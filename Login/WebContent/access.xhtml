@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+	<title>Zuweisungs Panel</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.css" />
+	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/mms.css" />
+
+</h:head>
+
+<h:body>
+	<!-- body -->
+	<div style="height: 120px;">
+		<p:graphicImage value="/Image/logo_100_sw.jpg"
+			style="position:absolute; top:20px; right:20px;" />
+	</div>
+
+	<h:form id="form">
+		<p:dialog id="reviewDialog" appendToBody="true"
+			header="Selected Details for '#{AccessBean.selected.email}'"
+			showEffect="fade" widgetVar="reviewDialog" modal="true">
+			<p:outputPanel id="documentPanel">
+				
+					<div style="margin: 10px;">
+						<!-- show details -->
+						<h4>Vorhandene Zuteilungen:</h4>
+						<ui:repeat var="iterator" value="#{AccessBean.modAccList}">
+						<ul>
+							<li>#{iterator.modTitle}</li>
+						</ul>
+						</ui:repeat>
+						<br/>
+						<h4>Neue Hinzuf&uuml;en:</h4>
+						<!-- Value is not saved in selectedAccess -->
+						<p:selectOneMenu value="#{AccessBean.selectedAccess}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems itemValue="#{AccessBean.modTitleList}" value="#{AccessBean.modTitleList}"/>
+						</p:selectOneMenu>
+					</div>
+				
+			</p:outputPanel>
+			<br />
+			
+			<p:commandButton id="confirm" value="Accept Changes"
+				actionListener="#{AccessBean.acceptChanges}"
+				update=":form:tabview-zuweisung:users :form:tabview-zuweisung:messages-access"
+				oncomplete="reviewDialog.hide()" />
+			<p:commandButton id="decline" value="Not Yet"
+				onclick="reviewDialog.hide()" type="button" />
+		</p:dialog>
+		<p:tabView id="tabview-zuweisung">
+			<!-- Dialog to review access -->
+
+			<!-- TabView -->
+			<p:tab title="User Access">
+
+				<p:layout style="min-width:400px;min-height:500px;"
+					id="changes-layout">
+
+					<p:layoutUnit id="changeAccess" position="center">
+						<p:dataTable id="users" var="user" value="#{AccessBean.userList}"
+							scrollable="true" rowKey="#{user.email}" scrollHeight="250"
+							selection="#{AccessBean.selected}" selectionMode="single">
+							<p:column headerText="Name" footerText="" style="width:24%">
+								<h:outputText value="#{user.name}" />
+							</p:column>
+							<p:column headerText="Vorname" footerText="" style="width:24%">
+								<h:outputText value="#{user.firstname}" />
+							</p:column>
+							<p:column headerText="Email" footerText="" style="width:24%">
+								<h:outputText value="#{user.email}" />
+							</p:column>
+							<p:column headerText="Rolle" footerText="" style="width:24%">
+								<h:outputText value="#{user.role}" />
+							</p:column>
+							<f:facet name="footer">
+								<div align="right">
+									<p:commandButton value="review" icon="ui-icon-search"
+										actionListener="#{AccessBean.loadAccess}"
+										update=":form:reviewDialog" oncomplete="reviewDialog.show();" />
+								</div>
+							</f:facet>
+						</p:dataTable>
+
+						<p:messages id="messages-access" for="messages-access"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</p:layoutUnit>
+
+				</p:layout>
+
+			</p:tab>
+		</p:tabView>
+		<!-- End TabView -->
+	</h:form>
+</h:body>
+<!-- End body -->
+
+</html>

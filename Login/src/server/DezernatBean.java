@@ -31,8 +31,8 @@ public class DezernatBean {
 
 		for (Subject s : subjectList) {
 			s.getSubTitle();
-			if(!DBField.loadFieldforDezernat(s.getSubTitle()).isEmpty()){
-				fieldList = DBField.loadFieldforDezernat(s.getSubTitle());
+			if(!DBField.loadFieldbySubjectTitle(s.getSubTitle()).isEmpty()){
+				fieldList = DBField.loadFieldbySubjectTitle(s.getSubTitle());
 			}
 			
 			Map.put(s, fieldList);
@@ -46,7 +46,7 @@ public class DezernatBean {
 		
 		if(selected!=null){
 			System.out.println(selected.getSubTitle());
-			fieldList=DBField.loadFieldforDezernat(selected.getSubTitle());
+			fieldList=DBField.loadFieldbySubjectTitle(selected.getSubTitle());
 		}
 	}
 	

@@ -68,7 +68,7 @@ public class RedakteurBean {
 	 */
 	public void handleSubject(Subject sub) {
 		// TODO Paste your event handling here
-		fieldList = DBField.loadFieldforDezernat(sub.getSubTitle());
+		fieldList = DBField.loadFieldbySubjectTitle(sub.getSubTitle());
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());

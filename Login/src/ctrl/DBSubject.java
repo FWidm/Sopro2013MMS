@@ -157,7 +157,14 @@ public class DBSubject extends DBManager {
 		}
 		return sub;
 	}
-	
+
+	/**
+	 * load subjects by version and modTitle
+	 * 
+	 * @param version
+	 * @param modTitle
+	 * @return
+	 */
 	public static List<Subject> loadSubject(int version, String modTitle) {
 		List<Subject> subs = new LinkedList<Subject>();
 		Connection con = null;
@@ -190,13 +197,10 @@ public class DBSubject extends DBManager {
 		}
 		return subs;
 	}
-	
-	public static void main(String[] args) {
-		List<Subject> modMans = loadSubject(0, "Algorithmen und Datenstrukturen");
-		System.out.println(modMans.get(0).getSubTitle());
-	}
+
 	/**
 	 * get all previously unchecked subjects
+	 * 
 	 * @return
 	 */
 	public static List<Subject> loadSubjectsforDezernat() {
@@ -205,7 +209,88 @@ public class DBSubject extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM subject WHERE ack=FALSE";
+
+			String query="SELECT subTitle,modtitle,description,aim,ects,id,ack, max(version) AS 'version'"
+					+ " FROM subject WHERE ack=FALSE GROUP BY subTitle";
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				int ver = rs.getInt("version");
+				String subT = rs.getString("subTitle");
+				String modT = rs.getString("modTitle");
+				String desc = rs.getString("description");
+				String aim = rs.getString("aim");
+				int ects = rs.getInt("ects");
+				boolean ack = rs.getBoolean("ack");
+
+				subs.add(new Subject(ver, subT, modT, desc, aim, ects, ack));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return subs;
+	}
+
+	/**
+	 * update a subjects ack field
+	 * 
+	 * @param b
+	 * @param version
+	 * @param subTitle
+	 * @param modTitle
+	 * @return
+	 */
+	public static boolean updateSubjectAck(boolean b, int version,
+			String subTitle, String modTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+
+			String update = "UPDATE subject SET ack=" + b + " WHERE version = "
+					+ version + " AND " + "subTitle = '" + subTitle + "' AND "
+					+ " modTitle = '" + modTitle + "'";
+			System.out.println(update);
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Load the newest subjects (max version) SELECT
+	 * subTitle,modtitle,description,aim,ects,id,ack, max(version) FROM subject
+	 * GROUP BY subTitle
+	 * 
+	 * @return
+	 */
+	public static List<Subject> loadSubjects() {
+		List<Subject> subs = new LinkedList<Subject>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT subTitle,modtitle,description,aim,ects,id,ack, max(version) AS 'version'"
+					+ " FROM subject GROUP BY subTitle";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -231,35 +316,9 @@ public class DBSubject extends DBManager {
 		return subs;
 	}
 
-	public static boolean updateSubjectAck(boolean b, int version,
-			String subTitle, String modTitle) {
-		Connection con = null;
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-
-			String update = "UPDATE subject SET ack="+ b
-					+ " WHERE version = " + version + " AND " + "subTitle = '"
-					+ subTitle + "' AND " + " modTitle = '" + modTitle + "'";
-			System.out.println(update);
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen - "
-						+ "Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+	public static void main(String[] args) {
+		List<Subject> modMans = loadSubject(0,
+				"Algorithmen und Datenstrukturen");
+		System.out.println(modMans.get(0).getSubTitle());
 	}
-	
 }

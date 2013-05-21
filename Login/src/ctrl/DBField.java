@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import data.Field;
+
 /**
  * @author Fabian
  * 
@@ -46,9 +47,12 @@ public class DBField extends DBManager {
 	}
 
 	/**
-	 * Delete an user based on it's unique email adress
+	 * delete a specific field by all its attributes
 	 * 
-	 * @param email
+	 * @param fieldTitle
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
 	 */
 	public static void deleteField(String fieldTitle, int subjectversion,
 			String subjectsubTitle, String subjectmodTitle) {
@@ -80,11 +84,13 @@ public class DBField extends DBManager {
 	}
 
 	/**
-	 * Update a specific Field (identified by modtitle, version and subtitle)
-	 * with the data from the user object.
+	 * Update a specific field with new attributes
 	 * 
-	 * @param u
-	 * @param email
+	 * @param f
+	 * @param fieldTitle
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
 	 */
 	public static void updateField(Field f, String fieldTitle,
 			int subjectversion, String subjectsubTitle, String subjectmodTitle) {
@@ -116,11 +122,16 @@ public class DBField extends DBManager {
 		}
 	}
 
+	// TODO Remove this, it is kinda pointless to load a module where already
+	// all attributes are known?
 	/**
-	 * loads a user based on the specific email adress
+	 * load a field based on all its attributes...
 	 * 
-	 * @param mail
-	 * @return u
+	 * @param fieldTitle
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
+	 * @return
 	 */
 	public static Field loadField(String fieldTitle, int subjectversion,
 			String subjectsubTitle, String subjectmodTitle) {
@@ -156,35 +167,84 @@ public class DBField extends DBManager {
 		return f;
 	}
 
-	public static List<Field> loadFieldforDezernat(String subT) {
-			List<Field> fields = new LinkedList<Field>();
-			Connection con = null;
-			try {
-				con = openConnection();
-				Statement stmt = con.createStatement();
-				String query = "SELECT * FROM field  WHERE subTitle = '"+subT+"'";
+	/**
+	 * load fields for a specific subTitle
+	 * 
+	 * @param subT
+	 * @return
+	 */
+	public static List<Field> loadFieldbySubjectTitle(String subT) {
+		List<Field> fields = new LinkedList<Field>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM field  WHERE subTitle = '" + subT
+					+ "'";
 
-				ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = stmt.executeQuery(query);
 
-				while (rs.next()) {
-					String fTitle = rs.getString("fieldTitle");
-					int version = Integer.parseInt(rs.getString("version"));
-					String subTitle = rs.getString("subTitle");
-					String modTitle = rs.getString("modTitle");
-					String description = rs.getString("description");
+			while (rs.next()) {
+				String fTitle = rs.getString("fieldTitle");
+				int version = Integer.parseInt(rs.getString("version"));
+				String subTitle = rs.getString("subTitle");
+				String modTitle = rs.getString("modTitle");
+				String description = rs.getString("description");
 
-					fields.add(new Field(fTitle, version, subTitle, modTitle, description));
-				}
-				closeQuietly(rs);
-				closeQuietly(stmt);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				closeQuietly(con);
+				fields.add(new Field(fTitle, version, subTitle, modTitle,
+						description));
 			}
-			return fields;
-		
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return fields;
+
+	}
+
+	/**
+	 * loads all fields for specified module and version and name of a subject
+	 * 
+	 * @param modTitle
+	 * @param version
+	 * @param subTite
+	 * @return
+	 */
+	public static List<Field> loadFieldList(String modTitle, int version,
+			String subTite) {
+		List<Field> f = new LinkedList<Field>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM field  WHERE modTitle = '" + modTitle
+					+ "' AND version = " + version + " AND subTitle = '"
+					+ subTite + "'";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String fTitle = rs.getString("fieldTitle");
+				int ver = Integer.parseInt(rs.getString("version"));
+				String subTitle = rs.getString("subTitle");
+				String mod = rs.getString("modTitle");
+				String description = rs.getString("description");
+
+				f.add(new Field(fTitle, ver, subTitle, mod, description));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return f;
 	}
 
 }
