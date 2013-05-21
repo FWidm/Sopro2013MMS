@@ -91,7 +91,7 @@ public class PdfBox {
 			System.out.println("height/width: "
 					+ page.getMediaBox().getHeight() + " / "
 					+ page.getMediaBox().getWidth());
-			printLine(content, "Universit�t Ulm - MMS: ", headX, headY, 16);
+			printLine(content, "Universität Ulm - MMS: ", headX, headY, 16);
 
 			content.drawLine(headX, headY - 5,
 					page.getMediaBox().getWidth() - 50, headY - 5);
