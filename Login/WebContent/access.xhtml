@@ -24,38 +24,6 @@
 	</div>
 
 	<h:form id="form">
-		<p:dialog id="reviewDialog" appendToBody="true"
-			header="Selected Details for '#{AccessBean.selected.email}'"
-			showEffect="fade" widgetVar="reviewDialog" modal="true">
-			<p:outputPanel id="documentPanel">
-				
-					<div style="margin: 10px;">
-						<!-- show details -->
-						<h4>Vorhandene Zuteilungen:</h4>
-						<ui:repeat var="iterator" value="#{AccessBean.modAccList}">
-						<ul>
-							<li>#{iterator.modTitle}</li>
-						</ul>
-						</ui:repeat>
-						<br/>
-						<h4>Neue Hinzuf&uuml;en:</h4>
-						<!-- Value is not saved in selectedAccess -->
-						<p:selectOneMenu value="#{AccessBean.selectedAccess}">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems itemValue="#{AccessBean.modTitleList}" value="#{AccessBean.modTitleList}"/>
-						</p:selectOneMenu>
-					</div>
-				
-			</p:outputPanel>
-			<br />
-			
-			<p:commandButton id="confirm" value="Accept Changes"
-				actionListener="#{AccessBean.acceptChanges}"
-				update=":form:tabview-zuweisung:users :form:tabview-zuweisung:messages-access"
-				oncomplete="reviewDialog.hide()" />
-			<p:commandButton id="decline" value="Not Yet"
-				onclick="reviewDialog.hide()" type="button" />
-		</p:dialog>
 		<p:tabView id="tabview-zuweisung">
 			<!-- Dialog to review access -->
 
@@ -66,32 +34,30 @@
 					id="changes-layout">
 
 					<p:layoutUnit id="changeAccess" position="center">
-						<p:dataTable id="users" var="user" value="#{AccessBean.userList}"
-							scrollable="true" rowKey="#{user.email}" scrollHeight="250"
-							selection="#{AccessBean.selected}" selectionMode="single">
-							<p:column headerText="Name" footerText="" style="width:24%">
-								<h:outputText value="#{user.name}" />
-							</p:column>
-							<p:column headerText="Vorname" footerText="" style="width:24%">
-								<h:outputText value="#{user.firstname}" />
-							</p:column>
-							<p:column headerText="Email" footerText="" style="width:24%">
-								<h:outputText value="#{user.email}" />
-							</p:column>
-							<p:column headerText="Rolle" footerText="" style="width:24%">
-								<h:outputText value="#{user.role}" />
-							</p:column>
-							<f:facet name="footer">
-								<div align="right">
-									<p:commandButton value="review" icon="ui-icon-search"
-										actionListener="#{AccessBean.loadAccess}"
-										update=":form:reviewDialog" oncomplete="reviewDialog.show();" />
-								</div>
-							</f:facet>
-						</p:dataTable>
+					
+						<table class="admin-edit-t" width="250" border="0" cellpadding="2">
+							<tr>
+								<td><h:outputText value="Module" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUser}">
+										<f:selectItem itemLabel="Select One User" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.userList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
 
-						<p:messages id="messages-access" for="messages-access"
-							showDetail="true" autoUpdate="true" closable="true" />
+							<tr>
+								<td><h:outputText value="Module" /> <p:selectOneMenu
+										value="#{AccessBean.selectedAccess}">
+										<f:selectItem itemLabel="Select One Module" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.modTitleList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{AccessBean.acceptChanges}" value="sysout" /></td>
+							</tr>
+						</table>
 					</p:layoutUnit>
 
 				</p:layout>
