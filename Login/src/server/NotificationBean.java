@@ -9,8 +9,14 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.TabChangeEvent;
 
+import data.Editable;
+import data.ExRules;
+import data.Field;
+import data.ModManual;
 import data.ModificationNotification;
+import data.Module;
 import data.Notification;
+import data.Subject;
 import data.User;
 
 import java.util.LinkedList;
@@ -37,7 +43,15 @@ public class NotificationBean {
 	private List<ModificationNotification> notificationList;
 	private ModificationNotification selectedNotification;
 	private ModificationNotification selectedMessage;
+	Editable selectedEditableAfter, selectedEditableBefore;
 	private String strTimeStamp;
+	
+	//variables for editable before & after
+	private String title, description, ects, aim;
+	private boolean mainVisible, ectsAimVisible, addInfoVisible;
+	private String title2, description2, ects2, aim2;
+	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
+	List<Field> fieldList, fieldList2;
 
 	@PostConstruct
 	void init() {
@@ -275,6 +289,79 @@ public class NotificationBean {
 	public void setSelectedNotification(
 			ModificationNotification selectedNotification) {
 		this.selectedNotification = selectedNotification;
+		selectedEditableAfter = selectedNotification.getModification().getAfter();
+		selectedEditableBefore = selectedNotification.getModification().getBefore();
+		if(selectedEditableAfter instanceof Subject || selectedEditableBefore instanceof Subject) {
+			//After
+			Subject sub = (Subject) selectedEditableAfter;
+			fieldList = DBField.loadFieldbySubjectTitle(sub.getSubTitle());
+			title = sub.getSubTitle();
+			description = sub.getDescription();
+			ects = String.valueOf(sub.getEcts());
+			aim = sub.getAim();
+			mainVisible = true;
+			ectsAimVisible = true;
+			addInfoVisible = true;
+			System.out.println(description);
+			//Before
+			Subject sub2 = (Subject) selectedEditableBefore;
+			fieldList2 = DBField.loadFieldbySubjectTitle(sub2.getSubTitle());
+			title2 = sub2.getSubTitle();
+			description2 = sub2.getDescription();
+			ects2 = String.valueOf(sub2.getEcts());
+			aim2 = sub2.getAim();
+			mainVisible2 = true;
+			ectsAimVisible2 = true;
+			addInfoVisible2 = true;
+		}
+		else if(selectedEditableAfter instanceof Module && selectedEditableBefore instanceof Module) {
+			//After
+			Module mod = (Module) selectedEditableAfter;
+			title = mod.getModTitle();
+			description = mod.getDescription();
+			mainVisible = true;
+			ectsAimVisible = false;
+			addInfoVisible = false;
+			//Before
+			Module mod2 = (Module) selectedEditableBefore;
+			title2 = mod2.getModTitle();
+			description2 = mod2.getDescription();
+			mainVisible2 = true;
+			ectsAimVisible2 = false;
+			addInfoVisible2 = false;
+		}
+		else if(selectedEditableAfter instanceof ModManual && selectedEditableBefore instanceof ModManual) {
+			//After
+			ModManual modMan = (ModManual) selectedEditableAfter;
+			title = modMan.getModManTitle();
+			description = modMan.getDescription();
+			mainVisible = true;
+			ectsAimVisible = false;
+			addInfoVisible = false;
+			//Before
+			ModManual modMan2 = (ModManual) selectedEditableBefore;
+			title2 = modMan2.getModManTitle();
+			description2 = modMan2.getDescription();
+			mainVisible2 = true;
+			ectsAimVisible2 = false;
+			addInfoVisible2 = false;
+		}
+		else if(selectedEditableAfter instanceof ExRules && selectedEditableBefore instanceof ExRules) {
+			//After
+			ExRules rule = (ExRules) selectedEditableAfter;
+			title = rule.getExRulesTitle();
+			description = "";
+			mainVisible = true;
+			ectsAimVisible = false;
+			addInfoVisible = false;
+			//Before
+			ExRules rule2 = (ExRules) selectedEditableBefore;
+			title2 = rule2.getExRulesTitle();
+			description2 = "";
+			mainVisible2 = true;
+			ectsAimVisible2 = false;
+			addInfoVisible2 = false;
+		}
 	}
 
 	/**
@@ -303,6 +390,258 @@ public class NotificationBean {
 	 */
 	public void setStrTimeStamp(String strTimeStamp) {
 		this.strTimeStamp = strTimeStamp;
+	}
+
+	/**
+	 * @return the selectedEditableAfter
+	 */
+	public Editable getSelectedEditableAfter() {
+		return selectedEditableAfter;
+	}
+
+	/**
+	 * @param selectedEditableAfter the selectedEditableAfter to set
+	 */
+	public void setSelectedEditableAfter(Editable selectedEditableAfter) {
+		this.selectedEditableAfter = selectedEditableAfter;
+	}
+
+	/**
+	 * @return the selectedEditableBefore
+	 */
+	public Editable getSelectedEditableBefore() {
+		return selectedEditableBefore;
+	}
+
+	/**
+	 * @param selectedEditableBefore the selectedEditableBefore to set
+	 */
+	public void setSelectedEditableBefore(Editable selectedEditableBefore) {
+		this.selectedEditableBefore = selectedEditableBefore;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the ects
+	 */
+	public String getEcts() {
+		return ects;
+	}
+
+	/**
+	 * @param ects the ects to set
+	 */
+	public void setEcts(String ects) {
+		this.ects = ects;
+	}
+
+	/**
+	 * @return the aim
+	 */
+	public String getAim() {
+		return aim;
+	}
+
+	/**
+	 * @param aim the aim to set
+	 */
+	public void setAim(String aim) {
+		this.aim = aim;
+	}
+
+	/**
+	 * @return the mainVisible
+	 */
+	public boolean isMainVisible() {
+		return mainVisible;
+	}
+
+	/**
+	 * @param mainVisible the mainVisible to set
+	 */
+	public void setMainVisible(boolean mainVisible) {
+		this.mainVisible = mainVisible;
+	}
+
+	/**
+	 * @return the ectsAimVisible
+	 */
+	public boolean isEctsAimVisible() {
+		return ectsAimVisible;
+	}
+
+	/**
+	 * @param ectsAimVisible the ectsAimVisible to set
+	 */
+	public void setEctsAimVisible(boolean ectsAimVisible) {
+		this.ectsAimVisible = ectsAimVisible;
+	}
+
+	/**
+	 * @return the addInfoVisible
+	 */
+	public boolean isAddInfoVisible() {
+		return addInfoVisible;
+	}
+
+	/**
+	 * @param addInfoVisible the addInfoVisible to set
+	 */
+	public void setAddInfoVisible(boolean addInfoVisible) {
+		this.addInfoVisible = addInfoVisible;
+	}
+
+	/**
+	 * @return the title2
+	 */
+	public String getTitle2() {
+		return title2;
+	}
+
+	/**
+	 * @param title2 the title2 to set
+	 */
+	public void setTitle2(String title2) {
+		this.title2 = title2;
+	}
+
+	/**
+	 * @return the description2
+	 */
+	public String getDescription2() {
+		return description2;
+	}
+
+	/**
+	 * @param description2 the description2 to set
+	 */
+	public void setDescription2(String description2) {
+		this.description2 = description2;
+	}
+
+	/**
+	 * @return the ects2
+	 */
+	public String getEcts2() {
+		return ects2;
+	}
+
+	/**
+	 * @param ects2 the ects2 to set
+	 */
+	public void setEcts2(String ects2) {
+		this.ects2 = ects2;
+	}
+
+	/**
+	 * @return the aim2
+	 */
+	public String getAim2() {
+		return aim2;
+	}
+
+	/**
+	 * @param aim2 the aim2 to set
+	 */
+	public void setAim2(String aim2) {
+		this.aim2 = aim2;
+	}
+
+	/**
+	 * @return the mainVisible2
+	 */
+	public boolean isMainVisible2() {
+		return mainVisible2;
+	}
+
+	/**
+	 * @param mainVisible2 the mainVisible2 to set
+	 */
+	public void setMainVisible2(boolean mainVisible2) {
+		this.mainVisible2 = mainVisible2;
+	}
+
+	/**
+	 * @return the ectsAimVisible2
+	 */
+	public boolean isEctsAimVisible2() {
+		return ectsAimVisible2;
+	}
+
+	/**
+	 * @param ectsAimVisible2 the ectsAimVisible2 to set
+	 */
+	public void setEctsAimVisible2(boolean ectsAimVisible2) {
+		this.ectsAimVisible2 = ectsAimVisible2;
+	}
+
+	/**
+	 * @return the addInfoVisible2
+	 */
+	public boolean isAddInfoVisible2() {
+		return addInfoVisible2;
+	}
+
+	/**
+	 * @param addInfoVisible2 the addInfoVisible2 to set
+	 */
+	public void setAddInfoVisible2(boolean addInfoVisible2) {
+		this.addInfoVisible2 = addInfoVisible2;
+	}
+
+	/**
+	 * @return the fieldList
+	 */
+	public List<Field> getFieldList() {
+		return fieldList;
+	}
+
+	/**
+	 * @param fieldList the fieldList to set
+	 */
+	public void setFieldList(List<Field> fieldList) {
+		this.fieldList = fieldList;
+	}
+
+	/**
+	 * @return the fieldList2
+	 */
+	public List<Field> getFieldList2() {
+		return fieldList2;
+	}
+
+	/**
+	 * @param fieldList2 the fieldList2 to set
+	 */
+	public void setFieldList2(List<Field> fieldList2) {
+		this.fieldList2 = fieldList2;
 	}
 
 }
