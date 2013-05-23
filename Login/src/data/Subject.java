@@ -1,6 +1,6 @@
 package data;
 
-public class Subject {
+public class Subject implements Editable{
 	
 	private int version; 
 	private String subTitle, modTitle, description, aim; 
@@ -109,6 +109,11 @@ public class Subject {
 	 */
 	public void setAck(boolean ack) {
 		this.ack = ack;
+	}
+	@Override
+	public Editable computeDifferences(Editable newEditable) {
+		// TODO Auto-generated method stub
+		return null;
 	} 
 	
 	

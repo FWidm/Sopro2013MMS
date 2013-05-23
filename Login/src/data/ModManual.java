@@ -2,7 +2,7 @@ package data;
 
 import java.util.Date;
 
-public class ModManual {
+public class ModManual implements Editable {
 
 	private String modManTitle, description, exRulesTitle;
 	private Date deadline;
@@ -91,6 +91,12 @@ public class ModManual {
 		return "ModManual [modManTitle=" + modManTitle + ", description="
 				+ description + ", exRulesTitle=" + exRulesTitle + ", deadline="
 				+ deadline + "]";
+	}
+
+	@Override
+	public Editable computeDifferences(Editable newEditable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

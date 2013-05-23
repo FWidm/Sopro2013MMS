@@ -8,7 +8,16 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
+import sun.security.jca.GetInstance.Instance;
+
+import data.Editable;
+import data.ExRules;
+import data.ModManual;
+import data.Modification;
+import data.ModificationNotification;
+import data.Module;
 import data.Notification;
+import data.Subject;
 
 public class DBNotification extends DBManager {
 
@@ -19,30 +28,128 @@ public class DBNotification extends DBManager {
 	 */
 	public static void saveNotification(Notification notif) {
 		Connection con = null;
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "INSERT INTO notification VALUES('"
-					+ notif.getRecipientEmail() + "', '"
-					+ notif.getSenderEmail() + "', current_timestamp" + ", '"
-					+ notif.getMessage() + "', '" + notif.getAction() + "', '"
-					+ notif.getStatus() + "', " + 0 + ")";
-			System.out.println(update);
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out
-						.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
+
+		// checks the instance of the Notification
+		if (notif instanceof ModificationNotification) {
+			ModificationNotification modNotif = (ModificationNotification) notif;
+			String update = "";
+
+			// checks the instance of the editable
+			if (modNotif.getModification().getBefore() instanceof ExRules) {
+				ExRules edit = (ExRules) modNotif.getModification().getBefore();
+				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, exRulesTitle) Values('"
+						+ notif.getRecipientEmail()
+						+ "', '"
+						+ notif.getSenderEmail()
+						+ "', current_timestamp"
+						+ ", '"
+						+ notif.getMessage()
+						+ "', '"
+						+ notif.getAction()
+						+ "', '"
+						+ notif.getStatus()
+						+ "', " + false + ", " + edit.getExRulesTitle() + ")";
+			} else if (modNotif.getModification().getBefore() instanceof ModManual) {
+				ModManual edit = (ModManual) modNotif.getModification()
+						.getBefore();
+				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ExRulesTitle, ModManTitle) Values('"
+						+ notif.getRecipientEmail()
+						+ "', '"
+						+ notif.getSenderEmail()
+						+ "', current_timestamp"
+						+ ", '"
+						+ notif.getMessage()
+						+ "', '"
+						+ notif.getAction()
+						+ "', '"
+						+ notif.getStatus()
+						+ "', "
+						+ false
+						+ ", "
+						+ edit.getExRulesTitle()
+						+ ", "
+						+ edit.getModManTitle() + ")";
+			} else if (modNotif.getModification().getBefore() instanceof Module) {
+				Module edit = (Module) modNotif.getModification().getBefore();
+				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modTitle) Values('"
+						+ notif.getRecipientEmail()
+						+ "', '"
+						+ notif.getSenderEmail()
+						+ "', current_timestamp"
+						+ ", '"
+						+ notif.getMessage()
+						+ "', '"
+						+ notif.getAction()
+						+ "', '"
+						+ notif.getStatus()
+						+ "', " + false + ", " + edit.getModTitle() + ")";
+			} else if (modNotif.getModification().getBefore() instanceof Subject) {
+				Subject edit = (Subject) modNotif.getModification().getBefore();
+				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ModTitle, SubTitle) Values('"
+						+ notif.getRecipientEmail()
+						+ "', '"
+						+ notif.getSenderEmail()
+						+ "', current_timestamp"
+						+ ", '"
+						+ notif.getMessage()
+						+ "', '"
+						+ notif.getAction()
+						+ "', '"
+						+ notif.getStatus()
+						+ "', "
+						+ false
+						+ ", "
+						+ edit.getModTitle()
+						+ ", "
+						+ edit.getSubTitle() + ")";
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				con = openConnection();
+				Statement stmt = con.createStatement();
+				System.out.println(update);
+				con.setAutoCommit(false);
+				stmt.executeUpdate(update);
+				try {
+					con.commit();
+				} catch (SQLException exc) {
+					con.rollback(); // bei Fehlschlag Rollback der Transaktion
+					System.out
+							.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
+				} finally {
+					closeQuietly(stmt);
+					closeQuietly(con); // Abbau Verbindung zur Datenbank
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (notif instanceof Notification) {
+			try {
+				con = openConnection();
+				Statement stmt = con.createStatement();
+				String update = "INSERT INTO notification VALUES('"
+						+ notif.getRecipientEmail() + "', '"
+						+ notif.getSenderEmail() + "', current_timestamp"
+						+ ", '" + notif.getMessage() + "', '"
+						+ notif.getAction() + "', '" + notif.getStatus()
+						+ "', " + 0 + ")";
+				System.out.println(update);
+				con.setAutoCommit(false);
+				stmt.executeUpdate(update);
+				try {
+					con.commit();
+				} catch (SQLException exc) {
+					con.rollback(); // bei Fehlschlag Rollback der Transaktion
+					System.out
+							.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
+				} finally {
+					closeQuietly(stmt);
+					closeQuietly(con); // Abbau Verbindung zur Datenbank
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -50,7 +157,7 @@ public class DBNotification extends DBManager {
 	 * Delete a notification based on it's unique recipientEmail,
 	 * senderEmail,timeStamp
 	 * 
-	 * @param sub
+	 * @param notif
 	 */
 	public static void deleteNotification(Notification notif) {
 		Connection con = null;
@@ -59,8 +166,8 @@ public class DBNotification extends DBManager {
 			Statement stmt = con.createStatement();
 			String update = "DELETE FROM notification WHERE recipientEmail = '"
 					+ notif.getRecipientEmail() + "' AND " + "senderEmail = '"
-					+ notif.getSenderEmail() + "' AND " + "timeStamp = "
-					+ notif.getTimeStamp();
+					+ notif.getSenderEmail() + "' AND " + "timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp() + "';";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -78,6 +185,41 @@ public class DBNotification extends DBManager {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Updates a specific notification if edited
+	 */
+	public static void updateNotificationEdit(Notification notif) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE notification SET isRead = " + false
+					+ ", status = 'queued'" + ", message = '"
+					+ notif.getMessage() + "', " + " action = 'Edit by "
+					+ notif.getSenderEmail() + "'"
+					+ " WHERE recipientEmail = '" + notif.getRecipientEmail()
+					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
+					+ "' AND " + " timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp() + "';";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Update a specific notification to isRead = true
 	 * 
@@ -89,11 +231,11 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET isRead = "
-					+ true  
-					+ " WHERE recipientEmail = '" + notif.getRecipientEmail() + "' AND "
-					+ "senderEmail = '" + notif.getSenderEmail() + "' AND "
-					+ " timeStamp = '" + (Timestamp) notif.getTimeStamp() +"';";
+			String update = "UPDATE notification SET isRead = " + true
+					+ " WHERE recipientEmail = '" + notif.getRecipientEmail()
+					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
+					+ "' AND " + " timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp() + "';";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -134,7 +276,7 @@ public class DBNotification extends DBManager {
 					+ "', " + "status= '" + notif.getStatus() + "' ,'"
 					+ "WHERE recipientEmail = '" + recipientEmail + "' AND "
 					+ "senderEmail = '" + senderEmail + "' AND "
-					+ " timeStamp = '" + (Timestamp) timeStamp +"';";
+					+ " timeStamp = '" + (Timestamp) timeStamp + "';";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -335,6 +477,63 @@ public class DBNotification extends DBManager {
 
 				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
 						isRead));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return notif;
+	}
+
+	public static List<ModificationNotification> loadModificationNotification() {
+		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM notification";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String recEm = rs.getString("recipientEmail");
+				String senEm = rs.getString("senderEmail");
+				Timestamp timS = rs.getTimestamp("timeStamp");
+				String mess = rs.getString("message");
+				String act = rs.getString("action");
+				String stat = rs.getString("status");
+				boolean isRead = rs.getBoolean("isRead");
+				String exRules = rs.getString("exRulesTitle");
+				String modMan = rs.getString("modManTitle");
+				String mod = rs.getString("modTitle");
+				String sub = rs.getString("subTitle");
+
+				if (exRules != null) {
+					if (modMan != null) {
+						// TODO add version for ModMan or not ;)
+					}
+					// TODO add version for ExRule or not ;)
+				} else if (mod != null) {
+					if (sub != null) {
+						int max = 0;
+						List<Subject> subjects = DBSubject
+								.loadSubject(sub, mod);
+						for (int i = 0; i < subjects.size(); i++) {
+							if (max < subjects.get(i).getVersion())
+								max = subjects.get(i).getVersion();
+						}
+						notif.add(new ModificationNotification(recEm, senEm,
+								timS, mess, act, stat, isRead,
+								new Modification(DBSubject.loadSubject(max - 1,
+										sub, mod), DBSubject.loadSubject(max,
+										sub, mod))));
+					}
+					// TODO add version for Module or not ;)
+				}
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);

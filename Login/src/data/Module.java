@@ -1,6 +1,6 @@
 package data;
 
-public class Module {
+public class Module implements Editable{
 	
 	private String modTitle;
 	private String description;
@@ -41,6 +41,12 @@ public class Module {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public Editable computeDifferences(Editable newEditable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

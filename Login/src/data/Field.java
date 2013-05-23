@@ -4,7 +4,7 @@ package data;
  * @author Fabian
  *
  */
-public class Field {
+public class Field implements Editable {
 	//TODO Achtung namen von DB != namen in der Klasse evtl Probelem
 	private String SubjectmodTitle;
 	private int Subjectversion;
@@ -108,6 +108,13 @@ public class Field {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+
+	@Override
+	public Editable computeDifferences(Editable newEditable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

@@ -169,7 +169,7 @@
 							style="max-width:1024px" scrollable="true" scrollHeight="250"
 							editable="true">
 							<!-- if emails should be updated to - do something in the listener method specified below
-							<p:ajax event="rowEditInit" listener="#{TemplateBean.testInit}"
+							<p:ajax event="rowEditInit" listener="#{ModuleExecutiveBean.testInit}"
                                 update=":form:messages" />
 							 -->
 							<p:ajax event="rowEdit" listener="#{CreateBean.onEdit}"
@@ -265,7 +265,7 @@
 										update=":tabview-admin:notify-layout" />
 									<p:commandButton value="accept" icon="ui-icon-check"
 										actionListener="#{NotificationBean.acceptSelectedNotification}"
-										update=":tabview-admin:notify-layout" />
+										update=":tabview-admin:notify-layout"/>
 								</div>
 							</f:facet>
 						</p:dataTable>

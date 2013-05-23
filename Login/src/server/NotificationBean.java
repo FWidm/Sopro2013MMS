@@ -5,10 +5,11 @@ import java.sql.Timestamp;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import org.primefaces.event.TabChangeEvent;
 
-import javax.faces.application.FacesMessage;  
-import javax.faces.context.FacesContext;  
-import org.primefaces.event.TabChangeEvent; 
+import data.ModificationNotification;
 import data.Notification;
 import data.User;
 
@@ -33,22 +34,23 @@ public class NotificationBean {
 	private String message;
 	private String action;
 	private String status;
-	private List<Notification> notificationList;
-	private Notification selectedNotification;
-	private Notification selectedMessage;
+	private List<ModificationNotification> notificationList;
+	private ModificationNotification selectedNotification;
+	private ModificationNotification selectedMessage;
 	private String strTimeStamp;
 
 	@PostConstruct
 	void init() {
-		notificationList = new LinkedList<Notification>();
-		notificationList = DBNotification.loadNotification();
+		notificationList = DBNotification.loadModificationNotification();
 	}
+
 	/**
-	 * actualize notificationlist after declining or accepting
+	 * actualize notificationlist after declining/accepting
 	 */
 	private void actualizeNotificationList() {
-		setNotificationList(DBNotification.loadNotification());
+		setNotificationList(DBNotification.loadModificationNotification());
 	}
+
 	/**
 	 * Clicking on the tablerow sets isRead to true
 	 */
@@ -58,40 +60,78 @@ public class NotificationBean {
 		if (selectedNotification != null) {
 			DBNotification.updateNotificationIsRead(getSelectedNotification());
 		} else
+			System.out.println("null jetzt");
+	}
+
+	/**
+	 * Deletes a specific notification from DB
+	 */
+	public void cancelSelectedNotification(ActionEvent e) {
+		// System.out.println("deleting"+selectedNotification.getSenderEmail());
+
+		if (selectedNotification != null) {
+			DBNotification.deleteNotification(getSelectedNotification());
+			actualizeNotificationList();
+		} else {
+			System.out.println("null");
+		}
+	}
+
+	/**
+	 * Editing a specific notification and updates the DB
+	 */
+	public void editSelectedNotification(ActionEvent e) {
+		// System.out.println("editing" +
+		// getSelectedNotification().getSenderEmail());
+
+		if (selectedNotification != null) {
+			DBNotification.updateNotificationEdit(getSelectedNotification());
+			actualizeNotificationList();
+		} else
 			System.out.println("null");
 	}
+
 	/**
-	 * Creates the dialog of unread notifications and shows them on changing a tab
+	 * Creates the dialog of unread notifications and shows them on changing a
+	 * tab
 	 */
-    public void onTabChange(TabChangeEvent event) {  
-    	System.out.println("tabchanged");
-    	boolean glbIsRead = false;
-    	String glbSender = new String();
-    	for(int i = 0; i < getNotificationList().size(); i++ ) {
-    		if(!getNotificationList().get(i).isRead()) {
-    			glbIsRead = true;
-    			glbSender += getNotificationList().get(i).getSenderEmail() + "\n"; //TODO Linebreak
-    		}
-    	}
-    	if(glbIsRead) {
-    		FacesMessage msg = new FacesMessage("There are unread messages!", glbSender );  
-  
-    		FacesContext.getCurrentInstance().addMessage(null, msg);  
-    	}
-    } 
-	
+	public void onTabChange(TabChangeEvent event) {
+		System.out.println("tabchanged");
+		boolean glbIsRead = false;
+		String glbSender = new String();
+		int cntr = 0;
+		for (int i = 0; i < getNotificationList().size(); i++) {
+			if (!getNotificationList().get(i).isRead()) {
+				glbIsRead = true;
+				cntr += 1;
+				glbSender += cntr + ". "
+						+ getNotificationList().get(i).getSenderEmail() + " \n"; // TODO
+																					// Line
+																					// break
+			}
+		}
+		if (glbIsRead) {
+			FacesMessage msg = new FacesMessage("There are " + cntr
+					+ " unread messages!", glbSender);
+
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
+	}
+
 	/**
 	 * decline selected notification
 	 */
 	public void declineSelectedNotification(ActionEvent e) {
 		System.out.println("decline");
-		
+
 		if (selectedNotification != null) {
-			if(DBNotification.declineNotification(getSelectedNotification())) {
+			if (DBNotification.declineNotification( getSelectedNotification())) {
 				selectedNotification.setStatus("accepted");
 				actualizeNotificationList();
-				System.out.println(selectedNotification.getMessage() + " was declined");
-			} else System.out.println("nothing to decline");
+				System.out.println(selectedNotification.getMessage()
+						+ " was declined");
+			} else
+				System.out.println("nothing to decline");
 		} else
 			System.out.println("null");
 		loadNotifications();
@@ -102,62 +142,26 @@ public class NotificationBean {
 	 */
 	public void acceptSelectedNotification(ActionEvent e) {
 		System.out.println("accept");
-		
+
 		if (selectedNotification != null) {
-			if(DBNotification.acceptNotification(getSelectedNotification())) {
+			if (DBNotification.acceptNotification(getSelectedNotification())) {
 				selectedNotification.setStatus("accepted");
 				actualizeNotificationList();
-				System.out.println(selectedNotification.getMessage() + " was accepted");
-			} else System.out.println("nothing to accept");
+				System.out.println(selectedNotification.getMessage()
+						+ " was accepted");
+			} else
+				System.out.println("nothing to accept");
 		} else
 			System.out.println("null");
 		loadNotifications();
 	}
-	// Currently unused method
-	// START********************************************************************
-	/**
-	 * loads the selected notification
-	 * 
-	 */
-	public void loadSelectedNotification(ActionEvent e) {
-		System.out.println("selected");
 
-		if (selectedNotification != null) {
-			System.out.println(selectedNotification.getMessage());
-			selectedMessage = DBNotification.loadNotification(
-					selectedNotification.getRecipientEmail(),
-					selectedNotification.getSenderEmail(),
-					selectedNotification.getTimeStamp());
-		} else
-			System.out.println("null");
-	}
-
-	/**
-	 * loads the selected notification
-	 */
-	public void selectNotification() {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		this.recipientEmail = fc.getExternalContext().getRequestParameterMap()
-				.get("recipientEmail");
-		this.senderEmail = fc.getExternalContext().getRequestParameterMap()
-				.get("senderEmail");
-		this.strTimeStamp = fc.getExternalContext().getRequestParameterMap()
-				.get("timeStamp");
-		Timestamp ts = Timestamp.valueOf(strTimeStamp);
-		System.out.println("notification from: " + senderEmail + " to "
-				+ recipientEmail + " at: " + ts);
-		setSelectedNotification(DBNotification.loadNotification(recipientEmail,
-				senderEmail, ts));
-	}
-
-	// Currently unused method
-	// END********************************************************************
 	/**
 	 * Loads all Notifications from the database
 	 * 
 	 */
 	public void loadNotifications() {
-		setNotificationList(DBNotification.loadNotification());
+		setNotificationList(DBNotification.loadModificationNotification());
 	}
 
 	/**
@@ -168,8 +172,7 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param recipientEmail
-	 *            the recipientEmail to set
+	 * @param recipientEmail the recipientEmail to set
 	 */
 	public void setRecipientEmail(String recipientEmail) {
 		this.recipientEmail = recipientEmail;
@@ -183,8 +186,7 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param senderEmail
-	 *            the senderEmail to set
+	 * @param senderEmail the senderEmail to set
 	 */
 	public void setSenderEmail(String senderEmail) {
 		this.senderEmail = senderEmail;
@@ -198,8 +200,7 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param timeStamp
-	 *            the timeStamp to set
+	 * @param timeStamp the timeStamp to set
 	 */
 	public void setTimeStamp(Timestamp timeStamp) {
 		this.timeStamp = timeStamp;
@@ -213,8 +214,7 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param message
-	 *            the message to set
+	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -228,8 +228,7 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param action
-	 *            the action to set
+	 * @param action the action to set
 	 */
 	public void setAction(String action) {
 		this.action = action;
@@ -243,8 +242,7 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param status
-	 *            the status to set
+	 * @param status the status to set
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -253,44 +251,43 @@ public class NotificationBean {
 	/**
 	 * @return the notificationList
 	 */
-	public List<Notification> getNotificationList() {
+	public List<ModificationNotification> getNotificationList() {
 		return notificationList;
 	}
 
 	/**
-	 * @param notificationList
-	 *            the notificationList to set
+	 * @param notificationList the notificationList to set
 	 */
-	public void setNotificationList(List<Notification> notificationList) {
+	public void setNotificationList(List<ModificationNotification> notificationList) {
 		this.notificationList = notificationList;
 	}
 
 	/**
 	 * @return the selectedNotification
 	 */
-	public Notification getSelectedNotification() {
+	public ModificationNotification getSelectedNotification() {
 		return selectedNotification;
 	}
 
 	/**
-	 * @param selectedNotification
-	 *            the selectedNotification to set
+	 * @param selectedNotification the selectedNotification to set
 	 */
-	public void setSelectedNotification(Notification selectedNotification) {
+	public void setSelectedNotification(
+			ModificationNotification selectedNotification) {
 		this.selectedNotification = selectedNotification;
 	}
 
 	/**
 	 * @return the selectedMessage
 	 */
-	public Notification getSelectedMessage() {
+	public ModificationNotification getSelectedMessage() {
 		return selectedMessage;
 	}
 
 	/**
 	 * @param selectedMessage the selectedMessage to set
 	 */
-	public void setSelectedMessage(Notification selectedMessage) {
+	public void setSelectedMessage(ModificationNotification selectedMessage) {
 		this.selectedMessage = selectedMessage;
 	}
 
@@ -307,6 +304,5 @@ public class NotificationBean {
 	public void setStrTimeStamp(String strTimeStamp) {
 		this.strTimeStamp = strTimeStamp;
 	}
-	
 
 }

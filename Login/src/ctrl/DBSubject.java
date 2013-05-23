@@ -210,7 +210,7 @@ public class DBSubject extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
-			String query="SELECT subTitle,modtitle,description,aim,ects,id,ack, max(version) AS 'version'"
+			String query = "SELECT subTitle,modtitle,description,aim,ects,id,ack, max(version) AS 'version'"
 					+ " FROM subject WHERE ack=FALSE GROUP BY subTitle";
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -274,6 +274,45 @@ public class DBSubject extends DBManager {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * load all versions from one subject
+	 * @param subTitle
+	 * @param modTitle
+	 * @return
+	 */
+	public static List<Subject> loadSubject(String subTitle, String modTitle) {
+		List<Subject> subs = new LinkedList<Subject>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM subject WHERE subTitle = '"
+					+ subTitle + "' AND " + "modTitle = '" + modTitle + "'";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				int ver = rs.getInt("version");
+				String subT = rs.getString("subTitle");
+				String modT = rs.getString("modTitle");
+				String desc = rs.getString("description");
+				String aim = rs.getString("aim");
+				int ects = rs.getInt("ects");
+				boolean ack = rs.getBoolean("ack");
+
+				subs.add(new Subject(ver, subT, modT, desc, aim, ects, ack));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return subs;
 	}
 
 	/**

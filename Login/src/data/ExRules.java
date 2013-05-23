@@ -1,6 +1,6 @@
 package data;
 
-public class ExRules {
+public class ExRules implements Editable {
 
 	private String exRulesTitle;
 	
@@ -24,6 +24,12 @@ public class ExRules {
 	 */
 	public void setExRulesTitle(String exRulesTitle) {
 		this.exRulesTitle = exRulesTitle;
+	}
+
+	@Override
+	public Editable computeDifferences(Editable newEditable) {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 	
 }
