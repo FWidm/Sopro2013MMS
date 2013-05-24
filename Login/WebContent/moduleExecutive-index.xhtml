@@ -55,7 +55,7 @@
 								toggleable="true" toggleSpeed="500"
 								visible="#{TemplateBean.ectsAimVisible}">
 
-								<strong>leistungspunkte:</strong> #{TemplateBean.ects}<br />
+								<strong>Leistungspunkte:</strong> #{TemplateBean.ects}<br />
 								<br />
 								<strong>Lernziele:</strong> #{TemplateBean.aim}
 	
@@ -106,14 +106,14 @@
 							<p:panel header="#{EditBean.title}"
 								toggleable="true" toggleSpeed="500"
 								visible="#{EditBean.mainVisible}">
-								<p:inputTextarea rows="10" cols="100" readonly="#{EditBean.descriptionEdit}" value="#{EditBean.description} #{EditBean.descriptionEdit}" />
+								<p:inputTextarea rows="5" cols="100" readonly="#{EditBean.descriptionEdit}" value="#{EditBean.description}" />
 
 							</p:panel>
 							<p:panel header="Leistungspunkte und Lernziele"
 								toggleable="true" toggleSpeed="500"
 								visible="#{EditBean.ectsAimVisible}">
 
-								<strong>leistungspunkte:</strong><p:inputText readonly="#{EditBean.ectsEdit}" value="#{EditBean.ects}" /><br />
+								<strong>Leistungspunkte:</strong><p:inputText readonly="#{EditBean.ectsEdit}" value="#{EditBean.ects}" /><br />
 								<br />
 								<strong>Lernziele:</strong><p:inputTextarea readonly="#{EditBean.aimEdit}" cols="29" value="#{EditBean.aim}" />
 	
@@ -206,7 +206,7 @@
 									toggleable="true" toggleSpeed="500"
 									visible="#{NotificationBean.ectsAimVisible}">
 
-									<strong>leistungspunkte:</strong> #{NotificationBean.ects}<br />
+									<strong>Leistungspunkte:</strong> #{NotificationBean.ects}<br />
 									<br />
 									<strong>Lernziele:</strong> #{NotificationBean.aim}
 	
@@ -236,7 +236,7 @@
 									toggleable="true" toggleSpeed="500"
 									visible="#{NotificationBean.ectsAimVisible2}">
 
-									<strong>leistungspunkte:</strong> #{NotificationBean.ects2}<br />
+									<strong>Leistungspunkte:</strong> #{NotificationBean.ects2}<br />
 									<br />
 									<strong>Lernziele:</strong> #{NotificationBean.aim2}
 	

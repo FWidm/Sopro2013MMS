@@ -78,11 +78,11 @@ public class EditBean {
 		ectsAimVisible = true;
 		addInfoVisible = true;
 		//sets the ability to edit
-		descriptionEdit = true;
-		ectsEdit = true;
-		aimEdit = true;
-		fieldTitleEdit = true;
-		fieldDescriptionEdit = true;
+		descriptionEdit = false;
+		ectsEdit = false;
+		aimEdit = false;
+		fieldTitleEdit = false;
+		fieldDescriptionEdit = false;
 		// Only Test and can be removed
 		System.out.println(sub.getSubTitle());
 	}
@@ -101,11 +101,11 @@ public class EditBean {
 		ectsAimVisible = false;
 		addInfoVisible = false;
 		//sets the ability to edit
-		descriptionEdit = false;
-		ectsEdit = false;
-		aimEdit = false;
-		fieldTitleEdit = false;
-		fieldDescriptionEdit = false;
+		descriptionEdit = true;
+		ectsEdit = true;
+		aimEdit = true;
+		fieldTitleEdit = true;
+		fieldDescriptionEdit = true;
 		// Only Test and can be removed
 		System.out.println(mod.getModTitle());
 		System.out.println(mod.getDescription());
@@ -125,11 +125,11 @@ public class EditBean {
 		ectsAimVisible = false;
 		addInfoVisible = false;
 		//sets the ability to edit
-		descriptionEdit = false;
-		ectsEdit = false;
-		aimEdit = false;
-		fieldTitleEdit = false;
-		fieldDescriptionEdit = false;
+		descriptionEdit = true;
+		ectsEdit = true;
+		aimEdit = true;
+		fieldTitleEdit = true;
+		fieldDescriptionEdit = true;
 		// Only Test and can be removed
 		System.out.println(modMan.getModManTitle());
 
@@ -149,11 +149,11 @@ public class EditBean {
 		ectsAimVisible = false;
 		addInfoVisible = false;
 		//sets the ability to edit
-		descriptionEdit = false;
-		ectsEdit = false;
-		aimEdit = false;
-		fieldTitleEdit = false;
-		fieldDescriptionEdit = false;
+		descriptionEdit = true;
+		ectsEdit = true;
+		aimEdit = true;
+		fieldTitleEdit = true;
+		fieldDescriptionEdit = true;
 		// Only Test and can be removed
 		System.out.println(rule.getExRulesTitle());
 	}
