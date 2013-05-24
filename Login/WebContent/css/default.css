@@ -1,0 +1,156 @@
+body {
+	font-size: 12px;
+	border-radius: 0px !important;
+}
+
+/*header image*/
+img {
+	top: 0px !important; 
+	right: 1.6em !important;
+}
+
+
+.ui-widget {
+    font-size: 100%;
+ }
+
+/*nav tabs header*/
+.ui-tabs .ui-tabs-nav {
+	background-image: -webkit-linear-gradient(#A9A28D 70%, #A9A28D 70%); 
+	background-image: -moz-linear-gradient(#A9A28D 70%, #A9A28D 70%); 
+	background-image: -o-linear-gradient(#A9A28D 70%, #A9A28D 70%); 
+	background-image: linear-gradient(#A9A28D 70%, #A9A28D 70%);
+ }
+
+/* header of tabs */
+.ui-tabs.ui-tabs-top > .ui-tabs-nav {
+	padding: .3em .5em 0em;
+	margin-left: 1.4em !important;
+	margin-right: 1.4em !important;
+	margin-top: .2em !important;
+}
+
+/*Tabs*/
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+ 	background: #c2bdae; /*like 70%*/
+ 	box-shadow: none;
+ }
+
+/* hover of tabs */
+li.ui-state-default.ui-corner-top.ui-state-hover {
+ 	background: white !important;
+}
+
+/*Text of tabs*/
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	color: black !important;
+	text-decoration: none !important;
+	text-shadow: none !important;
+}
+
+/*header of subtitles-widgets*/
+.ui-widget-header {
+	/*text-transform: uppercase !important; */
+	color: black;
+	border: 0px solid #A9A28D !important;
+	/*background: #f6f5f3!important;*/ /*like 10% */
+	background: #dfdcd4 !important; /* like 30% */
+	text-shadow: none;
+	background-image: -webkit-linear-gradient(#A9A28D 30%, #A9A28D 30%); 
+	background-image: -moz-linear-gradient(#A9A28D 30%, #A9A28D 30%); 
+	background-image: -o-linear-gradient(#A9A28D 30%, #A9A28D 30%); 
+	background-image: linear-gradient(#A9A28D 30%, #A9A28D 30%);
+	margin: 0px !important;
+}
+
+.ui-panel .ui-panel-titlebar {
+	padding: 0.5em;
+}
+
+/*menu Font color*/
+.ui-widget-content a {
+	color: black;
+}
+
+.ui-layout-unit-header, .ui-layout-unit-footer {
+	/*padding-top: .2em;
+	padding-left: .2em;
+	padding-bottom: .2em;
+	padding-right: .2em;*/
+
+}
+
+.ui-menu, .ui-menu .ui-menu-child {
+	background: #A32638;
+	
+}
+
+/* menu items list */
+.ui-menu .ui-menuitem-link {
+	display: block;
+	width: 92%;
+	outline: none;
+	text-decoration: none;
+	font-weight: 400;
+	border-bottom: solid 1px #A32638;
+	float: left;
+	line-height: 20px;
+	padding: .0em;
+	cursor: pointer;
+}
+
+/*menu widht*/
+.ui-menu {
+	width: 18.2em;
+	padding-left: .0em;
+	padding-right: .0em;
+	position: relative;
+}
+
+/*width of the list borders */
+.ui-menu .ui-menuitem {
+	width: 105%;
+	box-shadow: none;
+}
+
+/*hover of list items and tabs */
+.ui-state-hover {
+	background: #ecd3d7 !important;
+	box-shadow: none;
+	-webkit-box-shadow: none !important;
+}
+
+.ui-layout-unit {
+	padding: .0em !important;
+}
+
+.ui-corner-all {
+	-webkit-border-radius: 0px !important;
+	border-radius: 0px !important;
+}
+
+/*menu box*/
+.ui-widget-content {
+	border: none;
+	color: black;
+	background: white;
+}
+
+/*tables */
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td {
+	padding: 4px 0px;
+	overflow: hidden;
+	white-space: nowrap;
+	border-width: 1px;
+	border-style: solid;
+}
+
+/*parent header of menu*/
+ul li.ui-widget-header {
+	color: white;
+	border: 0px solid #A9A28D !important;
+	background: #A32638 !important;
+	text-shadow: none;
+	padding-right: 0px;
+	margin-right: 0px;
+}
