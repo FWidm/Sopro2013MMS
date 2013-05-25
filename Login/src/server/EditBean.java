@@ -157,6 +157,20 @@ public class EditBean {
 		// Only Test and can be removed
 		System.out.println(rule.getExRulesTitle());
 	}
+	
+	/**
+	 * 
+	 */
+	public void accept() {
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public void declime() {
+		
+	}
 
 	/**
 	 * @return the backModel

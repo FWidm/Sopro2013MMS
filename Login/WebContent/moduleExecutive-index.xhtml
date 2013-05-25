@@ -10,15 +10,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
 	<title>ModuleExecutive</title>
 
-	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/template.css" />
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
 <h:body>
 	<!-- body -->
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/logo_100_sw.jpg"
+		<p:graphicImage value="/Image/iui_19.png"
 			style="position:absolute; top:20px; right:20px;" />
 	</div>
 	<h:form id="form">
@@ -133,11 +132,9 @@
 
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
-							<p:commandButton type="push" value="Drucken" title="Drucken"
-								icon="ui-icon-print">
+							<p:commandButton type="push" value="Zur&#252;cksetzen" icon="ui-icon-trash" actionListener="#EditBean.declime">
 							</p:commandButton>
-							<p:commandButton type="push" value="Download" title="Download"
-								icon="ui-icon-disk">
+							<p:commandButton type="push" value="&#220;bernehmen" icon="ui-icon-disk" actionListener="#{EditBean.accept}">
 							</p:commandButton>
 						</div>
 					</p:layoutUnit>
