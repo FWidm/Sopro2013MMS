@@ -3,6 +3,7 @@ package util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,53 +29,45 @@ public class PdfBox {
 	public static PDXObjectImage ximage;
 
 	public static void main(String[] args) {
-		processSubjects(DBSubject.loadSubjects());
+
+		System.out.println(processSubjects(DBSubject.loadSubjects()));
+	}
+
+	private static String processSubjects(List<Subject> loadSubjects) {
+		List<String> subtitles=new LinkedList<String>();
+		for(Subject s:loadSubjects){
+			subtitles.add(processSubject(s));
+		}
+		//merge list of files - http://java.dzone.com/news/merging-pdf%E2%80%99s-with-pdfbox
+		//return name of merged file
+		return null;
 	}
 
 	/**
-	 * Function that takes a subjectlist that prints all files to PDF into the
-	 * ./pdf directory.
+	 * Function that takes a subject that prints a PDF into the ./pdf directory.
 	 * 
 	 * @param list
 	 */
-	private static void processSubjects(List<Subject> list) {
+	private static String processSubject(Subject sub) {
 		// LOAD FIELDS FROM DB
-		List<Field> fields;
-		for (Subject s : list) {
-			fields = DBField.loadFieldList(s.getModTitle(), s.getVersion(),
-					s.getSubTitle());
-			System.out.println(fields.toString());
-
-			List<String> strings = new LinkedList<String>();
-
-			strings.add("Fach: " + s.getSubTitle());
-			strings.add("Aus: " + s.getModTitle());
-			strings.add("Version: " + s.getVersion());
-			strings.add("Beschreibung: " + s.getDescription());
-
-			try {
-				printPDF(strings, fields);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		List<Field> fields = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(), sub.getSubTitle());
+		
+		try {
+			return printPDF(sub, fields);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 
 	}
 
-	/**
-	 * Print the processed List of Strings - it contains all variables in
-	 * strings, then is overwritten
-	 * 
-	 * @param strings
-	 * @throws IOException
-	 */
-	private static void printPDF(List<String> strings, List<Field> fields)
+	private static String printPDF(Subject sub, List<Field> fields)
 			throws IOException {
 		File logo = new File("D:/logo_50_sw.jpg");
 		PDDocument doc = null;
 		PDPage page = null;
+		int y = 0;
 
 		BufferedImage buff = ImageIO.read(logo);
 		try {
@@ -89,63 +82,56 @@ public class PdfBox {
 			System.out.println("height/width: "
 					+ page.getMediaBox().getHeight() + " / "
 					+ page.getMediaBox().getWidth());
-			printLine(content, "Universität Ulm - MMS: ", headX, headY, 16);
-
-			content.drawLine(headX, headY - 5,
-					page.getMediaBox().getWidth() - 50, headY - 5);
-			printLine(content, strings.get(0), headX + 150, headY - 20, 14);
-			content.drawLine(headX, headY - 25,
-					page.getMediaBox().getWidth() - 50, headY - 25);
+			printLine(content, "Universität Ulm - MMS: ", headX, headY - y, 16);
+			y += 5;
+			content.drawLine(headX, headY - y,
+					page.getMediaBox().getWidth() - 50, headY - y);
+			y = 20;
+			printLine(content, sub.getSubTitle(), headX + 150, headY - 20, 14);
+			y += 5;
+			content.drawLine(headX, headY - y,
+					page.getMediaBox().getWidth() - 50, headY - y);
 			// draw Subject
-			printMultipleLines(content, strings, headX + 10, headY - 40, 12);
-			// draw Fields of Subject
-			content.drawLine(headX, headY - 95,
-					page.getMediaBox().getWidth() - 50, headY - 95);
-			printLine(content, "Weitere Informationen:", headX + 150,
-					headY - 110, 14);
-			content.drawLine(headX, headY - 115,
-					page.getMediaBox().getWidth() - 50, headY - 115);
-
-			printFields(content, page, doc, fields, false);
+			y += 12;
+			printLine(content, "Modul: " + sub.getModTitle(), headX + 20, headY
+					- y, 10);
+			y += 12;
+			printLine(content, "Version: " + sub.getVersion(), headX + 20,
+					headY - y, 10);
+			y += 12;
+			List<String> lines = getParts(sub.getDescription(), 100);
+			printMultipleLines(content, lines, headX + 20, headY - y, 10);
+			y += 20;
+			printFields(content, page, doc, fields, false, y);
 
 			content.close();
-			String name = strings.get(0).split(": ")[1];
-			String version = strings.get(2).split(": ")[1];
-
-			doc.save("pdf/" + name + "_" + version + ".pdf");
+			String name = sub.getSubTitle();
+			String version = "v" + sub.getVersion();
+			String alphaOnly = name.replaceAll("[^a-zA-Z]+", "");
+			doc.save("pdf/" + alphaOnly + "_" + version + ".pdf");
 			doc.close();
+			return "pdf/" + alphaOnly + "_" + version + ".pdf";
 		} catch (IOException | COSVisitorException e) {
 			System.out.println(e);
 		}
+		return "";
 	}
 
-	/**
-	 * Print the fields of the specific subjects - needs the content until now,
-	 * the page and document of course it needs all the fields in a list and has
-	 * a boolean to either print or not print the university logo at the bottom
-	 * of the document.
-	 * 
-	 * @param content
-	 * @param page
-	 * @param doc
-	 * @param fields
-	 * @param printLogo
-	 * @throws IOException
-	 */
 	private static void printFields(PDPageContentStream content, PDPage page,
-			PDDocument doc, List<Field> fields, boolean printLogo)
+			PDDocument doc, List<Field> fields, boolean printLogo, int y)
 			throws IOException {
-		LinkedList<String> strings = new LinkedList<String>();
+
+		List<String> strings = new LinkedList<String>();
 		int offset = 0;
 		int tmpsize = 0;
-		int bottomborder = 60;
-		int tmpY = headY - 80 + offset;
+		int bottomborder = 115;
+		int tmpY = headY - y + offset;
 		for (Field f : fields) {
 			tmpY -= 55;
 			System.out.println(f.getFieldTitle());
 			if (tmpY < bottomborder) {
 				if (printLogo)
-					bottomborder = 115;
+					bottomborder = 150;
 				tmpY = headY + 100;
 				content.close();
 				page = new PDPage();
@@ -156,18 +142,25 @@ public class PdfBox {
 					content.drawXObject(ximage, 180, -20, 411, 80);
 			}
 
-			strings = new LinkedList<String>();
-			for (String s : f.getDescription().split("\r\n")) {
-				strings.add(s);
-			}
+			strings = getParts(f.getDescription(), 90);
 
-			printLine(content, f.getFieldTitle() + ": ", headX + 20, tmpY, 12);
+			printLine(content, f.getFieldTitle() + ": ", headX + 20, tmpY, 10);
 			tmpsize = printMultipleLines(content, strings, headX + 50,
-					tmpY - 14, 12) * 12;
+					tmpY - 14, 10) * 10;
 			tmpY = tmpY - tmpsize + 20;
 			System.out.println("location y: " + tmpY);
 		}
 		content.close();
+	}
+
+	private static List<String> getParts(String string, int partitionSize) {
+		List<String> parts = new ArrayList<String>();
+		int len = string.length();
+		for (int i = 0; i < len; i += partitionSize) {
+			parts.add(string.substring(i, Math.min(len, i + partitionSize)));
+		}
+		return parts;
+
 	}
 
 	/**

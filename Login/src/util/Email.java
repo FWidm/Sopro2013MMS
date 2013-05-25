@@ -66,8 +66,5 @@ public class Email {
 	        }
 	 
 	    }
-	 
-	    public static void main(String[] args) {
-	       Email.send("thefaustviii@gmail.com","Test2","Hello World!","true");
-	    }
+
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+import util.Email;
 
 public class User {
 
@@ -25,16 +26,19 @@ public class User {
 	 * @param role
 	 * @param int
 	 */
-	public User(String email, String name, String firstname, String role, int length) {
+	public User(String email, String name, String firstname, String role,
+			int length) {
 		this.name = name;
 		this.firstname = firstname;
 		// Randompassword
-		String generatedPass=util.PasswordGen.generatePassword(length);
-		//TODO remove sysout, add notification or email for the user email.
-		//something like notify(email user, String generated PW)
+		String generatedPass = util.PasswordGen.generatePassword(length);
+		// TODO remove sysout, add notification or email for the user email.
+		// something like notify(email user, String generated PW)
+		Email.send(email, "Your Password for MMS 2013", "Your password is: "
+				+ generatedPass, "true");
 		System.out.println(generatedPass);
-		printUserList(email,generatedPass);
-		
+		// printUserList(email,generatedPass);
+
 		try {
 			this.password = util.PasswordHash.createHash(generatedPass);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -44,13 +48,20 @@ public class User {
 		this.role = role;
 		this.email = email;
 	}
-	
-	public void resetPassword(int length){
-		String generatedPass=util.PasswordGen.generatePassword(length);
-		//TODO remove sysout, add notification or email for the user email.
-		//something like notify(email user, String generated PW)
+
+	/**
+	 * Method to reset a users password to a new random one with given length
+	 * 
+	 * @param length
+	 */
+	public void resetPassword(int length) {
+		String generatedPass = util.PasswordGen.generatePassword(length);
+		// TODO remove sysout, add notification or email for the user email.
+		// something like notify(email user, String generated PW)
+		Email.send(email, "Your changed Password for MMS 2013",
+				"Your new password is: " + generatedPass, "true");
 		System.out.println(generatedPass);
-		printUserList(email,generatedPass);
+		// printUserList(email,generatedPass);
 		try {
 			this.password = util.PasswordHash.createHash(generatedPass);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -58,11 +69,20 @@ public class User {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * printed the list of all users created with the methods - for debugging
+	 * purposes.
+	 * 
+	 * @param mail
+	 * @param pass
+	 */
+	@SuppressWarnings("unused")
 	private void printUserList(String mail, String pass) {
-        try {
-            BufferedWriter out = new BufferedWriter (new FileWriter("user-logins.txt",true));
-			out.write(mail+" : "+pass+"\r\n");
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(
+					"user-logins.txt", true));
+			out.write(mail + " : " + pass + "\r\n");
 			out.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -163,7 +183,9 @@ public class User {
 		this.email = email;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
