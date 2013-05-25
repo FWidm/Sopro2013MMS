@@ -15,11 +15,7 @@ import data.Field;
 import data.ModManual;
 import data.ModificationNotification;
 import data.Module;
-import data.Notification;
 import data.Subject;
-import data.User;
-
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +24,6 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.event.SelectEvent;
 import ctrl.DBField;
 import ctrl.DBNotification;
-import ctrl.DBUser;
 
 @ManagedBean(name = "NotificationBean")
 @RequestScoped
@@ -291,10 +286,10 @@ public class NotificationBean {
 		this.selectedNotification = selectedNotification;
 		selectedEditableAfter = selectedNotification.getModification().getAfter();
 		selectedEditableBefore = selectedNotification.getModification().getBefore();
-		if(selectedEditableAfter instanceof Subject || selectedEditableBefore instanceof Subject) {
+		if(selectedEditableAfter instanceof Subject && selectedEditableBefore instanceof Subject) {
 			//After
 			Subject sub = (Subject) selectedEditableAfter;
-			fieldList = DBField.loadFieldbySubjectTitle(sub.getSubTitle());
+			fieldList = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(), sub.getSubTitle());
 			title = sub.getSubTitle();
 			description = sub.getDescription();
 			ects = String.valueOf(sub.getEcts());
@@ -305,7 +300,7 @@ public class NotificationBean {
 			System.out.println(description);
 			//Before
 			Subject sub2 = (Subject) selectedEditableBefore;
-			fieldList2 = DBField.loadFieldbySubjectTitle(sub2.getSubTitle());
+			fieldList2 = DBField.loadFieldList(sub2.getModTitle(), sub2.getVersion(), sub2.getSubTitle());
 			title2 = sub2.getSubTitle();
 			description2 = sub2.getDescription();
 			ects2 = String.valueOf(sub2.getEcts());

@@ -68,7 +68,7 @@ public class TemplateBean {
 	 */
 	public void handleSubject(Subject sub) {
 		// TODO Paste your event handling here
-		fieldList = DBField.loadFieldbySubjectTitle(sub.getSubTitle());
+		fieldList = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(), sub.getSubTitle());
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());

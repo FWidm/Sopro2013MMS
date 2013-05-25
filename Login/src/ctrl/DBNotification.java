@@ -8,9 +8,6 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
-import sun.security.jca.GetInstance.Instance;
-
-import data.Editable;
 import data.ExRules;
 import data.ModManual;
 import data.Modification;
@@ -37,7 +34,7 @@ public class DBNotification extends DBManager {
 			// checks the instance of the editable
 			if (modNotif.getModification().getBefore() instanceof ExRules) {
 				ExRules edit = (ExRules) modNotif.getModification().getBefore();
-				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, exRulesTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, exRulesTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -48,11 +45,11 @@ public class DBNotification extends DBManager {
 						+ notif.getAction()
 						+ "', '"
 						+ notif.getStatus()
-						+ "', " + false + ", " + edit.getExRulesTitle() + ")";
+						+ "', " + false + ", '" + edit.getExRulesTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof ModManual) {
 				ModManual edit = (ModManual) modNotif.getModification()
 						.getBefore();
-				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ExRulesTitle, ModManTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ExRulesTitle, ModManTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -65,13 +62,13 @@ public class DBNotification extends DBManager {
 						+ notif.getStatus()
 						+ "', "
 						+ false
-						+ ", "
+						+ ", '"
 						+ edit.getExRulesTitle()
-						+ ", "
-						+ edit.getModManTitle() + ")";
+						+ "', '"
+						+ edit.getModManTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Module) {
 				Module edit = (Module) modNotif.getModification().getBefore();
-				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -82,10 +79,10 @@ public class DBNotification extends DBManager {
 						+ notif.getAction()
 						+ "', '"
 						+ notif.getStatus()
-						+ "', " + false + ", " + edit.getModTitle() + ")";
+						+ "', " + false + ", '" + edit.getModTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Subject) {
 				Subject edit = (Subject) modNotif.getModification().getBefore();
-				update = "INSERT INTO notification(ReceipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ModTitle, SubTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ModTitle, SubTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -98,10 +95,10 @@ public class DBNotification extends DBManager {
 						+ notif.getStatus()
 						+ "', "
 						+ false
-						+ ", "
+						+ ", '"
 						+ edit.getModTitle()
-						+ ", "
-						+ edit.getSubTitle() + ")";
+						+ "', '"
+						+ edit.getSubTitle() + "')";
 			}
 			try {
 				con = openConnection();
