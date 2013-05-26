@@ -103,7 +103,7 @@ public class TemplateActionListener implements ActionListener {
 		else if(bean.getModule() == null) {
 			
 			bean.setModule(itemValue);
-			bean.setSubjectList(((DBSubject.loadSubject(1, itemValue))));
+			bean.setSubjectList(((DBSubject.loadSubjectListMaxVersion(itemValue))));
 			
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();
@@ -188,7 +188,7 @@ public class TemplateActionListener implements ActionListener {
 			
 			bean.setModel(model);
 			
-			bean.handleSubject(DBSubject.loadSubject(1, itemValue, bean.getModule()));
+			bean.handleSubject(DBSubject.loadSubjectMaxVersion(itemValue, bean.getModule()));
 		}
 	}
 	

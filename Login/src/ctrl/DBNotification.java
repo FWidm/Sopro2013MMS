@@ -64,8 +64,7 @@ public class DBNotification extends DBManager {
 						+ false
 						+ ", '"
 						+ edit.getExRulesTitle()
-						+ "', '"
-						+ edit.getModManTitle() + "')";
+						+ "', '" + edit.getModManTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Module) {
 				Module edit = (Module) modNotif.getModification().getBefore();
 				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modTitle) Values('"
@@ -516,18 +515,12 @@ public class DBNotification extends DBManager {
 					// TODO add version for ExRule or not ;)
 				} else if (mod != null) {
 					if (sub != null) {
-						int max = 0;
-						List<Subject> subjects = DBSubject
-								.loadSubject(sub, mod);
-						for (int i = 0; i < subjects.size(); i++) {
-							if (max < subjects.get(i).getVersion())
-								max = subjects.get(i).getVersion();
-						}
+						Subject subject = DBSubject.loadSubjectMaxVersion(sub, mod);
 						notif.add(new ModificationNotification(recEm, senEm,
 								timS, mess, act, stat, isRead,
-								new Modification(DBSubject.loadSubject(max - 1,
-										sub, mod), DBSubject.loadSubject(max,
-										sub, mod))));
+								new Modification(DBSubject.loadSubject(
+										subject.getVersion() - 1, sub, mod),
+										subject)));
 					}
 					// TODO add version for Module or not ;)
 				}
