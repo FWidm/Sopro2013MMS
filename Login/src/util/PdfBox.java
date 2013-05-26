@@ -29,18 +29,34 @@ public class PdfBox {
 	public static PDXObjectImage ximage;
 
 	public static void main(String[] args) {
-
+		/*
+		 * //Testing of the String partition function. String lorem=
+		 * "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyamLorem ipsum dolor sit amet,"
+		 * +
+		 * " consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyamLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy"
+		 * +
+		 * " eirmod tempor invidunt ut labore et dolore magna aliquyamLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna"
+		 * + " aliquyam";
+		 * 
+		 * List<String> results=getParts(lorem, 100);
+		 * System.out.println(results.size()); for(String s:results){
+		 * System.out.println(s); }
+		 */
 		System.out.println(processSubjects(DBSubject.loadSubjects()));
 	}
 
-	private static String processSubjects(List<Subject> loadSubjects) {
-		List<String> subtitles=new LinkedList<String>();
-		for(Subject s:loadSubjects){
-			subtitles.add(processSubject(s));
+	public static List<String> processSubjects(List<Subject> loadSubjects) {
+		List<String> subtitles = new LinkedList<String>();
+		for (Subject s : loadSubjects) {
+			String filename=processSubject(s);
+			System.out.println(filename);
+			subtitles.add(filename);
+			
 		}
-		//merge list of files - http://java.dzone.com/news/merging-pdf%E2%80%99s-with-pdfbox
-		//return name of merged file
-		return null;
+		// merge list of files -
+		// http://java.dzone.com/news/merging-pdf%E2%80%99s-with-pdfbox
+		// return name of merged file
+		return subtitles;
 	}
 
 	/**
@@ -48,9 +64,10 @@ public class PdfBox {
 	 * 
 	 * @param list
 	 */
-	private static String processSubject(Subject sub) {
+	public static String processSubject(Subject sub) {
 		// LOAD FIELDS FROM DB
-		List<Field> fields = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(), sub.getSubTitle());
+		List<Field> fields = DBField.loadFieldList(sub.getModTitle(),
+				sub.getVersion(), sub.getSubTitle());
 		
 		try {
 			return printPDF(sub, fields);
@@ -62,6 +79,15 @@ public class PdfBox {
 
 	}
 
+	/**
+	 * takes a subject and its fields, prints the subjects details and calls a
+	 * method to print field details
+	 * 
+	 * @param sub
+	 * @param fields
+	 * @return
+	 * @throws IOException
+	 */
 	private static String printPDF(Subject sub, List<Field> fields)
 			throws IOException {
 		File logo = new File("D:/logo_50_sw.jpg");
@@ -79,9 +105,7 @@ public class PdfBox {
 			PDPageContentStream content = new PDPageContentStream(doc, page);
 
 			content.drawXObject(ximage, 180, 700, 411, 80);
-			System.out.println("height/width: "
-					+ page.getMediaBox().getHeight() + " / "
-					+ page.getMediaBox().getWidth());
+
 			printLine(content, "Universität Ulm - MMS: ", headX, headY - y, 16);
 			y += 5;
 			content.drawLine(headX, headY - y,
@@ -102,7 +126,7 @@ public class PdfBox {
 			List<String> lines = getParts(sub.getDescription(), 100);
 			printMultipleLines(content, lines, headX + 20, headY - y, 10);
 			y += 20;
-			printFields(content, page, doc, fields, false, y);
+			printFields(content, page, doc, fields, y);
 
 			content.close();
 			String name = sub.getSubTitle();
@@ -117,9 +141,20 @@ public class PdfBox {
 		return "";
 	}
 
+	/**
+	 * prints all Fields to the specified page and its content of a PDDocument,
+	 * prints a list of fields and optionally the logo, starts at y height
+	 * 
+	 * @param content
+	 * @param page
+	 * @param doc
+	 * @param fields
+	 * @param printLogo
+	 * @param y
+	 * @throws IOException
+	 */
 	private static void printFields(PDPageContentStream content, PDPage page,
-			PDDocument doc, List<Field> fields, boolean printLogo, int y)
-			throws IOException {
+			PDDocument doc, List<Field> fields, int y) throws IOException {
 
 		List<String> strings = new LinkedList<String>();
 		int offset = 0;
@@ -128,18 +163,12 @@ public class PdfBox {
 		int tmpY = headY - y + offset;
 		for (Field f : fields) {
 			tmpY -= 55;
-			System.out.println(f.getFieldTitle());
 			if (tmpY < bottomborder) {
-				if (printLogo)
-					bottomborder = 150;
 				tmpY = headY + 100;
 				content.close();
 				page = new PDPage();
 				doc.addPage(page);
 				content = new PDPageContentStream(doc, page);
-				// optional - draw university logo on page 2++
-				if (printLogo)
-					content.drawXObject(ximage, 180, -20, 411, 80);
 			}
 
 			strings = getParts(f.getDescription(), 90);
@@ -148,19 +177,46 @@ public class PdfBox {
 			tmpsize = printMultipleLines(content, strings, headX + 50,
 					tmpY - 14, 10) * 10;
 			tmpY = tmpY - tmpsize + 20;
-			System.out.println("location y: " + tmpY);
 		}
 		content.close();
 	}
 
+	/*
+	 * private static List<String> getParts(String string, int partitionSize) {
+	 * List<String> parts = new ArrayList<String>(); int len = string.length();
+	 * for (int i = 0; i < len; i += partitionSize) {
+	 * parts.add(string.substring(i, Math.min(len, i + partitionSize))); }
+	 * return parts;
+	 * 
+	 * }
+	 */
+	/**
+	 * Second version of the splitting Method - it uses string splits and
+	 * concatenation now
+	 * 
+	 * @param string
+	 * @param partitionSize
+	 * @return
+	 */
 	private static List<String> getParts(String string, int partitionSize) {
 		List<String> parts = new ArrayList<String>();
-		int len = string.length();
-		for (int i = 0; i < len; i += partitionSize) {
-			parts.add(string.substring(i, Math.min(len, i + partitionSize)));
-		}
-		return parts;
+		int len = 0;
+		String[] splitted = string.split(" ");
+		String tmp = "";
+		for (String s : splitted) {
 
+			if (len <= partitionSize) {
+				len += s.length() + 1;
+				tmp += s + " ";
+			} else {
+				parts.add(tmp);
+				tmp = "";
+				len = s.length() + 1;
+				tmp += s + " ";
+			}
+		}
+		parts.add(tmp);
+		return parts;
 	}
 
 	/**
@@ -216,7 +272,6 @@ public class PdfBox {
 			}
 		}
 		contentStream.endText();
-		System.out.println("no of lines: " + numberOfLines);
 		return numberOfLines;
 	}
 }
