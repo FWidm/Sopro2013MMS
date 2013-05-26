@@ -33,8 +33,7 @@ public class LoginBean {
 
 	public LoginBean() {
 		fc = FacesContext.getCurrentInstance();
-		nav = (ConfigurableNavigationHandler) fc.getApplication()
-				.getNavigationHandler();
+		nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class LoginBean {
 		dbUser = null;
 		loggedIn = false;
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		nav.performNavigation("test-index");
+		nav.performNavigation("index");
 	}
 
 	/**
