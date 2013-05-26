@@ -78,7 +78,7 @@ public class CreateBean {
 	/**
 	 * loads the user with the specified email from the database
 	 * 
-	 * @param email
+	 * @param Email
 	 * @return boolean
 	 */
 	public void saveUser(ActionEvent action) {

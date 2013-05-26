@@ -106,7 +106,7 @@
 								toggleSpeed="500" visible="#{EditBean.editable}">
 								<p:inputTextarea rows="1" cols="200" readonly="false"
 									value="#{EditBean.message}">
-									<p:ajax event="keyup" />
+									<p:ajax event="blur" />
 								</p:inputTextarea>
 							</p:panel>
 							<p:panel header="#{EditBean.title}" toggleable="true"
@@ -114,7 +114,7 @@
 								<p:inputTextarea rows="1" cols="200"
 									readonly="#{EditBean.descriptionEdit}"
 									value="#{EditBean.description}">
-									<p:ajax event="keyup" />
+									<p:ajax event="blur" />
 								</p:inputTextarea>
 
 							</p:panel>
@@ -124,14 +124,14 @@
 								<strong>Leistungspunkte:</strong>
 								<p:inputText readonly="#{EditBean.ectsEdit}"
 									value="#{EditBean.ects}">
-									<p:ajax event="keyup" />
+									<p:ajax event="blur" />
 								</p:inputText>
 								<br />
 								<br />
 								<strong>Lernziele:</strong>
 								<p:inputTextarea readonly="#{EditBean.aimEdit}" rows="1"
 									cols="200" value="#{EditBean.aim}">
-									<p:ajax event="keyup" />
+									<p:ajax event="blur" />
 								</p:inputTextarea>
 
 							</p:panel>
@@ -142,14 +142,14 @@
 									<strong>Titel: </strong>
 									<p:inputText readonly="#{EditBean.fieldTitleEdit}"
 										value="#{iterator.fieldTitle}">
-										<p:ajax event="keyup" />
+										<p:ajax event="blur" />
 									</p:inputText>
 									<br />
 									<strong>Beschreibung: </strong>
 									<p:inputTextarea rows="1" cols="200"
 										readonly="#{EditBean.fieldDescriptionEdit}"
 										value="#{iterator.description}">
-										<p:ajax event="keyup" />
+										<p:ajax event="blur" />
 									</p:inputTextarea>
 									<br />
 									<br />

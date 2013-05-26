@@ -445,6 +445,7 @@ public class EditBean {
 	 *            the description to set
 	 */
 	public void setDescription(String description) {
+		System.out.println(description);
 		this.description = description;
 	}
 

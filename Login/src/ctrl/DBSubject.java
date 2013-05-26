@@ -328,7 +328,7 @@ public class DBSubject extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT subTitle,modtitle,description,aim,ects,id,ack, max(version) AS 'version'"
+			String query = "SELECT subTitle,modtitle,description,aim,ects,ack, max(version) AS 'version'"
 					+ " FROM subject GROUP BY subTitle";
 
 			ResultSet rs = stmt.executeQuery(query);
