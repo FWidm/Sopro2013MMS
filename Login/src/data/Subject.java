@@ -110,12 +110,68 @@ public class Subject implements Editable{
 	public void setAck(boolean ack) {
 		this.ack = ack;
 	}
+	
 	@Override
 	public Editable computeDifferences(Editable newEditable) {
 		// TODO Auto-generated method stub
 		return null;
-	} 
-	
-	
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (ack ? 1231 : 1237);
+		result = prime * result + ((aim == null) ? 0 : aim.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ects;
+		result = prime * result
+				+ ((modTitle == null) ? 0 : modTitle.hashCode());
+		result = prime * result
+				+ ((subTitle == null) ? 0 : subTitle.hashCode());
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * returns true if all is equal except the version
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Subject other = (Subject) obj;
+		if (ack != other.ack)
+			return false;
+		if (aim == null) {
+			if (other.aim != null)
+				return false;
+		} else if (!aim.equals(other.aim))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (ects != other.ects)
+			return false;
+		if (modTitle == null) {
+			if (other.modTitle != null)
+				return false;
+		} else if (!modTitle.equals(other.modTitle))
+			return false;
+		if (subTitle == null) {
+			if (other.subTitle != null)
+				return false;
+		} else if (!subTitle.equals(other.subTitle))
+			return false;
+		return true;
+	}
 	
 }

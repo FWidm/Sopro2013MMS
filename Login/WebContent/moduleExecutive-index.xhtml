@@ -102,28 +102,56 @@
 					<p:layoutUnit position="center" header="Modulemanual">
 						<p:scrollPanel id="scrollPanel-edit" mode="native"
 							style="min-width:400px; min-height:470px;">
-							<p:panel header="#{EditBean.title}"
-								toggleable="true" toggleSpeed="500"
-								visible="#{EditBean.mainVisible}">
-								<p:inputTextarea rows="5" cols="100" readonly="#{EditBean.descriptionEdit}" value="#{EditBean.description}" />
+							<p:panel header="Kommentare und Notizen" toggleable="false"
+								toggleSpeed="500" visible="#{EditBean.editable}">
+								<p:inputTextarea rows="1" cols="200" readonly="false"
+									value="#{EditBean.message}">
+									<p:ajax event="keyup" />
+								</p:inputTextarea>
+							</p:panel>
+							<p:panel header="#{EditBean.title}" toggleable="true"
+								toggleSpeed="500" visible="#{EditBean.mainVisible}">
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{EditBean.descriptionEdit}"
+									value="#{EditBean.description}">
+									<p:ajax event="keyup" />
+								</p:inputTextarea>
 
 							</p:panel>
-							<p:panel header="Leistungspunkte und Lernziele"
-								toggleable="true" toggleSpeed="500"
-								visible="#{EditBean.ectsAimVisible}">
+							<p:panel header="Leistungspunkte und Lernziele" toggleable="true"
+								toggleSpeed="500" visible="#{EditBean.ectsAimVisible}">
 
-								<strong>Leistungspunkte:</strong><p:inputText readonly="#{EditBean.ectsEdit}" value="#{EditBean.ects}" /><br />
+								<strong>Leistungspunkte:</strong>
+								<p:inputText readonly="#{EditBean.ectsEdit}"
+									value="#{EditBean.ects}">
+									<p:ajax event="keyup" />
+								</p:inputText>
 								<br />
-								<strong>Lernziele:</strong><p:inputTextarea readonly="#{EditBean.aimEdit}" cols="29" value="#{EditBean.aim}" />
-	
+								<br />
+								<strong>Lernziele:</strong>
+								<p:inputTextarea readonly="#{EditBean.aimEdit}" rows="1"
+									cols="200" value="#{EditBean.aim}">
+									<p:ajax event="keyup" />
+								</p:inputTextarea>
+
 							</p:panel>
-							<p:panel header="Zusaetzliche Informationen"
-								toggleable="true" toggleSpeed="500"
-								visible="#{EditBean.addInfoVisible}">
+							<p:panel header="Zusaetzliche Informationen" toggleable="true"
+								toggleSpeed="500" visible="#{EditBean.addInfoVisible}">
 
 								<ui:repeat var="iterator" value="#{EditBean.fieldList}">
-									<strong>Titel: </strong><p:inputText readonly="#{EditBean.fieldTitleEdit}" value="#{iterator.fieldTitle}" /><br />
-									<strong>Beschreibung: </strong><p:inputTextarea readonly="#{EditBean.fieldDescriptionEdit}" value="#{iterator.description}" /><br />
+									<strong>Titel: </strong>
+									<p:inputText readonly="#{EditBean.fieldTitleEdit}"
+										value="#{iterator.fieldTitle}">
+										<p:ajax event="keyup" />
+									</p:inputText>
+									<br />
+									<strong>Beschreibung: </strong>
+									<p:inputTextarea rows="1" cols="200"
+										readonly="#{EditBean.fieldDescriptionEdit}"
+										value="#{iterator.description}">
+										<p:ajax event="keyup" />
+									</p:inputTextarea>
+									<br />
 									<br />
 								</ui:repeat>
 							</p:panel>
@@ -132,9 +160,12 @@
 
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
-							<p:commandButton type="push" value="Zur&#252;cksetzen" icon="ui-icon-trash" actionListener="#EditBean.declime">
+							<p:commandButton type="push" value="Zur&#252;cksetzen"
+								icon="ui-icon-trash" actionListener="#{EditBean.decline}"
+								update=":form:tabview-modEx:scrollPanel-edit">
 							</p:commandButton>
-							<p:commandButton type="push" value="&#220;bernehmen" icon="ui-icon-disk" actionListener="#{EditBean.accept}">
+							<p:commandButton type="push" value="&#220;bernehmen"
+								icon="ui-icon-disk" actionListener="#{EditBean.accept}">
 							</p:commandButton>
 						</div>
 					</p:layoutUnit>
