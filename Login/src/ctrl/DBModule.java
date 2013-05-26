@@ -71,12 +71,12 @@ public class DBModule extends DBManager {
 	 * @param Module
 	 * @param modTitle
 	 */
-	public static void updateModule(Module m, String modTitle) {
+	public static void updateModule(Module newMod, String modTitle) {
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE module SET modTitle = '" + m.getModTitle() + "', description = '" + m.getDescription() + "' " + "WHERE modTitle = '" + modTitle + "'";
+			String update = "UPDATE module SET modTitle = '" + newMod.getModTitle() + "', description = '" + newMod.getDescription() + "' " + "WHERE modTitle = '" + modTitle + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -94,6 +94,7 @@ public class DBModule extends DBManager {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * loads a module based on the specific modTitle
 	 * @param modTitle

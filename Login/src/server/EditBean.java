@@ -11,6 +11,7 @@ import org.primefaces.model.MenuModel;
 
 import ctrl.DBExRules;
 import ctrl.DBField;
+import ctrl.DBModule;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
 import data.EditActionListener;
@@ -184,40 +185,50 @@ public class EditBean {
 	}
 
 	/**
-	 * 
+	 * accept the changes that were made
 	 */
 	public void accept() {
 		if (isEditable()) {
 			System.out.println("isEditable");
 			// get the highest Version
 			int max = 0;
-			// we assume that selectedEditable is instance of Subject
-			Subject oldSub = (Subject) selectedEditable;
-			max = oldSub.getVersion();
-			System.out.println("Max Version" + max);
-			Subject newSub = new Subject(max + 1, title, oldSub.getModTitle(),
-					description, aim, Integer.valueOf(ects), oldSub.isAck());
+			if(selectedEditable instanceof Subject) {
+				Subject oldSub = (Subject) selectedEditable;
+				max = oldSub.getVersion();
+				System.out.println("Max Version" + max);
+				Subject newSub = new Subject(max + 1, title, oldSub.getModTitle(),
+						description, aim, Integer.valueOf(ects), oldSub.isAck());
 
-			// if old sub isn't the same as the new sub
-			// we create new database entries and create a notification
-			if (!oldSub.equals(newSub)) {
-				System.out.println("not equal");
-				if(handleAccept(newSub, oldSub)) {
-					oldFieldList = fieldList;
-					selectedEditable = newSub;
-				}
-			} else {
-				boolean differ = false;
-				for (int i = 0; i < oldFieldList.size(); i++) {
-					if (!fieldList.get(i).equals(oldFieldList.get(i))) {
-						differ = true;
-						break;
-					}
-				}
-				if (differ) {
+				// if old sub isn't the same as the new sub
+				// we create new database entries and create a notification
+				if (!oldSub.equals(newSub)) {
+					System.out.println("not equal");
 					if(handleAccept(newSub, oldSub)) {
 						oldFieldList = fieldList;
 						selectedEditable = newSub;
+					}
+				} else {
+					boolean differ = false;
+					for (int i = 0; i < oldFieldList.size(); i++) {
+						if (!fieldList.get(i).equals(oldFieldList.get(i))) {
+							differ = true;
+							break;
+						}
+					}
+					if (differ) {
+						if(handleAccept(newSub, oldSub)) {
+							oldFieldList = fieldList;
+							selectedEditable = newSub;
+						}
+					}
+				}
+			}
+			else if(selectedEditable instanceof Module) {
+				Module oldMod = (Module) selectedEditable;
+				Module newMod = new Module(title, description);
+				if(!oldMod.equals(newMod)) {
+					if(handleAccept(newMod, oldMod)) {
+						selectedEditable = newMod;
 					}
 				}
 			}
@@ -248,7 +259,13 @@ public class EditBean {
 			title = exRule.getExRulesTitle();
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param newSub
+	 * @param oldSub
+	 * @return true if changes in database were made false otherwise
+	 */
 	private boolean handleAccept(Subject newSub, Subject oldSub) {
 		try {
 			DBSubject.saveSubject(newSub);
@@ -262,6 +279,22 @@ public class EditBean {
 					"queued", false, new Modification(oldSub, newSub));
 			DBNotification.saveNotification(mn);
 		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param newMod
+	 * @param oldMod
+	 * @return true if changes in database were made false otherwise
+	 */
+	private boolean handleAccept(Module newMod, Module oldMod) {
+		try {
+			DBModule.updateModule(newMod, oldMod.getModTitle());
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
