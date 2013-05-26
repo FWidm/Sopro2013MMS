@@ -68,6 +68,7 @@ public class PdfBox {
 		// LOAD FIELDS FROM DB
 		List<Field> fields = DBField.loadFieldList(sub.getModTitle(),
 				sub.getVersion(), sub.getSubTitle());
+		System.out.println(sub.getSubTitle()+" "+fields.toString());
 		
 		try {
 			return printPDF(sub, fields);
@@ -123,18 +124,23 @@ public class PdfBox {
 			printLine(content, "Version: " + sub.getVersion(), headX + 20,
 					headY - y, 10);
 			y += 12;
+			printLine(content, "Ziel: " + sub.getAim(), headX + 20,
+					headY - y, 10);
+			y += 12;
 			List<String> lines = getParts(sub.getDescription(), 100);
-			printMultipleLines(content, lines, headX + 20, headY - y, 10);
-			y += 20;
+			int lineCount = printMultipleLines(content, lines, headX + 20, headY - y, 10);
+			y += 12*lineCount;
+			System.out.println(lineCount +  " "+y);
 			printFields(content, page, doc, fields, y);
 
 			content.close();
 			String name = sub.getSubTitle();
 			String version = "v" + sub.getVersion();
-			String alphaOnly = name.replaceAll("[^a-zA-Z]+", "");
-			doc.save("pdf/" + alphaOnly + "_" + version + ".pdf");
+			//remove all chars that are not  a-z or A-Z
+			String charsOnly = name.replaceAll("[^a-zA-Z]+", "");
+			doc.save("pdf/" + charsOnly + "_" + version + ".pdf");
 			doc.close();
-			return "pdf/" + alphaOnly + "_" + version + ".pdf";
+			return "pdf/" + charsOnly + "_" + version + ".pdf";
 		} catch (IOException | COSVisitorException e) {
 			System.out.println(e);
 		}
@@ -160,7 +166,9 @@ public class PdfBox {
 		int offset = 0;
 		int tmpsize = 0;
 		int bottomborder = 115;
-		int tmpY = headY - y + offset;
+		int tmpY = headY - y + offset +25;
+		content.drawLine(headX, tmpY-35,
+				page.getMediaBox().getWidth() - 50, tmpY-35);
 		for (Field f : fields) {
 			tmpY -= 55;
 			if (tmpY < bottomborder) {
