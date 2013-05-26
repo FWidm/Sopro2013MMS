@@ -340,6 +340,16 @@
 				</p:tab>
 			</p:tabView>
 		</p:tab>
+		
+		<p:tab title="Logout">
+			<table width="350" border="0" cellpadding="2">
+				<tr>
+					<td><h3>Wirklich ausloggen?</h3></td>
+					<td><p:commandButton value="OK" type="submit"
+							actionListener="#{LoginBean.logout}" /></td>
+				</tr>
+			</table>
+		</p:tab>
 
 	</p:tabView>
 </h:body>

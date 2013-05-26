@@ -9,8 +9,14 @@
 	<!-- <meta http-equiv="refresh" content="30" /> -->
 	<title>MMS Index</title>
 
+	<!-- adam.admin@uni-ulm.de - 5qQ0B8kpQT -->
+	<!-- robin.redakteur@uni-ulm.de - C6r5a6cDsU -->
+	<!-- dennis.dekan@uni-ulm.de - if6IpquxYo -->
+	<!-- daniel.dezernat@uni-ulm.de - 70JpvK601e -->
+	<!-- markus.modulverantwortlicher@uni-ulm.de - aPdeHN338q -->
+
 	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/default.css" /> 
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 <!-- body -->
@@ -36,11 +42,11 @@
 								id="password" value="#{LoginBean.password}" /></td>
 					</tr>
 					<tr>
-						<td colspan="2" align="right"><p:commandButton id="resetpw"
-								value="forgot password"
+						<td colspan="2" align="right"><p:commandButton
+								action="#{LoginBean.checkSuccess}" value="Login" type="submit" />
+							<p:commandButton id="resetpw" value="forgot password"
 								onclick="confirmation.show();return false;">
-							</p:commandButton> <p:commandButton action="#{LoginBean.checkSuccess}"
-								value="Login" type="submit" /></td>
+							</p:commandButton></td>
 					</tr>
 				</table>
 				<p:messages id="login-messages" showDetail="true" autoUpdate="true"

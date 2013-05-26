@@ -11,13 +11,13 @@
 	<title>Redakteur</title>
 
 	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/Redakteur.css" />
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
 <h:body>
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/logo_100_sw.jpg"
+		<p:graphicImage value="/Image/iui_19.png"
 			style="position:absolute; top:20px; right:20px;" />
 	</div>
 	<!-- body -->
@@ -87,6 +87,17 @@
 
 			<p:tab title="Edit"></p:tab>
 			<p:tab title="Notification"></p:tab>
+			
+			<p:tab title="Logout">
+				<table width="350" border="0" cellpadding="2">
+					<tr>
+						<td><h3>Wirklich ausloggen?</h3></td>
+						<td><p:commandButton value="OK" type="submit"
+								actionListener="#{LoginBean.logout}" /></td>
+					</tr>
+				</table>
+			</p:tab>
+			
 		</p:tabView>
 		<!-- End TabView -->
 	</h:form>

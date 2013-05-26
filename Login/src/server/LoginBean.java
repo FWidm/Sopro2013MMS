@@ -54,11 +54,12 @@ public class LoginBean {
 	/**
 	 * logs out the current user
 	 * 
-	 * @return display the login page
 	 */
-	public String logout() {
+	public void logout() {
 		dbUser = null;
-		return "login";
+		loggedIn = false;
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		nav.performNavigation("test-index");
 	}
 
 	/**
@@ -69,7 +70,27 @@ public class LoginBean {
 	public void checkSuccess() {
 		if (checkValidUser()) {
 			loggedIn = true;
-			nav.performNavigation("login-success");
+			// set session attributes for current user
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("role", dbUser.getRole());
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("email", dbUser.getEmail());
+			switch(dbUser.getRole()){
+			case "Administrator": 
+				nav.performNavigation("admin-index");
+				break;
+			case "Redakteur": 
+				nav.performNavigation("redakteur-index");
+				break;
+			case "Modulverantwortlicher": 
+				nav.performNavigation("modulverantwortlicher-index");
+				break;
+			case "Dezernat": 
+				nav.performNavigation("dezernat-index");
+				break;
+			case "Dekan": 
+				nav.performNavigation("dekan-index");
+				break;
+			}
+			
 		} else {
 			loggedIn = false;
 			addErrorMessage("login", "Login failed", "Please check your input.");
@@ -126,6 +147,7 @@ public class LoginBean {
 		System.out.println("invalid");
 		return false;
 	}
+	
 
 	public void checkLoggedIn(ComponentSystemEvent event) {
 		System.out.println("checkLoggedIn");
