@@ -235,7 +235,42 @@ public class DBSubject extends DBManager {
 		}
 		return subs;
 	}
+	
+	public static Subject loadSubjectMaxVersion(String subTitle, String modTitle){
+		Subject sub=null;
+		
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
 
+			String query = "SELECT subtitle,,modtitle,description,aim,ects,ack, max(version) AS 'version'"
+					+ " FROM subject "+
+					" WHERE ack=TRUE AND subtitle='"+subTitle+"' AND modtitle='"+modTitle+"'"+
+					" GROUP BY subtitle";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				int ver = rs.getInt("version");
+				String subT = rs.getString("subTitle");
+				String modT = rs.getString("modTitle");
+				String desc = rs.getString("description");
+				String aim = rs.getString("aim");
+				int ects = rs.getInt("ects");
+				boolean ack = rs.getBoolean("ack");
+
+				sub=new Subject(ver, subT, modT, desc, aim, ects, ack);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return sub;
+	}
 	/**
 	 * update a subjects ack field
 	 * 
@@ -253,8 +288,8 @@ public class DBSubject extends DBManager {
 			Statement stmt = con.createStatement();
 
 			String update = "UPDATE subject SET ack=" + b + " WHERE version = "
-					+ version + " AND " + "subTitle = '" + subTitle + "' AND "
-					+ " modTitle = '" + modTitle + "'";
+					+ version + " AND " + "subtitle = '" + subTitle + "' AND "
+					+ " modtitle = '" + modTitle + "'";
 			System.out.println(update);
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
