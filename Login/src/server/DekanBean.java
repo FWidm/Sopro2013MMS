@@ -38,6 +38,7 @@ public class DekanBean {
 	private ModManual currentMM;
 	
 	private List<ExRules> exRulesList;
+	private List<ExRules> exRulesSearchList;
 	private String exRules;
 	private ExRules currentER;
 	
@@ -54,6 +55,8 @@ public class DekanBean {
 		modManualList = DBModManual.loadAllModManuals();
 		exRulesList = new LinkedList<ExRules>();
 		exRulesList = DBExRules.loadAllExRules();
+		exRulesSearchList = new LinkedList<ExRules>();
+		exRulesSearchList = DBExRules.loadAllExRules();
 	}
 	
 	public void onTabChange(TabChangeEvent event) {  
@@ -69,7 +72,7 @@ public class DekanBean {
 	public void resetFields() {
 		modManTitle = description = null;
 		deadline = null;
-		exRulesTitle = -1;
+		exRules = null;
 	}
 	
 	/**
@@ -85,7 +88,7 @@ public class DekanBean {
 	 */
 	public void saveModManual(ActionEvent action) {
 		success = true;
-		if (modManTitle.isEmpty() || description.isEmpty() || exRulesTitle == -1 || deadline == null) {
+		if (modManTitle.isEmpty() || description.isEmpty() || exRules == null || exRules.equals("") || deadline == null) {
 			success = false;
 			addErrorMessage("Empty Field error: ", "Fields may not be empty - be sure to edit every field.");
 			System.out.println(success);			
@@ -93,11 +96,10 @@ public class DekanBean {
 		}	
 
 		if (DBModManual.loadModManual(modManTitle) == null) {
-			String exRules = decodeExRulesTitle();
 			DBModManual.saveModManual(new ModManual(modManTitle, description, exRules, deadline));
 			System.out.println(success);
 			addMessage("Module manual created: ", "" + modManTitle + ", " + exRules + ", " + deadline);
-			exRulesTitle = -1;
+			exRules = null;
 			actualizeModManualList();
 			return;
 		}
@@ -114,7 +116,7 @@ public class DekanBean {
 	public void saveExRules(ActionEvent action) {
 		success = true;
 		System.out.println("**** " + exRules);
-		if (exRules == "") {
+		if (exRules.equals("") || exRules == null) {
 			success = false;
 			addErrorMessage("Empty Field error: ", "Field may not be empty.");
 			System.out.println(success);			
@@ -123,8 +125,11 @@ public class DekanBean {
 
 		if (DBExRules.loadExRules(exRules) == null) {
 			DBExRules.saveExRule(new ExRules(exRules));
+			exRules = null;
+			actualizeExRulesList();
+			actualizeExRulesSearchList();
 			System.out.println(success);
-			addMessage("Examinatino rules created: ", exRules);
+			addMessage("Examination rules created: ", exRules);
 			return;
 		}
 		
@@ -138,11 +143,10 @@ public class DekanBean {
 	 * function that refreshes the ModManualsList for delete and edit mode
 	 */
 	public void actualizeModManualList() {
-		String exRulesTitle = decodeExRulesTitle();
-		if (exRulesTitle == null)
+		if (exRules == null || exRules.equals(""))
 			setModManualList(DBModManual.loadAllModManuals());
 		else
-			setModManualList(DBModManual.loadModManuals(exRulesTitle));
+			setModManualList(DBModManual.loadModManuals(exRules));
 	}
 	
 	/**
@@ -174,30 +178,21 @@ public class DekanBean {
 	}
 	
 	/**
-	 * Translates numbers into Strings that are way more readable
-	 * 
-	 * @return String
-	 */
-	private String decodeExRulesTitle() {
-		switch (exRulesTitle) {
-		case 1:
-			return "PO2010";
-		case 2:
-			return "PO2012";
-		default:
-			return null;
-		}
-	}
-	
-	/**
 	 * function that refreshes the exRulesList for delete edit mode
 	 */
 	public void actualizeExRulesList() {
-		String exRulesTitle = decodeExRulesTitle();
-		if (exRulesTitle == null)
+		System.out.println(exRules);
+		if (exRules == null || exRules.equals(""))
 			setExRulesList(DBExRules.loadAllExRules());
 		else
-			setExRulesList(DBExRules.loadAllExRules(exRulesTitle));
+			setExRulesList(DBExRules.loadAllExRules(exRules));
+	}
+	
+	/**
+	 * function that refreshes the exRulesSearchList for the drop down menu
+	 */
+	public void actualizeExRulesSearchList() {
+		setExRulesSearchList(DBExRules.loadAllExRules());
 	}
 	
 	/**
@@ -205,7 +200,7 @@ public class DekanBean {
 	 */
 	public void deleteModManual(){
 		DBModManual.deleteModManual(currentMM.getModManTitle());
-		exRulesTitle = -1;
+		exRules = null;
 		actualizeModManualList();
 	}
 	
@@ -214,7 +209,9 @@ public class DekanBean {
 	 */
 	public void deleteExRules(){
 		DBExRules.deleteExRule(currentER.getExRulesTitle());
+		exRules = null;
 		actualizeExRulesList();
+		actualizeExRulesSearchList();
 	}
 	
 	/**
@@ -365,6 +362,20 @@ public class DekanBean {
 	 */
 	public void setCurrentMM(ModManual currentMM) {
 		this.currentMM = currentMM;
+	}
+
+	/**
+	 * @return the exRulesSearchList
+	 */
+	public List<ExRules> getExRulesSearchList() {
+		return exRulesSearchList;
+	}
+
+	/**
+	 * @param exRulesSearchList the exRulesSearchList to set
+	 */
+	public void setExRulesSearchList(List<ExRules> exRulesSearchList) {
+		this.exRulesSearchList = exRulesSearchList;
 	}
 	
 	
