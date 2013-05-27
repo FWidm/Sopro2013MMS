@@ -41,6 +41,8 @@ public class DekanBean {
 	private List<ExRules> exRulesSearchList;
 	private String exRules;
 	private ExRules currentER;
+	
+	private static SimpleDateFormat sdf;
 
 
 	/**
@@ -48,6 +50,7 @@ public class DekanBean {
 	 */
 	@PostConstruct
 	public void init() {
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		modManualList = new LinkedList<ModManual>();
 		modManualList = DBModManual.loadAllModManuals();
 		exRulesList = new LinkedList<ExRules>();
@@ -168,11 +171,10 @@ public class DekanBean {
 		ModManual m = (ModManual) event.getObject();
 		FacesMessage msg = new FacesMessage("User Edited", ((ModManual) event.getObject()).toString());
 		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
-			System.out.println(m.toString());
-			DBModManual.updateModManual(m, m.getModManTitle());
-			
+
 			// if deadline was changed --> notify
-			if(DBModManual.loadModManual(m.getModManTitle()).getDeadline() != m.getDeadline()){
+			if(!((DBModManual.loadModManual(m.getModManTitle())).getDeadline().toString().equals(sdf.format(m.getDeadline())))){
+				System.out.println("date changed!");
 				// *******************************************************************************************************************
 				// add notification code here
 
@@ -182,7 +184,8 @@ public class DekanBean {
 				// private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				// String formattedDate = sdf.format(deadline);
 				// *******************************************************************************************************************
-			}			
+			}	
+			DBModManual.updateModManual(m, m.getModManTitle());
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 		actualizeModManualList();
