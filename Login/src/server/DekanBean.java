@@ -29,28 +29,25 @@ import data.User;
 @ManagedBean(name = "DekanBean")
 @SessionScoped
 public class DekanBean {
-	
+
 	private List<ModManual> modManualList;
 	private boolean success = true;
 	private String modManTitle, description;
 	private int exRulesTitle;
 	private Date deadline;
 	private ModManual currentMM;
-	
+
 	private List<ExRules> exRulesList;
 	private List<ExRules> exRulesSearchList;
 	private String exRules;
 	private ExRules currentER;
-	
-	SimpleDateFormat sdf;
-	
+
+
 	/**
 	 * Equivalent to a constructor
 	 */
 	@PostConstruct
 	public void init() {
-		// is used to parse date
-		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		modManualList = new LinkedList<ModManual>();
 		modManualList = DBModManual.loadAllModManuals();
 		exRulesList = new LinkedList<ExRules>();
@@ -58,14 +55,14 @@ public class DekanBean {
 		exRulesSearchList = new LinkedList<ExRules>();
 		exRulesSearchList = DBExRules.loadAllExRules();
 	}
-	
+
 	public void onTabChange(TabChangeEvent event) {  
-        FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: " + event.getTab().getTitle());  
-  
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
-        System.out.println("Tab Changed!");
-    }
-	
+		FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: " + event.getTab().getTitle());  
+
+		FacesContext.getCurrentInstance().addMessage(null, msg);  
+		System.out.println("Tab Changed!");
+	}
+
 	/**
 	 * reset modManTitle, description, deadline and exRulesTitle
 	 */
@@ -74,14 +71,14 @@ public class DekanBean {
 		deadline = null;
 		exRules = null;
 	}
-	
+
 	/**
 	 * reset exRules to null
 	 */
 	public void resetField() {
 		exRules = null;
 	}
-	
+
 	/**
 	 * saves the ModManual to the database
 	 * 
@@ -101,14 +98,25 @@ public class DekanBean {
 			addMessage("Module manual created: ", "" + modManTitle + ", " + exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
+
+			// *******************************************************************************************************************
+			// add notification code here
+
+			// in der variable deadline ist das datum gespeichert. muss evtl noch in ein anderes datums-format umgewandelt werden.
+			// umwandeln in sql-kompatibles format geht mit der SimpleDateFormat klasse, bsp. siehe unten oder DBModManual.java
+
+			// private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			// String formattedDate = sdf.format(deadline);
+			// *******************************************************************************************************************
+
 			return;
 		}
-		
+
 		success = false;
 		System.out.println("error - modMantitle already exists: " + modManTitle + " " + success);
 		addErrorMessage("Module manual title already exists: ", "'" + modManTitle + "' is already in the database - please doublecheck.");
 	}
-	
+
 	/**
 	 * saves the examination rules to the database
 	 * 
@@ -132,13 +140,13 @@ public class DekanBean {
 			addMessage("Examination rules created: ", exRules);
 			return;
 		}
-		
+
 		success = false;
 		System.out.println("error - exRules already exists: " + exRules + " " + success);
 		addErrorMessage("Examination rules title already exists: ", "'" + exRules + "' is already in the database - please doublecheck.");
 	}
-	
-	
+
+
 	/**
 	 * function that refreshes the ModManualsList for delete and edit mode
 	 */
@@ -148,7 +156,7 @@ public class DekanBean {
 		else
 			setModManualList(DBModManual.loadModManuals(exRules));
 	}
-	
+
 	/**
 	 * Event Triggered when the accept icon is clicked on edit module manual tab -
 	 * updates with new Values
@@ -156,12 +164,25 @@ public class DekanBean {
 	 * @param event
 	 */
 	public void onEdit(RowEditEvent event) {
-		
+
 		ModManual m = (ModManual) event.getObject();
 		FacesMessage msg = new FacesMessage("User Edited", ((ModManual) event.getObject()).toString());
 		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
 			System.out.println(m.toString());
 			DBModManual.updateModManual(m, m.getModManTitle());
+			
+			// if deadline was changed --> notify
+			if(DBModManual.loadModManual(m.getModManTitle()).getDeadline() != m.getDeadline()){
+				// *******************************************************************************************************************
+				// add notification code here
+
+				// in der variable deadline ist das datum gespeichert. muss evtl noch in ein anderes datums-format umgewandelt werden.
+				// umwandeln in sql-kompatibles format geht mit der SimpleDateFormat klasse, bsp. siehe unten oder DBModManual.java
+
+				// private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				// String formattedDate = sdf.format(deadline);
+				// *******************************************************************************************************************
+			}			
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 		actualizeModManualList();
@@ -176,7 +197,7 @@ public class DekanBean {
 		FacesMessage msg = new FacesMessage("User edit cancelled", ((ModManual) event.getObject()).getModManTitle());
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
-	
+
 	/**
 	 * function that refreshes the exRulesList for delete edit mode
 	 */
@@ -187,14 +208,14 @@ public class DekanBean {
 		else
 			setExRulesList(DBExRules.loadAllExRules(exRules));
 	}
-	
+
 	/**
 	 * function that refreshes the exRulesSearchList for the drop down menu
 	 */
 	public void actualizeExRulesSearchList() {
 		setExRulesSearchList(DBExRules.loadAllExRules());
 	}
-	
+
 	/**
 	 * deletes the exRule from the database, which was selected in the data table
 	 */
@@ -203,7 +224,7 @@ public class DekanBean {
 		exRules = null;
 		actualizeModManualList();
 	}
-	
+
 	/**
 	 * deletes the exRule from the database, which was selected in the data table
 	 */
@@ -213,7 +234,7 @@ public class DekanBean {
 		actualizeExRulesList();
 		actualizeExRulesSearchList();
 	}
-	
+
 	/**
 	 * if anything goes wrong - display an Error
 	 * 
@@ -235,7 +256,7 @@ public class DekanBean {
 		FacesContext.getCurrentInstance().addMessage("dekan-messages",
 				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
-	
+
 	/**
 	 * @return the modManualList
 	 */
@@ -377,7 +398,7 @@ public class DekanBean {
 	public void setExRulesSearchList(List<ExRules> exRulesSearchList) {
 		this.exRulesSearchList = exRulesSearchList;
 	}
-	
-	
+
+
 
 }
