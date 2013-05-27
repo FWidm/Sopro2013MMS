@@ -11,7 +11,7 @@
 	<title>Zuweisungs Panel</title>
 
 	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/default.css" /> 
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
@@ -33,11 +33,11 @@
 					id="changes-layout">
 
 					<p:layoutUnit id="changeAccess" position="center">
-					
+
 						<table class="admin-edit-t" width="250" border="0" cellpadding="2">
 							<tr>
-								<td><h:outputText value="Module" /> <p:selectOneMenu
-										value="#{AccessBean.selectedUser}">
+								<td><h:outputText value="User" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUserAccept}">
 										<f:selectItem itemLabel="Select One User" itemValue="-1" />
 										<f:selectItems value="#{AccessBean.userList}" var="#{it}"
 											itemValue="#{it}" itemLabel="#{it}" />
@@ -54,11 +54,82 @@
 							</tr>
 							<tr>
 								<td><p:commandButton
-										actionListener="#{AccessBean.acceptChanges}" value="sysout" /></td>
+										actionListener="#{AccessBean.acceptChanges}" value="accept" /></td>
 							</tr>
 						</table>
+						<p:messages id="messages-access" for="messages-access"
+							showDetail="true" autoUpdate="true" closable="true" />
 					</p:layoutUnit>
 
+				</p:layout>
+
+			</p:tab>
+			<p:tab title="User Access List">
+
+				<p:layout style="min-width:400px;min-height:500px;"
+					id="change-list-layout">
+
+					<p:layoutUnit id="listAccess" position="center">
+
+						<table class="list-table" width="250" border="0" cellpadding="2">
+							<tr>
+								<td><h:outputText value="User" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUserDisplay}">
+										<f:selectItem itemLabel="Select One User" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.userList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td></td>
+
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{AccessBean.listChanges}" value="accept"
+										update=":form:tabview-zuweisung:change-list-layout" /></td>
+							</tr>
+						</table>
+						<br />
+						<h3>
+							<h:outputText
+								value="Zuweisungen f&uuml;r #{AccessBean.selectedUserDisplay}" />
+						</h3>
+						<ui:repeat id="outputValues" value="#{AccessBean.userModAccList}"
+							var="modAcc">
+							<li>- <h:outputText value="#{modAcc.modTitle}" /></li>
+						</ui:repeat>
+						<br />
+						<p:dataTable id="users" var="it" value="#{AccessBean.userModAccList}"
+							style="max-width:1024px" scrollable="true" scrollHeight="250">
+							<p:column headerText="Email" footerText="" style="width:45%">
+								<h:outputText value="#{it.email}" />
+							</p:column>
+							<p:column headerText="Modtitle" footerText="" style="width:45%">
+								<h:outputText value="#{it.modTitle}" />
+							</p:column>
+							<!-- update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame:users" -->
+							<p:column style="width:40px" footerText="">
+								<p:commandButton icon="ui-icon-trash"
+									oncomplete="deleteDlg.show();">
+									<f:setPropertyActionListener value="#{it}"
+										target="#{AccessBean.deleteMod}" />
+								</p:commandButton>
+
+							</p:column>
+						</p:dataTable>
+					</p:layoutUnit>
+					<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
+						header="Delete" message="Delete this ?" width="400" modal="true"
+						closable="false" severity="alert">
+						<!--  update=":tabview-admin:delete-frame:users"  -->
+						<h:panelGroup layout="block" style="text-align: right">
+							<p:commandButton value="Yes"
+								oncomplete="deleteDlg.hide();"
+								/>
+							<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+						</h:panelGroup>
+					</p:confirmDialog>
 				</p:layout>
 
 			</p:tab>

@@ -14,8 +14,9 @@ public class DBModAccess extends DBManager {
 	/**
 	 * Save a ModAccess to the database
 	 * @param ma
+	 * @return success
 	 */
-	public static void saveModAccess(ModAccess ma) {
+	public static boolean saveModAccess(ModAccess ma) {
 		Connection con = null;		
 		try {
 			con = openConnection();
@@ -32,10 +33,12 @@ public class DBModAccess extends DBManager {
 				closeQuietly(stmt);
 				closeQuietly(con); // Abbau Verbindung zur Datenbank
 			}
+			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
