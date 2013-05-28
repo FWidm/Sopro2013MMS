@@ -249,7 +249,7 @@ public class DBSubject extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
-			String query = "SELECT subtitle,,modtitle,description,aim,ects,ack, max(version) AS 'version'"
+			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
 					+ " FROM subject "+
 					" WHERE ack=TRUE AND subtitle='"+subTitle+"' AND modtitle='"+modTitle+"'"+
 					" GROUP BY subtitle";
@@ -276,6 +276,43 @@ public class DBSubject extends DBManager {
 		}
 		return sub;
 	}
+	
+	public static Subject loadSubjectMaxVersionForNotif(String subTitle, String modTitle){
+		Subject sub=null;
+		
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+
+			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
+					+ " FROM subject "+
+					" WHERE ack=FALSE AND subtitle='"+subTitle+"' AND modtitle='"+modTitle+"'"+
+					" GROUP BY subtitle";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				int ver = rs.getInt("version");
+				String subT = rs.getString("subTitle");
+				String modT = rs.getString("modTitle");
+				String desc = rs.getString("description");
+				String aim = rs.getString("aim");
+				int ects = rs.getInt("ects");
+				boolean ack = rs.getBoolean("ack");
+
+				sub=new Subject(ver, subT, modT, desc, aim, ects, ack);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return sub;
+	}
+	
 	/**
 	 * load a subjectlist
 	 * @param subTitle
@@ -290,7 +327,7 @@ public class DBSubject extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
-			String query = "SELECT subtitle,,modtitle,description,aim,ects,ack, max(version) AS 'version'"
+			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
 					+ " FROM subject "+
 					" WHERE ack=TRUE AND modtitle='"+modTitle+"'"+
 					" GROUP BY subtitle";

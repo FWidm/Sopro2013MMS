@@ -515,7 +515,7 @@ public class DBNotification extends DBManager {
 					// TODO add version for ExRule or not ;)
 				} else if (mod != null) {
 					if (sub != null) {
-						Subject subject = DBSubject.loadSubjectMaxVersion(sub, mod);
+						Subject subject = DBSubject.loadSubjectMaxVersionForNotif(sub, mod);
 						notif.add(new ModificationNotification(recEm, senEm,
 								timS, mess, act, stat, isRead,
 								new Modification(DBSubject.loadSubject(

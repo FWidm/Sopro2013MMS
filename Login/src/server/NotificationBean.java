@@ -24,6 +24,7 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.event.SelectEvent;
 import ctrl.DBField;
 import ctrl.DBNotification;
+import ctrl.DBSubject;
 
 @ManagedBean(name = "NotificationBean")
 @RequestScoped
@@ -40,8 +41,8 @@ public class NotificationBean {
 	private ModificationNotification selectedMessage;
 	Editable selectedEditableAfter, selectedEditableBefore;
 	private String strTimeStamp;
-	
-	//variables for editable before & after
+
+	// variables for editable before & after
 	private String title, description, ects, aim;
 	private boolean mainVisible, ectsAimVisible, addInfoVisible;
 	private String title2, description2, ects2, aim2;
@@ -134,7 +135,7 @@ public class NotificationBean {
 		System.out.println("decline");
 
 		if (selectedNotification != null) {
-			if (DBNotification.declineNotification( getSelectedNotification())) {
+			if (DBNotification.declineNotification(getSelectedNotification())) {
 				selectedNotification.setStatus("accepted");
 				actualizeNotificationList();
 				System.out.println(selectedNotification.getMessage()
@@ -158,6 +159,9 @@ public class NotificationBean {
 				actualizeNotificationList();
 				System.out.println(selectedNotification.getMessage()
 						+ " was accepted");
+				Subject newSub = (Subject) selectedEditableAfter;
+				DBSubject.updateSubjectAck(true, newSub.getVersion(),
+						newSub.getSubTitle(), newSub.getModTitle());
 			} else
 				System.out.println("nothing to accept");
 		} else
@@ -181,7 +185,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param recipientEmail the recipientEmail to set
+	 * @param recipientEmail
+	 *            the recipientEmail to set
 	 */
 	public void setRecipientEmail(String recipientEmail) {
 		this.recipientEmail = recipientEmail;
@@ -195,7 +200,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param senderEmail the senderEmail to set
+	 * @param senderEmail
+	 *            the senderEmail to set
 	 */
 	public void setSenderEmail(String senderEmail) {
 		this.senderEmail = senderEmail;
@@ -209,7 +215,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param timeStamp the timeStamp to set
+	 * @param timeStamp
+	 *            the timeStamp to set
 	 */
 	public void setTimeStamp(Timestamp timeStamp) {
 		this.timeStamp = timeStamp;
@@ -223,7 +230,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param message the message to set
+	 * @param message
+	 *            the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -237,7 +245,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param action the action to set
+	 * @param action
+	 *            the action to set
 	 */
 	public void setAction(String action) {
 		this.action = action;
@@ -251,7 +260,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -265,9 +275,11 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param notificationList the notificationList to set
+	 * @param notificationList
+	 *            the notificationList to set
 	 */
-	public void setNotificationList(List<ModificationNotification> notificationList) {
+	public void setNotificationList(
+			List<ModificationNotification> notificationList) {
 		this.notificationList = notificationList;
 	}
 
@@ -279,83 +291,91 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param selectedNotification the selectedNotification to set
+	 * @param selectedNotification
+	 *            the selectedNotification to set
 	 */
 	public void setSelectedNotification(
 			ModificationNotification selectedNotification) {
 		this.selectedNotification = selectedNotification;
-		selectedEditableAfter = selectedNotification.getModification().getAfter();
-		selectedEditableBefore = selectedNotification.getModification().getBefore();
-		if(selectedEditableAfter instanceof Subject && selectedEditableBefore instanceof Subject) {
-			//After
-			Subject sub = (Subject) selectedEditableAfter;
-			fieldList = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(), sub.getSubTitle());
-			title = sub.getSubTitle();
-			description = sub.getDescription();
-			ects = String.valueOf(sub.getEcts());
-			aim = sub.getAim();
-			mainVisible = true;
-			ectsAimVisible = true;
-			addInfoVisible = true;
-			System.out.println(description);
-			//Before
-			Subject sub2 = (Subject) selectedEditableBefore;
-			fieldList2 = DBField.loadFieldList(sub2.getModTitle(), sub2.getVersion(), sub2.getSubTitle());
-			title2 = sub2.getSubTitle();
-			description2 = sub2.getDescription();
-			ects2 = String.valueOf(sub2.getEcts());
-			aim2 = sub2.getAim();
-			mainVisible2 = true;
-			ectsAimVisible2 = true;
-			addInfoVisible2 = true;
-		}
-		else if(selectedEditableAfter instanceof Module && selectedEditableBefore instanceof Module) {
-			//After
-			Module mod = (Module) selectedEditableAfter;
-			title = mod.getModTitle();
-			description = mod.getDescription();
-			mainVisible = true;
-			ectsAimVisible = false;
-			addInfoVisible = false;
-			//Before
-			Module mod2 = (Module) selectedEditableBefore;
-			title2 = mod2.getModTitle();
-			description2 = mod2.getDescription();
-			mainVisible2 = true;
-			ectsAimVisible2 = false;
-			addInfoVisible2 = false;
-		}
-		else if(selectedEditableAfter instanceof ModManual && selectedEditableBefore instanceof ModManual) {
-			//After
-			ModManual modMan = (ModManual) selectedEditableAfter;
-			title = modMan.getModManTitle();
-			description = modMan.getDescription();
-			mainVisible = true;
-			ectsAimVisible = false;
-			addInfoVisible = false;
-			//Before
-			ModManual modMan2 = (ModManual) selectedEditableBefore;
-			title2 = modMan2.getModManTitle();
-			description2 = modMan2.getDescription();
-			mainVisible2 = true;
-			ectsAimVisible2 = false;
-			addInfoVisible2 = false;
-		}
-		else if(selectedEditableAfter instanceof ExRules && selectedEditableBefore instanceof ExRules) {
-			//After
-			ExRules rule = (ExRules) selectedEditableAfter;
-			title = rule.getExRulesTitle();
-			description = "";
-			mainVisible = true;
-			ectsAimVisible = false;
-			addInfoVisible = false;
-			//Before
-			ExRules rule2 = (ExRules) selectedEditableBefore;
-			title2 = rule2.getExRulesTitle();
-			description2 = "";
-			mainVisible2 = true;
-			ectsAimVisible2 = false;
-			addInfoVisible2 = false;
+		if (selectedNotification != null) {
+			selectedEditableAfter = selectedNotification.getModification()
+					.getAfter();
+			selectedEditableBefore = selectedNotification.getModification()
+					.getBefore();
+			if (selectedEditableAfter instanceof Subject
+					&& selectedEditableBefore instanceof Subject) {
+				// After
+				Subject sub = (Subject) selectedEditableAfter;
+				fieldList = DBField.loadFieldList(sub.getModTitle(),
+						sub.getVersion(), sub.getSubTitle());
+				title = sub.getSubTitle();
+				description = sub.getDescription();
+				ects = String.valueOf(sub.getEcts());
+				aim = sub.getAim();
+				mainVisible = true;
+				ectsAimVisible = true;
+				addInfoVisible = true;
+				System.out.println(description);
+				// Before
+				Subject sub2 = (Subject) selectedEditableBefore;
+				fieldList2 = DBField.loadFieldList(sub2.getModTitle(),
+						sub2.getVersion(), sub2.getSubTitle());
+				title2 = sub2.getSubTitle();
+				description2 = sub2.getDescription();
+				ects2 = String.valueOf(sub2.getEcts());
+				aim2 = sub2.getAim();
+				mainVisible2 = true;
+				ectsAimVisible2 = true;
+				addInfoVisible2 = true;
+			} else if (selectedEditableAfter instanceof Module
+					&& selectedEditableBefore instanceof Module) {
+				// After
+				Module mod = (Module) selectedEditableAfter;
+				title = mod.getModTitle();
+				description = mod.getDescription();
+				mainVisible = true;
+				ectsAimVisible = false;
+				addInfoVisible = false;
+				// Before
+				Module mod2 = (Module) selectedEditableBefore;
+				title2 = mod2.getModTitle();
+				description2 = mod2.getDescription();
+				mainVisible2 = true;
+				ectsAimVisible2 = false;
+				addInfoVisible2 = false;
+			} else if (selectedEditableAfter instanceof ModManual
+					&& selectedEditableBefore instanceof ModManual) {
+				// After
+				ModManual modMan = (ModManual) selectedEditableAfter;
+				title = modMan.getModManTitle();
+				description = modMan.getDescription();
+				mainVisible = true;
+				ectsAimVisible = false;
+				addInfoVisible = false;
+				// Before
+				ModManual modMan2 = (ModManual) selectedEditableBefore;
+				title2 = modMan2.getModManTitle();
+				description2 = modMan2.getDescription();
+				mainVisible2 = true;
+				ectsAimVisible2 = false;
+				addInfoVisible2 = false;
+			} else if (selectedEditableAfter instanceof ExRules
+					&& selectedEditableBefore instanceof ExRules) {
+				// After
+				ExRules rule = (ExRules) selectedEditableAfter;
+				title = rule.getExRulesTitle();
+				description = "";
+				mainVisible = true;
+				ectsAimVisible = false;
+				addInfoVisible = false;
+				// Before
+				ExRules rule2 = (ExRules) selectedEditableBefore;
+				title2 = rule2.getExRulesTitle();
+				description2 = "";
+				mainVisible2 = true;
+				ectsAimVisible2 = false;
+				addInfoVisible2 = false;
+			}
 		}
 	}
 
@@ -367,7 +387,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param selectedMessage the selectedMessage to set
+	 * @param selectedMessage
+	 *            the selectedMessage to set
 	 */
 	public void setSelectedMessage(ModificationNotification selectedMessage) {
 		this.selectedMessage = selectedMessage;
@@ -381,7 +402,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param strTimeStamp the strTimeStamp to set
+	 * @param strTimeStamp
+	 *            the strTimeStamp to set
 	 */
 	public void setStrTimeStamp(String strTimeStamp) {
 		this.strTimeStamp = strTimeStamp;
@@ -395,7 +417,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param selectedEditableAfter the selectedEditableAfter to set
+	 * @param selectedEditableAfter
+	 *            the selectedEditableAfter to set
 	 */
 	public void setSelectedEditableAfter(Editable selectedEditableAfter) {
 		this.selectedEditableAfter = selectedEditableAfter;
@@ -409,7 +432,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param selectedEditableBefore the selectedEditableBefore to set
+	 * @param selectedEditableBefore
+	 *            the selectedEditableBefore to set
 	 */
 	public void setSelectedEditableBefore(Editable selectedEditableBefore) {
 		this.selectedEditableBefore = selectedEditableBefore;
@@ -423,7 +447,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -437,7 +462,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -451,7 +477,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param ects the ects to set
+	 * @param ects
+	 *            the ects to set
 	 */
 	public void setEcts(String ects) {
 		this.ects = ects;
@@ -465,7 +492,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param aim the aim to set
+	 * @param aim
+	 *            the aim to set
 	 */
 	public void setAim(String aim) {
 		this.aim = aim;
@@ -479,7 +507,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param mainVisible the mainVisible to set
+	 * @param mainVisible
+	 *            the mainVisible to set
 	 */
 	public void setMainVisible(boolean mainVisible) {
 		this.mainVisible = mainVisible;
@@ -493,7 +522,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param ectsAimVisible the ectsAimVisible to set
+	 * @param ectsAimVisible
+	 *            the ectsAimVisible to set
 	 */
 	public void setEctsAimVisible(boolean ectsAimVisible) {
 		this.ectsAimVisible = ectsAimVisible;
@@ -507,7 +537,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param addInfoVisible the addInfoVisible to set
+	 * @param addInfoVisible
+	 *            the addInfoVisible to set
 	 */
 	public void setAddInfoVisible(boolean addInfoVisible) {
 		this.addInfoVisible = addInfoVisible;
@@ -521,7 +552,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param title2 the title2 to set
+	 * @param title2
+	 *            the title2 to set
 	 */
 	public void setTitle2(String title2) {
 		this.title2 = title2;
@@ -535,7 +567,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param description2 the description2 to set
+	 * @param description2
+	 *            the description2 to set
 	 */
 	public void setDescription2(String description2) {
 		this.description2 = description2;
@@ -549,7 +582,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param ects2 the ects2 to set
+	 * @param ects2
+	 *            the ects2 to set
 	 */
 	public void setEcts2(String ects2) {
 		this.ects2 = ects2;
@@ -563,7 +597,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param aim2 the aim2 to set
+	 * @param aim2
+	 *            the aim2 to set
 	 */
 	public void setAim2(String aim2) {
 		this.aim2 = aim2;
@@ -577,7 +612,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param mainVisible2 the mainVisible2 to set
+	 * @param mainVisible2
+	 *            the mainVisible2 to set
 	 */
 	public void setMainVisible2(boolean mainVisible2) {
 		this.mainVisible2 = mainVisible2;
@@ -591,7 +627,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param ectsAimVisible2 the ectsAimVisible2 to set
+	 * @param ectsAimVisible2
+	 *            the ectsAimVisible2 to set
 	 */
 	public void setEctsAimVisible2(boolean ectsAimVisible2) {
 		this.ectsAimVisible2 = ectsAimVisible2;
@@ -605,7 +642,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param addInfoVisible2 the addInfoVisible2 to set
+	 * @param addInfoVisible2
+	 *            the addInfoVisible2 to set
 	 */
 	public void setAddInfoVisible2(boolean addInfoVisible2) {
 		this.addInfoVisible2 = addInfoVisible2;
@@ -619,7 +657,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param fieldList the fieldList to set
+	 * @param fieldList
+	 *            the fieldList to set
 	 */
 	public void setFieldList(List<Field> fieldList) {
 		this.fieldList = fieldList;
@@ -633,7 +672,8 @@ public class NotificationBean {
 	}
 
 	/**
-	 * @param fieldList2 the fieldList2 to set
+	 * @param fieldList2
+	 *            the fieldList2 to set
 	 */
 	public void setFieldList2(List<Field> fieldList2) {
 		this.fieldList2 = fieldList2;

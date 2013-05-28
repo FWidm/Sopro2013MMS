@@ -197,7 +197,7 @@ public class EditBean {
 				max = oldSub.getVersion();
 				System.out.println("Max Version" + max);
 				Subject newSub = new Subject(max + 1, title, oldSub.getModTitle(),
-						description, aim, Integer.valueOf(ects), oldSub.isAck());
+						description, aim, Integer.valueOf(ects), false);
 
 				// if old sub isn't the same as the new sub
 				// we create new database entries and create a notification
@@ -219,6 +219,9 @@ public class EditBean {
 						if(handleAccept(newSub, oldSub)) {
 							oldFieldList = fieldList;
 							selectedEditable = newSub;
+						}
+						else {
+							//TODO inform abound existing change
 						}
 					}
 				}
