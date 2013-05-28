@@ -81,31 +81,34 @@ public class ModulBean {
 		model.addSubmenu(submenu);
 
 	}
-	
+
 	/**
 	 * Adds a new field to fieldList
 	 */
 	public void addField(int index) {
-		if(selectedEditable instanceof Subject) {
+		if (selectedEditable instanceof Subject) {
 			Subject sub = (Subject) selectedEditable;
-			if(!emptyFieldList) {
-				fieldList.add(index+1, new Field("", sub.getVersion(), sub.getSubTitle(), sub.getModTitle(), ""));
+			if (!emptyFieldList) {
+				fieldList.add(
+						index + 1,
+						new Field("", sub.getVersion(), sub.getSubTitle(), sub
+								.getModTitle(), ""));
 			} else {
-				fieldList.add(new Field("", sub.getVersion(), sub.getSubTitle(), sub.getModTitle(), ""));
+				fieldList.add(new Field("", sub.getVersion(),
+						sub.getSubTitle(), sub.getModTitle(), ""));
 			}
-			
-				
+
 			System.out.println(fieldList.size() + " " + oldFieldList.size());
 			emptyFieldList = false;
 		}
 	}
-	
+
 	/**
 	 * removes a field from fieldList
 	 */
 	public void removeField(int index) {
 		fieldList.remove(index);
-		if(fieldList.size() == 0)
+		if (fieldList.size() == 0)
 			emptyFieldList = true;
 	}
 
@@ -121,7 +124,7 @@ public class ModulBean {
 		oldFieldList = DBField.loadFieldList(sub.getModTitle(),
 				sub.getVersion(), sub.getSubTitle());
 		fieldList = new LinkedList<Field>(oldFieldList);
-		if(fieldList.size() == 0)
+		if (fieldList.size() == 0)
 			emptyFieldList = true;
 		title = sub.getSubTitle();
 		description = sub.getDescription();
@@ -168,7 +171,7 @@ public class ModulBean {
 		System.out.println(mod.getModTitle());
 		System.out.println(mod.getDescription());
 	}
-	
+
 	/**
 	 * this method is called when clicking a ModManual in the menu parameter is
 	 * the clicked modManual
@@ -229,68 +232,79 @@ public class ModulBean {
 		if (isEditable()) {
 			// get the highest Version
 			int max = 0;
-			if(selectedEditable instanceof Subject) {
+			if (selectedEditable instanceof Subject) {
 				Subject oldSub = (Subject) selectedEditable;
 				max = oldSub.getVersion();
-				Subject newSub = new Subject(max + 1, title, oldSub.getModTitle(),
-						description, aim, Integer.valueOf(ects), false);
+				if (oldSub.isAck()) {
+					Subject newSub = new Subject(max + 1, title,
+							oldSub.getModTitle(), description, aim,
+							Integer.valueOf(ects), false);
 
-				// if old sub isn't the same as the new sub
-				// we create new database entries and create a notification
-				if (!oldSub.equals(newSub)) {
-					System.out.println("not equal");
-					if(handleAccept(newSub, oldSub)) {
-						oldFieldList = new LinkedList<Field>(fieldList);
-						selectedEditable = newSub;
-						addMessage(TO_FOR, "Erfolg: ", "Ihre Änderung wurde erfolgreich verschickt.");
+					// if old sub isn't the same as the new sub
+					// we create new database entries and create a notification
+					if (!oldSub.equals(newSub)) {
+						System.out.println("not equal");
+						if (handleAccept(newSub, oldSub)) {
+							oldFieldList = new LinkedList<Field>(fieldList);
+							selectedEditable = newSub;
+							addMessage(TO_FOR, "Erfolg: ",
+									"Ihre Änderung wurde erfolgreich verschickt.");
+						}
+					} else {
+						System.out.println(fieldList.size() + " "
+								+ oldFieldList.size());
+						boolean differ = false;
+						if (fieldList.size() != oldFieldList.size()) {
+							System.out.println("Unterschiedlich lang");
+							differ = true;
+						} else {
+							for (int i = 0; i < oldFieldList.size(); i++) {
+								if (!fieldList.get(i).equals(
+										oldFieldList.get(i))) {
+									differ = true;
+									break;
+								}
+							}
+						}
+						if (differ) {
+							System.out.println("differ");
+							boolean empty = false;
+							for (Field field : fieldList) {
+								if (field.getFieldTitle() == "") {
+									// TODO inform about empty field
+									addErrorMessage(TO_FOR, "Leeres Feld: ",
+											"Bitte tragen Sie einen Titel ein oder löschen Sie das Feld.");
+									empty = true;
+								}
+							}
+							if (!empty) {
+								if (handleAccept(newSub, oldSub)) {
+									oldFieldList = new LinkedList<Field>(
+											fieldList);
+									selectedEditable = newSub;
+									addMessage(TO_FOR, "Erfolg: ",
+											"Ihre Änderung wurde erfolgreich verschickt.");
+								} else {
+									// TODO inform about existing change
+									addErrorMessage(TO_FOR,
+											"Änderung existiert bereits: ",
+											"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
+								}
+							}
+						} else {
+							addErrorMessage(TO_FOR, "Fach ist identisch: ",
+									"Bitte tätigen Sie zuerst eine Änderung.");
+						}
 					}
 				} else {
-					System.out.println(fieldList.size() + " " + oldFieldList.size());
-					boolean differ = false;
-					if(fieldList.size() != oldFieldList.size()) {
-						System.out.println("Unterschiedlich lang");
-						differ = true;
-					}
-					else {
-						for (int i = 0; i < oldFieldList.size(); i++) {
-							if (!fieldList.get(i).equals(oldFieldList.get(i))) {
-								differ = true;
-								break;
-							}
-						}
-					}
-					if (differ) {
-						System.out.println("differ");
-						boolean empty = false;
-						for (Field field : fieldList) {
-							if (field.getFieldTitle() == "") {
-								//TODO inform about empty field
-								addErrorMessage(TO_FOR, "Leeres Feld: ", "Bitte tragen Sie einen Titel ein oder löschen Sie das Feld.");
-								empty = true; 
-							}
-						}
-						if(!empty) {
-							if(handleAccept(newSub, oldSub)) {
-								oldFieldList = new LinkedList<Field>(fieldList);
-								selectedEditable = newSub;
-								addMessage(TO_FOR, "Erfolg: ", "Ihre Änderung wurde erfolgreich verschickt.");
-							}
-							else {
-								//TODO inform about existing change
-								addErrorMessage(TO_FOR, "Änderung existiert bereits: ", "Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
-							}
-						}
-					}
-					else {
-						addErrorMessage(TO_FOR, "Fach ist identisch: ", "Bitte tätigen Sie zuerst eine Änderung.");
-					}
+					addErrorMessage(TO_FOR, "Änderung existiert bereits: ",
+							"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
 				}
-			}
-			else if(selectedEditable instanceof Module) {
+			} else if (selectedEditable instanceof Module) {
 				Module oldMod = (Module) selectedEditable;
 				Module newMod = new Module(title, description);
-				if(!oldMod.equals(newMod)) {
-					if(handleAccept(newMod, oldMod)) {
+				if (!oldMod.equals(newMod)) {
+					if (handleAccept(newMod, oldMod)) {
 						selectedEditable = newMod;
 					}
 				}
@@ -322,7 +336,7 @@ public class ModulBean {
 			title = exRule.getExRulesTitle();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param newSub
@@ -341,13 +355,13 @@ public class ModulBean {
 					new Timestamp(System.currentTimeMillis()), message, "edit",
 					"queued", false, new Modification(oldSub, newSub));
 			DBNotification.saveNotification(mn);
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 * @param newMod
@@ -363,7 +377,7 @@ public class ModulBean {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * if anything goes wrong - display an Error
 	 * 
@@ -785,10 +799,11 @@ public class ModulBean {
 	}
 
 	/**
-	 * @param emptyFieldList the emptyFieldList to set
+	 * @param emptyFieldList
+	 *            the emptyFieldList to set
 	 */
 	public void setEmptyFieldList(boolean emptyFieldList) {
 		this.emptyFieldList = emptyFieldList;
 	}
-	
+
 }
