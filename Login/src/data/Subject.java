@@ -110,12 +110,6 @@ public class Subject implements Editable{
 	public void setAck(boolean ack) {
 		this.ack = ack;
 	}
-	
-	@Override
-	public Editable computeDifferences(Editable newEditable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -123,7 +117,6 @@ public class Subject implements Editable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (ack ? 1231 : 1237);
 		result = prime * result + ((aim == null) ? 0 : aim.hashCode());
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
@@ -136,7 +129,7 @@ public class Subject implements Editable{
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * returns true if all is equal except the version
+	 * returns true if all is equal except ack and version
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -147,8 +140,6 @@ public class Subject implements Editable{
 		if (getClass() != obj.getClass())
 			return false;
 		Subject other = (Subject) obj;
-		if (ack != other.ack)
-			return false;
 		if (aim == null) {
 			if (other.aim != null)
 				return false;
@@ -173,5 +164,13 @@ public class Subject implements Editable{
 			return false;
 		return true;
 	}
+	
+	@Override
+	public Editable computeDifferences(Editable newEditable) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 	
 }

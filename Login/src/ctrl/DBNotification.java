@@ -302,7 +302,7 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET status = 'declined' "
+			String update = "UPDATE notification SET status = 'declined', isRead = false "
 					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
 					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
 					+ "' AND " + " timeStamp = '"
@@ -339,7 +339,7 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET status = 'accepted' "
+			String update = "UPDATE notification SET status = 'accepted', isRead = false  "
 					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
 					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
 					+ "' AND " + " timeStamp = '"
@@ -521,6 +521,60 @@ public class DBNotification extends DBManager {
 								new Modification(DBSubject.loadSubject(
 										subject.getVersion() - 1, sub, mod),
 										subject)));
+					}
+					// TODO add version for Module or not ;)
+				}
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return notif;
+	}
+	
+	public static List<ModificationNotification> loadModificationNotificationRedakteur() {
+		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM notification where status='queued'";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String recEm = rs.getString("recipientEmail");
+				String senEm = rs.getString("senderEmail");
+				Timestamp timS = rs.getTimestamp("timeStamp");
+				String mess = rs.getString("message");
+				String act = rs.getString("action");
+				String stat = rs.getString("status");
+				boolean isRead = rs.getBoolean("isRead");
+				String exRules = rs.getString("exRulesTitle");
+				String modMan = rs.getString("modManTitle");
+				String mod = rs.getString("modTitle");
+				String sub = rs.getString("subTitle");
+
+				if (exRules != null) {
+					if (modMan != null) {
+						// TODO add version for ModMan or not ;)
+					}
+					// TODO add version for ExRule or not ;)
+				} else if (mod != null) {
+					if (sub != null) {
+						Subject subject = DBSubject.loadSubjectMaxVersionForNotif(sub, mod);
+						if(subject != null) {
+							notif.add(new ModificationNotification(recEm,
+									senEm, timS, mess, act, stat, isRead,
+									new Modification(
+											DBSubject.loadSubject(
+													subject.getVersion() - 1,
+													sub, mod), subject)));
+						}
 					}
 					// TODO add version for Module or not ;)
 				}

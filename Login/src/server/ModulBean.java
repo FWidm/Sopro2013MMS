@@ -1,20 +1,28 @@
 package server;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
+
+import sun.util.EmptyListResourceBundle;
 
 import ctrl.DBExRules;
 import ctrl.DBField;
 import ctrl.DBModule;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
-import data.EditActionListener;
+import data.ModulActionListener;
 import data.Editable;
 import data.ExRules;
 import data.Field;
@@ -24,14 +32,15 @@ import data.ModificationNotification;
 import data.Module;
 import data.Subject;
 
-@ManagedBean(name = "EditBean")
+@ManagedBean(name = "ModulBean")
 @SessionScoped
-public class EditBean {
+public class ModulBean {
 
 	public static final String PRUEFORDNUNG = "Pr\u00FCfungsordnungen";
 	public static final String MODMANUAL = "Modulhandb\u00FCcher";
 	public static final String MODULE = "Module";
 	public static final String FAECHER = "F\u00E4cher";
+	public static final String TO_FOR = "message-log";
 
 	// Add your tag id's for ajax-update on menuItemClick here.
 	public static final String UPDATE_AJAX = "list-menu-edit back-menu-edit scrollPanel-edit";
@@ -48,11 +57,11 @@ public class EditBean {
 	private boolean mainVisible, ectsAimVisible, addInfoVisible;
 	private boolean descriptionEdit, ectsEdit, aimEdit, fieldTitleEdit,
 			fieldDescriptionEdit;
-	private boolean editable;
+	private boolean editable, emptyFieldList;
 	private Editable selectedEditable;
 	private String message;
 
-	public EditBean() {
+	public ModulBean() {
 		backModel = new DefaultMenuModel();
 
 		model = new DefaultMenuModel();
@@ -66,11 +75,38 @@ public class EditBean {
 			m.setValue(exRulesList.get(i).getExRulesTitle());
 			m.setAjax(true);
 			m.setUpdate(UPDATE_AJAX);
-			m.addActionListener(new EditActionListener());
+			m.addActionListener(new ModulActionListener());
 			submenu.getChildren().add(m);
 		}
 		model.addSubmenu(submenu);
 
+	}
+	
+	/**
+	 * Adds a new field to fieldList
+	 */
+	public void addField(int index) {
+		if(selectedEditable instanceof Subject) {
+			Subject sub = (Subject) selectedEditable;
+			if(!emptyFieldList) {
+				fieldList.add(index+1, new Field("", sub.getVersion(), sub.getSubTitle(), sub.getModTitle(), ""));
+			} else {
+				fieldList.add(new Field("", sub.getVersion(), sub.getSubTitle(), sub.getModTitle(), ""));
+			}
+			
+				
+			System.out.println(fieldList.size() + " " + oldFieldList.size());
+			emptyFieldList = false;
+		}
+	}
+	
+	/**
+	 * removes a field from fieldList
+	 */
+	public void removeField(int index) {
+		fieldList.remove(index);
+		if(fieldList.size() == 0)
+			emptyFieldList = true;
 	}
 
 	/**
@@ -84,7 +120,9 @@ public class EditBean {
 		selectedEditable = sub;
 		oldFieldList = DBField.loadFieldList(sub.getModTitle(),
 				sub.getVersion(), sub.getSubTitle());
-		fieldList = oldFieldList;
+		fieldList = new LinkedList<Field>(oldFieldList);
+		if(fieldList.size() == 0)
+			emptyFieldList = true;
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());
@@ -130,7 +168,7 @@ public class EditBean {
 		System.out.println(mod.getModTitle());
 		System.out.println(mod.getDescription());
 	}
-
+	
 	/**
 	 * this method is called when clicking a ModManual in the menu parameter is
 	 * the clicked modManual
@@ -189,13 +227,11 @@ public class EditBean {
 	 */
 	public void accept() {
 		if (isEditable()) {
-			System.out.println("isEditable");
 			// get the highest Version
 			int max = 0;
 			if(selectedEditable instanceof Subject) {
 				Subject oldSub = (Subject) selectedEditable;
 				max = oldSub.getVersion();
-				System.out.println("Max Version" + max);
 				Subject newSub = new Subject(max + 1, title, oldSub.getModTitle(),
 						description, aim, Integer.valueOf(ects), false);
 
@@ -204,25 +240,49 @@ public class EditBean {
 				if (!oldSub.equals(newSub)) {
 					System.out.println("not equal");
 					if(handleAccept(newSub, oldSub)) {
-						oldFieldList = fieldList;
+						oldFieldList = new LinkedList<Field>(fieldList);
 						selectedEditable = newSub;
+						addMessage(TO_FOR, "Erfolg: ", "Ihre Änderung wurde erfolgreich verschickt.");
 					}
 				} else {
+					System.out.println(fieldList.size() + " " + oldFieldList.size());
 					boolean differ = false;
-					for (int i = 0; i < oldFieldList.size(); i++) {
-						if (!fieldList.get(i).equals(oldFieldList.get(i))) {
-							differ = true;
-							break;
+					if(fieldList.size() != oldFieldList.size()) {
+						System.out.println("Unterschiedlich lang");
+						differ = true;
+					}
+					else {
+						for (int i = 0; i < oldFieldList.size(); i++) {
+							if (!fieldList.get(i).equals(oldFieldList.get(i))) {
+								differ = true;
+								break;
+							}
 						}
 					}
 					if (differ) {
-						if(handleAccept(newSub, oldSub)) {
-							oldFieldList = fieldList;
-							selectedEditable = newSub;
+						System.out.println("differ");
+						boolean empty = false;
+						for (Field field : fieldList) {
+							if (field.getFieldTitle() == "") {
+								//TODO inform about empty field
+								addErrorMessage(TO_FOR, "Leeres Feld: ", "Bitte tragen Sie einen Titel ein oder löschen Sie das Feld.");
+								empty = true; 
+							}
 						}
-						else {
-							//TODO inform abound existing change
+						if(!empty) {
+							if(handleAccept(newSub, oldSub)) {
+								oldFieldList = new LinkedList<Field>(fieldList);
+								selectedEditable = newSub;
+								addMessage(TO_FOR, "Erfolg: ", "Ihre Änderung wurde erfolgreich verschickt.");
+							}
+							else {
+								//TODO inform about existing change
+								addErrorMessage(TO_FOR, "Änderung existiert bereits: ", "Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
+							}
 						}
+					}
+					else {
+						addErrorMessage(TO_FOR, "Fach ist identisch: ", "Bitte tätigen Sie zuerst eine Änderung.");
 					}
 				}
 			}
@@ -244,7 +304,7 @@ public class EditBean {
 	public void decline() {
 		if (selectedEditable instanceof Subject) {
 			Subject oldSub = (Subject) selectedEditable;
-			fieldList = oldFieldList;
+			fieldList = new LinkedList<Field>(oldFieldList);
 			title = oldSub.getSubTitle();
 			description = oldSub.getDescription();
 			ects = String.valueOf(oldSub.getEcts());
@@ -281,7 +341,7 @@ public class EditBean {
 					new Timestamp(System.currentTimeMillis()), message, "edit",
 					"queued", false, new Modification(oldSub, newSub));
 			DBNotification.saveNotification(mn);
-		} catch(Exception e) {
+		} catch(SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -302,6 +362,28 @@ public class EditBean {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * if anything goes wrong - display an Error
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addErrorMessage(String toFor, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
+	}
+
+	/**
+	 * Informs the User via message.
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addMessage(String toFor, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
 
 	/**
@@ -695,4 +777,18 @@ public class EditBean {
 		this.message = message;
 	}
 
+	/**
+	 * @return the emptyFieldList
+	 */
+	public boolean isEmptyFieldList() {
+		return emptyFieldList;
+	}
+
+	/**
+	 * @param emptyFieldList the emptyFieldList to set
+	 */
+	public void setEmptyFieldList(boolean emptyFieldList) {
+		this.emptyFieldList = emptyFieldList;
+	}
+	
 }

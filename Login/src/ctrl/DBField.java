@@ -19,30 +19,26 @@ public class DBField extends DBManager {
 	 * 
 	 * @param f
 	 */
-	public static void saveField(Field f) {
+	public static void saveField(Field f) throws SQLException {
 		Connection con = null;
+		
+		con = openConnection();
+		Statement stmt = con.createStatement();
+		String update = "INSERT INTO field VALUES('" + f.getFieldTitle()
+				+ "', '" + f.getSubjectversion() + "', '"
+				+ f.getSubjectsubTitle() + "', '" + f.getSubjectmodTitle()
+				+ "', '" + f.getDescription() + "')";
+		con.setAutoCommit(false);
+		stmt.executeUpdate(update);
 		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "INSERT INTO field VALUES('" + f.getFieldTitle()
-					+ "', '" + f.getSubjectversion() + "', '"
-					+ f.getSubjectsubTitle() + "', '" + f.getSubjectmodTitle()
-					+ "', '" + f.getDescription() + "')";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out
-						.println("COMMIT Field fehlgeschlagen - Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			con.commit();
+		} catch (SQLException exc) {
+			con.rollback(); // bei Fehlschlag Rollback der Transaktion
+			System.out
+					.println("COMMIT Field fehlgeschlagen - Rollback durchgefuehrt");
+		} finally {
+			closeQuietly(stmt);
+			closeQuietly(con); // Abbau Verbindung zur Datenbank
 		}
 	}
 

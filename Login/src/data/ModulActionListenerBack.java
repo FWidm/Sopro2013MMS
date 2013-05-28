@@ -10,21 +10,21 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
-import server.EditBean;
+import server.ModulBean;
 
 import ctrl.DBExRules;
 import ctrl.DBModManual;
 import ctrl.DBModule;
 
-public class EditActionListenerBack implements ActionListener {
+public class ModulActionListenerBack implements ActionListener {
 	
 	public void refreshMenu(String itemValue) {
 		
-		EditActionListener listener = new EditActionListener();
+		ModulActionListener listener = new ModulActionListener();
 		
-		EditBean bean = findBean("EditBean");
+		ModulBean bean = findBean("ModulBean");
 		
-		if(itemValue.equals(EditBean.PRUEFORDNUNG)) {
+		if(itemValue.equals(ModulBean.PRUEFORDNUNG)) {
 			
 			bean.setExRules(null);
 			bean.setModMan(null);
@@ -34,7 +34,7 @@ public class EditActionListenerBack implements ActionListener {
 			
 			MenuModel model = new DefaultMenuModel();
 			Submenu submenu = new Submenu();
-			submenu.setLabel(EditBean.PRUEFORDNUNG);
+			submenu.setLabel(ModulBean.PRUEFORDNUNG);
 			model.addSubmenu(submenu);
 			
 			bean.setExRulesList(DBExRules.loadAllExRules());
@@ -43,13 +43,13 @@ public class EditActionListenerBack implements ActionListener {
 				MenuItem m = new MenuItem();
 				m.setValue(bean.getExRulesList().get(i).getExRulesTitle());
 				m.setAjax(true);
-				m.setUpdate(EditBean.UPDATE_AJAX);
+				m.setUpdate(ModulBean.UPDATE_AJAX);
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
 			}
 			bean.setModel(model);
 		}
-		else if(itemValue.equals(EditBean.MODMANUAL)) {
+		else if(itemValue.equals(ModulBean.MODMANUAL)) {
 			
 			bean.setModMan(null);
 			bean.setModule(null);
@@ -61,8 +61,8 @@ public class EditActionListenerBack implements ActionListener {
 			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
-			exRules.setUpdate(EditBean.UPDATE_AJAX);
-			exRules.setValue(EditBean.PRUEFORDNUNG);
+			exRules.setUpdate(ModulBean.UPDATE_AJAX);
+			exRules.setValue(ModulBean.PRUEFORDNUNG);
 			exRules.addActionListener(this);
 			backSubmenu.getChildren().add(exRules);
 			backModel.addSubmenu(backSubmenu);
@@ -70,13 +70,13 @@ public class EditActionListenerBack implements ActionListener {
 			
 			MenuModel model = new DefaultMenuModel();
 			Submenu submenu = new Submenu();
-			submenu.setLabel(EditBean.MODMANUAL);
+			submenu.setLabel(ModulBean.MODMANUAL);
 			model.addSubmenu(submenu);
 			
 			for(int i = 0; i < bean.getModManList().size(); i++) {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
-				m.setUpdate(EditBean.UPDATE_AJAX);
+				m.setUpdate(ModulBean.UPDATE_AJAX);
 				m.setValue(bean.getModManList().get(i).getModManTitle());
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
@@ -84,7 +84,7 @@ public class EditActionListenerBack implements ActionListener {
 			
 			bean.setModel(model);
 		}
-		else if(itemValue.equals(EditBean.MODULE)) {
+		else if(itemValue.equals(ModulBean.MODULE)) {
 			
 			bean.setModule(null);
 			
@@ -95,14 +95,14 @@ public class EditActionListenerBack implements ActionListener {
 			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
-			exRules.setUpdate(EditBean.UPDATE_AJAX);
-			exRules.setValue(EditBean.PRUEFORDNUNG);
+			exRules.setUpdate(ModulBean.UPDATE_AJAX);
+			exRules.setValue(ModulBean.PRUEFORDNUNG);
 			exRules.addActionListener(this);
 			backSubmenu.getChildren().add(exRules);
 			MenuItem modMan = new MenuItem();
 			modMan.setAjax(true);
-			modMan.setUpdate(EditBean.UPDATE_AJAX);
-			modMan.setValue(EditBean.MODMANUAL);
+			modMan.setUpdate(ModulBean.UPDATE_AJAX);
+			modMan.setValue(ModulBean.MODMANUAL);
 			modMan.addActionListener(this);
 			backSubmenu.getChildren().add(modMan);
 			backModel.addSubmenu(backSubmenu);
@@ -110,13 +110,13 @@ public class EditActionListenerBack implements ActionListener {
 			
 			MenuModel model = new DefaultMenuModel();
 			Submenu submenu = new Submenu();
-			submenu.setLabel(EditBean.MODULE);
+			submenu.setLabel(ModulBean.MODULE);
 			model.addSubmenu(submenu);
 			
 			for(int i = 0; i < bean.getModuleList().size(); i++) {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
-				m.setUpdate(EditBean.UPDATE_AJAX);
+				m.setUpdate(ModulBean.UPDATE_AJAX);
 				m.setValue(bean.getModuleList().get(i).getModTitle());
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);

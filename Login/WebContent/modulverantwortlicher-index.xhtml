@@ -23,7 +23,8 @@
 	<h:form id="form">
 		<p:growl id="growl" showDetail="true" />
 		<p:tabView id="tabview-modEx" scrollable="true" dynamic="true">
-			<p:ajax event="tabChange" listener="#{NotificationBean.onTabChange}"
+			<p:ajax event="tabChange"
+				listener="#{RedakteurNotificationBean.onTabChange}"
 				update=":form:growl" />
 			<!-- TabView -->
 			<p:tab title="Start" id="tabStart">
@@ -88,14 +89,16 @@
 
 			<p:tab title="Edit">
 				<!-- Begin of second tab // Edit -->
+				<p:messages id="message-log" for="message-log" showDetail="true"
+					autoUpdate="true" closable="true" />
 				<p:layout
 					style="min-width:800px; min-height:600px; max-height:600px;">
 					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
 					<p:layoutUnit position="west" resizable="true" size="215"
 						minSize="215" header="Modulelist" collapsible="true">
 
-						<p:menu id="back-menu-edit" model="#{EditBean.backModel}" />
-						<p:menu id="list-menu-edit" model="#{EditBean.model}" />
+						<p:menu id="back-menu-edit" model="#{ModulBean.backModel}" />
+						<p:menu id="list-menu-edit" model="#{ModulBean.model}" />
 
 					</p:layoutUnit>
 
@@ -103,54 +106,65 @@
 						<p:scrollPanel id="scrollPanel-edit" mode="native"
 							style="min-width:400px; min-height:470px;">
 							<p:panel header="Kommentare und Notizen" toggleable="false"
-								toggleSpeed="500" visible="#{EditBean.editable}">
+								toggleSpeed="500" visible="#{ModulBean.editable}">
 								<p:inputTextarea rows="1" cols="200" readonly="false"
-									value="#{EditBean.message}">
+									value="#{ModulBean.message}">
 									<p:ajax event="blur" />
 								</p:inputTextarea>
 							</p:panel>
-							<p:panel header="#{EditBean.title}" toggleable="true"
-								toggleSpeed="500" visible="#{EditBean.mainVisible}">
+							<p:panel header="#{ModulBean.title}" toggleable="true"
+								toggleSpeed="500" visible="#{ModulBean.mainVisible}">
 								<p:inputTextarea rows="1" cols="200"
-									readonly="#{EditBean.descriptionEdit}"
-									value="#{EditBean.description}">
+									readonly="#{ModulBean.descriptionEdit}"
+									value="#{ModulBean.description}">
 									<p:ajax event="blur" />
 								</p:inputTextarea>
 
 							</p:panel>
 							<p:panel header="Leistungspunkte und Lernziele" toggleable="true"
-								toggleSpeed="500" visible="#{EditBean.ectsAimVisible}">
+								toggleSpeed="500" visible="#{ModulBean.ectsAimVisible}">
 
 								<strong>Leistungspunkte:</strong>
-								<p:inputText readonly="#{EditBean.ectsEdit}"
-									value="#{EditBean.ects}">
+								<p:inputText readonly="#{ModulBean.ectsEdit}"
+									value="#{ModulBean.ects}">
 									<p:ajax event="blur" />
 								</p:inputText>
 								<br />
 								<br />
 								<strong>Lernziele:</strong>
-								<p:inputTextarea readonly="#{EditBean.aimEdit}" rows="1"
-									cols="200" value="#{EditBean.aim}">
+								<p:inputTextarea readonly="#{ModulBean.aimEdit}" rows="1"
+									cols="200" value="#{ModulBean.aim}">
 									<p:ajax event="blur" />
 								</p:inputTextarea>
 
 							</p:panel>
 							<p:panel header="Zusaetzliche Informationen" toggleable="true"
-								toggleSpeed="500" visible="#{EditBean.addInfoVisible}">
-
-								<ui:repeat var="iterator" value="#{EditBean.fieldList}">
+								toggleSpeed="500" visible="#{ModulBean.addInfoVisible}">
+								<p:panel visible="#{ModulBean.emptyFieldList}">
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										update=":form:tabview-modEx:scrollPanel-edit"
+										actionListener="#{ModulBean.addField(0)}" />
+								</p:panel>
+								<ui:repeat var="iterator" value="#{ModulBean.fieldList}"
+									varStatus="status">
 									<strong>Titel: </strong>
-									<p:inputText readonly="#{EditBean.fieldTitleEdit}"
+									<p:inputText readonly="#{ModulBean.fieldTitleEdit}"
 										value="#{iterator.fieldTitle}">
 										<p:ajax event="blur" />
 									</p:inputText>
 									<br />
 									<strong>Beschreibung: </strong>
 									<p:inputTextarea rows="1" cols="200"
-										readonly="#{EditBean.fieldDescriptionEdit}"
+										readonly="#{ModulBean.fieldDescriptionEdit}"
 										value="#{iterator.description}">
 										<p:ajax event="blur" />
 									</p:inputTextarea>
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										update=":form:tabview-modEx:scrollPanel-edit"
+										actionListener="#{ModulBean.addField(status.index)}" />
+									<p:commandButton icon="ui-icon-minusthick"
+										update=":form:tabview-modEx:scrollPanel-edit"
+										actionListener="#{ModulBean.removeField(status.index)}" />
 									<br />
 									<br />
 								</ui:repeat>
@@ -161,11 +175,12 @@
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
 							<p:commandButton type="push" value="Zur&#252;cksetzen"
-								icon="ui-icon-trash" actionListener="#{EditBean.decline}"
+								icon="ui-icon-trash" actionListener="#{ModulBean.decline}"
 								update=":form:tabview-modEx:scrollPanel-edit">
 							</p:commandButton>
 							<p:commandButton type="push" value="&#220;bernehmen"
-								icon="ui-icon-disk" actionListener="#{EditBean.accept}">
+								update=":form:tabview-modEx:message-log" icon="ui-icon-disk"
+								actionListener="#{ModulBean.accept}">
 							</p:commandButton>
 						</div>
 					</p:layoutUnit>
@@ -180,69 +195,75 @@
 					<p:layoutUnit position="west" resizable="true" size="400"
 						minSize="215" maxSize="400" header="Nachrichten"
 						collapsible="true">
-				
 
-							<p:dataTable id="notifications" var="noti"
-								value="#{NotificationBean.notificationList}" scrollable="true"
-								rowKey="#{noti.timeStamp}" scrollHeight="400"
-								selection="#{NotificationBean.selectedNotification}"
-								selectionMode="single" autoUpdate="true">
-								<p:ajax event="rowSelect"
-									listener="#{NotificationBean.selectedNotificationIsRead}"
-									update=":form:tabview-modEx:notify-layout" />
 
-								<p:column>
-									<p:graphicImage value="/Image/Notification/#{noti.status}.png"
-										style="width: 40px;" />
+						<p:dataTable id="notifications" var="noti"
+							value="#{RedakteurNotificationBean.notificationList}"
+							scrollable="true" rowKey="#{noti.timeStamp}" scrollHeight="400"
+							selection="#{RedakteurNotificationBean.selectedNotification}"
+							selectionMode="single" autoUpdate="true">
+							<p:ajax event="rowSelect"
+								listener="#{RedakteurNotificationBean.selectedNotificationIsRead}"
+								update=":form:tabview-modEx:notify-layout" />
+
+							<p:column>
+								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
+									style="width: 40px;" />
 									 #{noti.senderEmail} 
 	
 							</p:column>
-								<f:facet name="footer">
-									<div align="center">
-										<p:commandButton value="decline" icon="ui-icon-closethick"
-											actionListener="#{NotificationBean.declineSelectedNotification}"
-											update=":form:tabview-modEx:notify-layout" />
-										<p:commandButton value="accept" icon="ui-icon-check"
-											actionListener="#{NotificationBean.acceptSelectedNotification}"
-											update=":form:tabview-modEx:notify-layout" />
-									</div>
-								</f:facet>
-							</p:dataTable>
+							<f:facet name="footer">
+								<div align="center">
+									<p:commandButton align="left" value="aktualisieren" icon="ui-icon-refresh"
+										actionListener="#{RedakteurNotificationBean.loadNotifications}"
+										update=":form:tabview-modEx:notify-layout" />
+									<p:commandButton value="ablehnen" icon="ui-icon-closethick"
+										actionListener="#{RedakteurNotificationBean.declineSelectedNotification}"
+										update=":form:tabview-modEx:notify-layout" />
+									<p:commandButton value="akzeptieren" icon="ui-icon-check"
+										actionListener="#{RedakteurNotificationBean.acceptSelectedNotification}"
+										update=":form:tabview-modEx:notify-layout" />
+								</div>
+							</f:facet>
+						</p:dataTable>
 
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
 						<p:layout>
 							<p:layoutUnit position="north" minSize="80"
-								header="Date: #{NotificationBean.selectedNotification.timeStamp} 
-				Sender: #{NotificationBean.selectedNotification.senderEmail} 
-				Action: #{NotificationBean.selectedNotification.action}">
+								header="Date: #{RedakteurNotificationBean.selectedNotification.timeStamp} 
+				Sender: #{RedakteurNotificationBean.selectedNotification.senderEmail} 
+				Action: #{RedakteurNotificationBean.selectedNotification.action}">
 								<h:outputText id="message"
-									value="#{NotificationBean.selectedNotification.message}" />
+									value="#{RedakteurNotificationBean.selectedNotification.message}" />
 							</p:layoutUnit>
 							<p:layoutUnit position="center" minSize="200"
 								header="Neue Version (vom Verantwortlichen bearbeitet)">
-								<p:panel id="pnlTitle1" header="#{NotificationBean.title}"
-									toggleable="true" toggleSpeed="500"
-									visible="#{NotificationBean.mainVisible}">
+								<p:panel id="pnlTitle1"
+									header="#{RedakteurNotificationBean.title}" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedakteurNotificationBean.mainVisible}">
 
-								#{NotificationBean.description}
+								#{RedakteurNotificationBean.description}
 							
 							</p:panel>
 								<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
 									toggleable="true" toggleSpeed="500"
-									visible="#{NotificationBean.ectsAimVisible}">
+									visible="#{RedakteurNotificationBean.ectsAimVisible}">
 
-									<strong>Leistungspunkte:</strong> #{NotificationBean.ects}<br />
+									<strong>Leistungspunkte:</strong> #{RedakteurNotificationBean.ects}<br />
 									<br />
-									<strong>Lernziele:</strong> #{NotificationBean.aim}
+									<strong>Lernziele:</strong> #{RedakteurNotificationBean.aim}
 	
 							</p:panel>
 								<p:panel id="pnlDescription1"
 									header="Zusaetzliche Informationen" toggleable="true"
-									toggleSpeed="500" visible="#{NotificationBean.addInfoVisible}">
+									toggleSpeed="500"
+									visible="#{RedakteurNotificationBean.addInfoVisible}">
 
-									<ui:repeat var="iterator" value="#{NotificationBean.fieldList}">
+									<ui:repeat var="iterator"
+										value="#{RedakteurNotificationBean.fieldList}">
 										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
 										<strong>Beschreibung: </strong>#{iterator.description}<br />
 										<br />
@@ -252,28 +273,30 @@
 							<p:layoutUnit position="east" resizable="true" minSize="200"
 								maxSize="600"
 								header="Alte Version (aktuell verfuegbare Version)">
-								<p:panel id="pnlTitle2" header="#{NotificationBean.title2}"
-									toggleable="true" toggleSpeed="500"
-									visible="#{NotificationBean.mainVisible2}">
+								<p:panel id="pnlTitle2"
+									header="#{RedakteurNotificationBean.title2}" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedakteurNotificationBean.mainVisible2}">
 
-								#{NotificationBean.description2}
+								#{RedakteurNotificationBean.description2}
 							
 							</p:panel>
 								<p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
 									toggleable="true" toggleSpeed="500"
-									visible="#{NotificationBean.ectsAimVisible2}">
+									visible="#{RedakteurNotificationBean.ectsAimVisible2}">
 
-									<strong>Leistungspunkte:</strong> #{NotificationBean.ects2}<br />
+									<strong>Leistungspunkte:</strong> #{RedakteurNotificationBean.ects2}<br />
 									<br />
-									<strong>Lernziele:</strong> #{NotificationBean.aim2}
+									<strong>Lernziele:</strong> #{RedakteurNotificationBean.aim2}
 	
 							</p:panel>
 								<p:panel id="pnlDescription2"
 									header="Zusaetzliche Informationen" toggleable="true"
-									toggleSpeed="500" visible="#{NotificationBean.addInfoVisible2}">
+									toggleSpeed="500"
+									visible="#{RedakteurNotificationBean.addInfoVisible2}">
 
 									<ui:repeat var="iterator"
-										value="#{NotificationBean.fieldList2}">
+										value="#{RedakteurNotificationBean.fieldList2}">
 										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
 										<strong>Beschreibung: </strong>#{iterator.description}<br />
 										<br />
@@ -285,7 +308,7 @@
 
 				</p:layout>
 			</p:tab>
-			
+
 			<p:tab title="Logout">
 				<table width="350" border="0" cellpadding="2">
 					<tr>
@@ -295,7 +318,7 @@
 					</tr>
 				</table>
 			</p:tab>
-			
+
 		</p:tabView>
 		<!-- End TabView -->
 	</h:form>

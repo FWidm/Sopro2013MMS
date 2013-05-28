@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -16,6 +17,8 @@ import data.ModManual;
 import data.ModificationNotification;
 import data.Module;
 import data.Subject;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,9 +29,9 @@ import ctrl.DBField;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
 
-@ManagedBean(name = "NotificationBean")
-@RequestScoped
-public class NotificationBean {
+@ManagedBean(name = "RedakteurNotificationBean")
+@SessionScoped
+public class RedakteurNotificationBean {
 
 	private String recipientEmail;
 	private String senderEmail;
@@ -49,16 +52,16 @@ public class NotificationBean {
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
 
-	@PostConstruct
-	void init() {
-		notificationList = DBNotification.loadModificationNotification();
+	public RedakteurNotificationBean() {
+		System.out.println("init notif");
+		notificationList = DBNotification.loadModificationNotificationRedakteur();
 	}
 
 	/**
 	 * actualize notificationlist after declining/accepting
 	 */
 	private void actualizeNotificationList() {
-		setNotificationList(DBNotification.loadModificationNotification());
+		setNotificationList(DBNotification.loadModificationNotificationRedakteur());
 	}
 
 	/**
@@ -102,11 +105,13 @@ public class NotificationBean {
 	}
 
 	/**
-	 * Creates the dialog of unread notifications and shows them on changing a
+	 * Creates the dialog of unread notifications and shows them by changing a
 	 * tab
 	 */
 	public void onTabChange(TabChangeEvent event) {
-		System.out.println("tabchanged");
+		System.out.println("tabchanged and loaded notifs");
+		//setNotificationList(DBNotification.loadModificationNotificationRedakteur());
+		loadNotifications();
 		boolean glbIsRead = false;
 		String glbSender = new String();
 		int cntr = 0;
@@ -129,16 +134,16 @@ public class NotificationBean {
 	}
 
 	/**
-	 * decline selected notification
+	 * declines the selected notification
 	 */
 	public void declineSelectedNotification(ActionEvent e) {
 		System.out.println("decline");
 
 		if (selectedNotification != null) {
 			if (DBNotification.declineNotification(getSelectedNotification())) {
-				selectedNotification.setStatus("accepted");
-				actualizeNotificationList();
-				System.out.println(selectedNotification.getMessage()
+				selectedNotification.setStatus("declined");
+				//actualizeNotificationList();
+				System.out.println(selectedNotification.getSenderEmail()
 						+ " was declined");
 			} else
 				System.out.println("nothing to decline");
@@ -156,8 +161,8 @@ public class NotificationBean {
 		if (selectedNotification != null) {
 			if (DBNotification.acceptNotification(getSelectedNotification())) {
 				selectedNotification.setStatus("accepted");
-				actualizeNotificationList();
-				System.out.println(selectedNotification.getMessage()
+				//actualizeNotificationList();
+				System.out.println(selectedNotification.getSenderEmail()
 						+ " was accepted");
 				Subject newSub = (Subject) selectedEditableAfter;
 				DBSubject.updateSubjectAck(true, newSub.getVersion(),
@@ -174,7 +179,7 @@ public class NotificationBean {
 	 * 
 	 */
 	public void loadNotifications() {
-		setNotificationList(DBNotification.loadModificationNotification());
+		setNotificationList(DBNotification.loadModificationNotificationRedakteur());
 	}
 
 	/**

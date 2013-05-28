@@ -16,30 +16,26 @@ public class DBSubject extends DBManager {
 	 * 
 	 * @param sub
 	 */
-	public static void saveSubject(Subject sub) {
+	public static void saveSubject(Subject sub) throws SQLException {
 		Connection con = null;
+
+		con = openConnection();
+		Statement stmt = con.createStatement();
+		String update = "INSERT INTO subject VALUES(" + sub.getVersion()
+				+ ", '" + sub.getSubTitle() + "', '" + sub.getModTitle()
+				+ "', '" + sub.getDescription() + "', '" + sub.getAim()
+				+ "', " + sub.getEcts() + ", " + sub.isAck() + ")";
+		con.setAutoCommit(false);
+		stmt.executeUpdate(update);
 		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "INSERT INTO subject VALUES(" + sub.getVersion()
-					+ ", '" + sub.getSubTitle() + "', '" + sub.getModTitle()
-					+ "', '" + sub.getDescription() + "', '" + sub.getAim()
-					+ "', " + sub.getEcts() + ", " + sub.isAck() + ")";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out
-						.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			con.commit();
+		} catch (SQLException exc) {
+			con.rollback(); // bei Fehlschlag Rollback der Transaktion
+			System.out
+					.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
+		} finally {
+			closeQuietly(stmt);
+			closeQuietly(con); // Abbau Verbindung zur Datenbank
 		}
 	}
 
