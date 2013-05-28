@@ -18,10 +18,8 @@ import org.primefaces.event.TabChangeEvent;
 
 import ctrl.DBExRules;
 import ctrl.DBModManual;
-import ctrl.DBUser;
 import data.ExRules;
 import data.ModManual;
-import data.User;
 
 
 

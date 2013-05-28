@@ -3,7 +3,6 @@ package server;
 import java.sql.Timestamp;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 import javax.faces.application.FacesMessage;
@@ -18,10 +17,8 @@ import data.ModificationNotification;
 import data.Module;
 import data.Subject;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.SelectEvent;

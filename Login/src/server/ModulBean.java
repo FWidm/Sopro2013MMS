@@ -15,8 +15,6 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
-import sun.util.EmptyListResourceBundle;
-
 import ctrl.DBExRules;
 import ctrl.DBField;
 import ctrl.DBModule;
