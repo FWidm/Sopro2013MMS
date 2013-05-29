@@ -6,7 +6,7 @@ body {
 /*header image*/
 img {
 	top: 0px !important; 
-	right: 1.6em !important;
+	right: 2.6em !important;
 }
 
 
@@ -24,17 +24,21 @@ img {
 
 /* header of tabs */
 .ui-tabs.ui-tabs-top > .ui-tabs-nav {
-	padding: .3em .5em 0em;
+	padding: .3em .5em;
 	margin-left: 1.4em !important;
 	margin-right: 1.4em !important;
 	margin-top: .2em !important;
 }
 
 /*Tabs*/
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
- 	background: #c2bdae; /*like 70%*/
- 	box-shadow: none;
- }
+
+
+/*input text areas */
+.ui-state-default, .ui-widget-content .ui-state-default {
+    background: none;
+    border: none !important;
+    border-bottom: 1px #c2bdae dotted !important;
+}
 
 /* hover of tabs */
 li.ui-state-default.ui-corner-top.ui-state-hover {

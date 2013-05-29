@@ -257,6 +257,7 @@ public class ModulBean {
 							differ = true;
 						} else {
 							for (int i = 0; i < oldFieldList.size(); i++) {
+								System.out.println("Vergleich: " + fieldList.get(i).getDescription() + "\n" + oldFieldList.get(i).getDescription());
 								if (!fieldList.get(i).equals(
 										oldFieldList.get(i))) {
 									differ = true;

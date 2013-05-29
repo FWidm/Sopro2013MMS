@@ -108,6 +108,7 @@ public class Field implements Editable {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+		System.out.println("fieldDescription changed into: " + description);
 	}
 
 
@@ -126,10 +127,6 @@ public class Field implements Editable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((SubjectmodTitle == null) ? 0 : SubjectmodTitle.hashCode());
-		result = prime * result
-				+ ((SubjectsubTitle == null) ? 0 : SubjectsubTitle.hashCode());
-		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result
 				+ ((fieldTitle == null) ? 0 : fieldTitle.hashCode());
@@ -139,7 +136,7 @@ public class Field implements Editable {
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * true if all is equal except the version
+	 * returns true id fieldTitle and description from one Field is equal to another
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -150,16 +147,6 @@ public class Field implements Editable {
 		if (getClass() != obj.getClass())
 			return false;
 		Field other = (Field) obj;
-		if (SubjectmodTitle == null) {
-			if (other.SubjectmodTitle != null)
-				return false;
-		} else if (!SubjectmodTitle.equals(other.SubjectmodTitle))
-			return false;
-		if (SubjectsubTitle == null) {
-			if (other.SubjectsubTitle != null)
-				return false;
-		} else if (!SubjectsubTitle.equals(other.SubjectsubTitle))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -172,8 +159,6 @@ public class Field implements Editable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 	
 }
