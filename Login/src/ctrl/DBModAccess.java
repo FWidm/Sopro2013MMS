@@ -155,5 +155,32 @@ public class DBModAccess extends DBManager {
 		}
 		return ma;
 	}
+	
+	public static List<ModAccess> loadAccess() {
+		List<ModAccess>  ma = new LinkedList<ModAccess>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM modAccess";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String mT = rs.getString("modTitle");
+				String e = rs.getString("email");
+				
+				ma.add(new ModAccess(mT, e));
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return ma;
+	}
 
 }
