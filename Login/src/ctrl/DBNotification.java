@@ -38,14 +38,18 @@ public class DBNotification extends DBManager {
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
-						+ "', current_timestamp"
-						+ ", '"
+						+ "', '"
+						+ (Timestamp) notif.getTimeStamp()
+						+ "', '"
 						+ notif.getMessage()
 						+ "', '"
 						+ notif.getAction()
 						+ "', '"
 						+ notif.getStatus()
-						+ "', " + false + ", '" + edit.getExRulesTitle() + "')";
+						+ "', "
+						+ false
+						+ ", '"
+						+ edit.getExRulesTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof ModManual) {
 				ModManual edit = (ModManual) modNotif.getModification()
 						.getBefore();
@@ -53,8 +57,9 @@ public class DBNotification extends DBManager {
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
-						+ "', current_timestamp"
-						+ ", '"
+						+ "', '"
+						+ (Timestamp) notif.getTimeStamp()
+						+ "', '"
 						+ notif.getMessage()
 						+ "', '"
 						+ notif.getAction()
@@ -64,29 +69,35 @@ public class DBNotification extends DBManager {
 						+ false
 						+ ", '"
 						+ edit.getExRulesTitle()
-						+ "', '" + edit.getModManTitle() + "')";
+						+ "', '"
+						+ edit.getModManTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Module) {
 				Module edit = (Module) modNotif.getModification().getBefore();
 				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
-						+ "', current_timestamp"
-						+ ", '"
+						+ "', '"
+						+ (Timestamp) notif.getTimeStamp()
+						+ "', '"
 						+ notif.getMessage()
 						+ "', '"
 						+ notif.getAction()
 						+ "', '"
 						+ notif.getStatus()
-						+ "', " + false + ", '" + edit.getModTitle() + "')";
+						+ "', "
+						+ false
+						+ ", '"
+						+ edit.getModTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Subject) {
 				Subject edit = (Subject) modNotif.getModification().getBefore();
 				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ModTitle, SubTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
-						+ "', current_timestamp"
-						+ ", '"
+						+ "', '"
+						+ (Timestamp) notif.getTimeStamp()
+						+ "', '"
 						+ notif.getMessage()
 						+ "', '"
 						+ notif.getAction()
@@ -97,7 +108,8 @@ public class DBNotification extends DBManager {
 						+ ", '"
 						+ edit.getModTitle()
 						+ "', '"
-						+ edit.getSubTitle() + "')";
+						+ edit.getSubTitle()
+						+ "')";
 			}
 			try {
 				con = openConnection();
@@ -125,10 +137,10 @@ public class DBNotification extends DBManager {
 				Statement stmt = con.createStatement();
 				String update = "INSERT INTO notification VALUES('"
 						+ notif.getRecipientEmail() + "', '"
-						+ notif.getSenderEmail() + "', current_timestamp"
-						+ ", '" + notif.getMessage() + "', '"
-						+ notif.getAction() + "', '" + notif.getStatus()
-						+ "', " + 0 + ")";
+						+ notif.getSenderEmail() + "', '"
+						+ (Timestamp) notif.getTimeStamp() + "', '"
+						+ notif.getMessage() + "', '" + notif.getAction()
+						+ "', '" + notif.getStatus() + "', " + 0 + ")";
 				System.out.println(update);
 				con.setAutoCommit(false);
 				stmt.executeUpdate(update);
@@ -303,11 +315,16 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "UPDATE notification SET status = 'declined', isRead = false "
-					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
-					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
-					+ "' AND " + " timeStamp = '"
+					+ "WHERE recipientEmail = '"
+					+ notif.getRecipientEmail()
+					+ "' AND "
+					+ "senderEmail = '"
+					+ notif.getSenderEmail()
+					+ "' AND "
+					+ " timeStamp = '"
 					+ (Timestamp) notif.getTimeStamp() + "'";
 			con.setAutoCommit(false);
+			System.out.println(update);
 			stmt.executeUpdate(update);
 			try {
 				con.commit();
@@ -340,9 +357,13 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "UPDATE notification SET status = 'accepted', isRead = false  "
-					+ "WHERE recipientEmail = '" + notif.getRecipientEmail()
-					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
-					+ "' AND " + " timeStamp = '"
+					+ "WHERE recipientEmail = '"
+					+ notif.getRecipientEmail()
+					+ "' AND "
+					+ "senderEmail = '"
+					+ notif.getSenderEmail()
+					+ "' AND "
+					+ " timeStamp = '"
 					+ (Timestamp) notif.getTimeStamp() + "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
@@ -485,6 +506,11 @@ public class DBNotification extends DBManager {
 		return notif;
 	}
 
+	/**
+	 * loads all modNotifs
+	 * 
+	 * @return
+	 */
 	public static List<ModificationNotification> loadModificationNotification() {
 		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
 		Connection con = null;
@@ -515,7 +541,8 @@ public class DBNotification extends DBManager {
 					// TODO add version for ExRule or not ;)
 				} else if (mod != null) {
 					if (sub != null) {
-						Subject subject = DBSubject.loadSubjectMaxVersionForNotif(sub, mod);
+						Subject subject = DBSubject
+								.loadSubjectMaxVersionModNotif(sub, mod);
 						notif.add(new ModificationNotification(recEm, senEm,
 								timS, mess, act, stat, isRead,
 								new Modification(DBSubject.loadSubject(
@@ -535,7 +562,12 @@ public class DBNotification extends DBManager {
 		}
 		return notif;
 	}
-	
+
+	/**
+	 * load all modNotifs where status is "queued"
+	 * 
+	 * @return
+	 */
 	public static List<ModificationNotification> loadModificationNotificationRedakteur() {
 		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
 		Connection con = null;
@@ -566,8 +598,9 @@ public class DBNotification extends DBManager {
 					// TODO add version for ExRule or not ;)
 				} else if (mod != null) {
 					if (sub != null) {
-						Subject subject = DBSubject.loadSubjectMaxVersionForNotif(sub, mod);
-						if(subject != null) {
+						Subject subject = DBSubject
+								.loadSubjectMaxVersionForRedakNotif(sub, mod);
+						if (subject != null) {
 							notif.add(new ModificationNotification(recEm,
 									senEm, timS, mess, act, stat, isRead,
 									new Modification(

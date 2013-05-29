@@ -24,7 +24,7 @@
 <p:growl id="growl" showDetail="true"/>
 <p:tabView id="tabview-modEx" scrollable="true" dynamic="true">
 <p:ajax event="tabChange"
-        listener="#{RedakteurNotificationBean.onTabChange}"
+        listener="#{ModulNotificationBean.onTabChange}"
         update=":form:growl"/>
 <!-- TabView -->
 <p:tab title="Start" id="tabStart">
@@ -187,7 +187,8 @@
     </p:layout>
 </p:tab>
 <p:tab title="notifications">
-
+	    <p:messages id="message-log-edit" for="message-log-edit" showDetail="true"
+                autoUpdate="true" closable="true"/>
     <p:layout
             style="min-width:800px; min-height:500px; max-height:500px;"
             id="notify-layout">
@@ -198,12 +199,12 @@
 
 
             <p:dataTable id="notifications" var="noti"
-                         value="#{RedakteurNotificationBean.notificationList}"
+                         value="#{ModulNotificationBean.notificationList}"
                          scrollable="true" rowKey="#{noti.timeStamp}" scrollHeight="400"
-                         selection="#{RedakteurNotificationBean.selectedNotification}"
+                         selection="#{ModulNotificationBean.selectedNotification}"
                          selectionMode="single" autoUpdate="true">
                 <p:ajax event="rowSelect"
-                        listener="#{RedakteurNotificationBean.selectedNotificationIsRead}"
+                        listener="#{ModulNotificationBean.selectedNotificationIsRead}"
                         update=":form:tabview-modEx:notify-layout"/>
 
                 <p:column>
@@ -214,14 +215,11 @@
                 </p:column>
                 <f:facet name="footer">
                     <div align="center">
-                        <p:commandButton align="left" value="aktualisieren" icon="ui-icon-refresh"
-                                         actionListener="#{RedakteurNotificationBean.loadNotifications}"
+                    	<p:commandButton value="Widerrufen/Entfernen" icon="ui-icon-trash"
+                                         actionListener="#{ModulNotificationBean.cancelSelectedNotification}"
                                          update=":form:tabview-modEx:notify-layout"/>
-                        <p:commandButton value="ablehnen" icon="ui-icon-closethick"
-                                         actionListener="#{RedakteurNotificationBean.declineSelectedNotification}"
-                                         update=":form:tabview-modEx:notify-layout"/>
-                        <p:commandButton value="akzeptieren" icon="ui-icon-check"
-                                         actionListener="#{RedakteurNotificationBean.acceptSelectedNotification}"
+                        <p:commandButton value="Aktualisieren" icon="ui-icon-refresh"
+                                         actionListener="#{ModulNotificationBean.loadNotifications}"
                                          update=":form:tabview-modEx:notify-layout"/>
                     </div>
                 </f:facet>
@@ -232,38 +230,38 @@
         <p:layoutUnit position="center">
             <p:layout>
                 <p:layoutUnit position="north" minSize="80"
-                              header="Date: #{RedakteurNotificationBean.selectedNotification.timeStamp}
-				Sender: #{RedakteurNotificationBean.selectedNotification.senderEmail} 
-				Action: #{RedakteurNotificationBean.selectedNotification.action}">
+                              header="Date: #{ModulNotificationBean.selectedNotification.timeStamp}
+				Sender: #{ModulNotificationBean.selectedNotification.senderEmail} 
+				Action: #{ModulNotificationBean.selectedNotification.action}">
                     <h:outputText id="message"
-                                  value="#{RedakteurNotificationBean.selectedNotification.message}"/>
+                                  value="#{ModulNotificationBean.selectedNotification.message}"/>
                 </p:layoutUnit>
                 <p:layoutUnit position="center" minSize="200"
                               header="Neue Version (vom Verantwortlichen bearbeitet)">
                     <p:panel id="pnlTitle1"
-                             header="#{RedakteurNotificationBean.title}" toggleable="true"
+                             header="#{ModulNotificationBean.title}" toggleable="true"
                              toggleSpeed="500"
-                             visible="#{RedakteurNotificationBean.mainVisible}">
+                             visible="#{ModulNotificationBean.mainVisible}">
 
-                        #{RedakteurNotificationBean.description}
+                        #{ModulNotificationBean.description}
 
                     </p:panel>
                     <p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
                              toggleable="true" toggleSpeed="500"
-                             visible="#{RedakteurNotificationBean.ectsAimVisible}">
+                             visible="#{ModulNotificationBean.ectsAimVisible}">
 
-                        <strong>Leistungspunkte:</strong> #{RedakteurNotificationBean.ects}<br/>
+                        <strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects}<br/>
                         <br/>
-                        <strong>Lernziele:</strong> #{RedakteurNotificationBean.aim}
+                        <strong>Lernziele:</strong> #{ModulNotificationBean.aim}
 
                     </p:panel>
                     <p:panel id="pnlDescription1"
                              header="Zusaetzliche Informationen" toggleable="true"
                              toggleSpeed="500"
-                             visible="#{RedakteurNotificationBean.addInfoVisible}">
+                             visible="#{ModulNotificationBean.addInfoVisible}">
 
                         <ui:repeat var="iterator"
-                                   value="#{RedakteurNotificationBean.fieldList}">
+                                   value="#{ModulNotificationBean.fieldList}">
                             <strong>Titel: </strong>#{iterator.fieldTitle}<br/>
                             <strong>Beschreibung: </strong>#{iterator.description}<br/>
                             <br/>
@@ -274,29 +272,29 @@
                               maxSize="600"
                               header="Alte Version (aktuell verfuegbare Version)">
                     <p:panel id="pnlTitle2"
-                             header="#{RedakteurNotificationBean.title2}" toggleable="true"
+                             header="#{ModulNotificationBean.title2}" toggleable="true"
                              toggleSpeed="500"
-                             visible="#{RedakteurNotificationBean.mainVisible2}">
+                             visible="#{ModulNotificationBean.mainVisible2}">
 
-                        #{RedakteurNotificationBean.description2}
+                        #{ModulNotificationBean.description2}
 
                     </p:panel>
                     <p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
                              toggleable="true" toggleSpeed="500"
-                             visible="#{RedakteurNotificationBean.ectsAimVisible2}">
+                             visible="#{ModulNotificationBean.ectsAimVisible2}">
 
-                        <strong>Leistungspunkte:</strong> #{RedakteurNotificationBean.ects2}<br/>
+                        <strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects2}<br/>
                         <br/>
-                        <strong>Lernziele:</strong> #{RedakteurNotificationBean.aim2}
+                        <strong>Lernziele:</strong> #{ModulNotificationBean.aim2}
 
                     </p:panel>
                     <p:panel id="pnlDescription2"
                              header="Zusaetzliche Informationen" toggleable="true"
                              toggleSpeed="500"
-                             visible="#{RedakteurNotificationBean.addInfoVisible2}">
+                             visible="#{ModulNotificationBean.addInfoVisible2}">
 
                         <ui:repeat var="iterator"
-                                   value="#{RedakteurNotificationBean.fieldList2}">
+                                   value="#{ModulNotificationBean.fieldList2}">
                             <strong>Titel: </strong>#{iterator.fieldTitle}<br/>
                             <strong>Beschreibung: </strong>#{iterator.description}<br/>
                             <br/>

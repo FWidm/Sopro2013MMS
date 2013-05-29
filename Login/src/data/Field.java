@@ -2,17 +2,16 @@ package data;
 
 /**
  * @author Fabian
- *
+ * 
  */
 public class Field implements Editable {
-	//TODO Achtung namen von DB != namen in der Klasse evtl Probelem
+	// TODO Achtung namen von DB != namen in der Klasse evtl Probelem
 	private String SubjectmodTitle;
 	private int Subjectversion;
 	private String SubjectsubTitle;
 	private String fieldTitle;
 	private String description;
-	
-	
+
 	/**
 	 * @param subjectmodTitle
 	 * @param subjectversion
@@ -20,8 +19,8 @@ public class Field implements Editable {
 	 * @param fieldTitle
 	 * @param description
 	 */
-	public Field(String fieldTitle, int subjectversion,
-			String subjectsubTitle, String subjectmodTitle, String description) {
+	public Field(String fieldTitle, int subjectversion, String subjectsubTitle,
+			String subjectmodTitle, String description) {
 		super();
 		this.SubjectmodTitle = subjectmodTitle;
 		this.Subjectversion = subjectversion;
@@ -30,7 +29,6 @@ public class Field implements Editable {
 		this.description = description;
 	}
 
-
 	/**
 	 * @return the subjectmodTitle
 	 */
@@ -38,14 +36,13 @@ public class Field implements Editable {
 		return SubjectmodTitle;
 	}
 
-
 	/**
-	 * @param subjectmodTitle the subjectmodTitle to set
+	 * @param subjectmodTitle
+	 *            the subjectmodTitle to set
 	 */
 	public void setSubjectmodTitle(String subjectmodTitle) {
 		SubjectmodTitle = subjectmodTitle;
 	}
-
 
 	/**
 	 * @return the subjectversion
@@ -54,14 +51,13 @@ public class Field implements Editable {
 		return Subjectversion;
 	}
 
-
 	/**
-	 * @param subjectversion the subjectversion to set
+	 * @param subjectversion
+	 *            the subjectversion to set
 	 */
 	public void setSubjectversion(int subjectversion) {
 		Subjectversion = subjectversion;
 	}
-
 
 	/**
 	 * @return the subjectsubTitle
@@ -70,14 +66,13 @@ public class Field implements Editable {
 		return SubjectsubTitle;
 	}
 
-
 	/**
-	 * @param subjectsubTitle the subjectsubTitle to set
+	 * @param subjectsubTitle
+	 *            the subjectsubTitle to set
 	 */
 	public void setSubjectsubTitle(String subjectsubTitle) {
 		SubjectsubTitle = subjectsubTitle;
 	}
-
 
 	/**
 	 * @return the fieldTitle
@@ -86,14 +81,13 @@ public class Field implements Editable {
 		return fieldTitle;
 	}
 
-
 	/**
-	 * @param fieldTitle the fieldTitle to set
+	 * @param fieldTitle
+	 *            the fieldTitle to set
 	 */
 	public void setFieldTitle(String fieldTitle) {
 		this.fieldTitle = fieldTitle;
 	}
-
 
 	/**
 	 * @return the description
@@ -102,15 +96,13 @@ public class Field implements Editable {
 		return description;
 	}
 
-
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-		System.out.println("fieldDescription changed into: " + description);
 	}
-
 
 	@Override
 	public Editable computeDifferences(Editable newEditable) {
@@ -118,8 +110,9 @@ public class Field implements Editable {
 		return null;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -133,10 +126,11 @@ public class Field implements Editable {
 		return result;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 * returns true id fieldTitle and description from one Field is equal to another
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object) returns true id fieldTitle
+	 * and description from one Field is equal to another
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -160,5 +154,10 @@ public class Field implements Editable {
 		return true;
 	}
 
-	
+	public Field getCopy() {
+		return new Field(this.getFieldTitle(), this.getSubjectversion(),
+				this.getSubjectsubTitle(), this.getSubjectmodTitle(),
+				this.getDescription());
+	}
+
 }

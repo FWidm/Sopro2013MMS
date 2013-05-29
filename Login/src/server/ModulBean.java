@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
@@ -20,6 +21,7 @@ import ctrl.DBField;
 import ctrl.DBModule;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
+import ctrl.DBUser;
 import data.ModulActionListener;
 import data.Editable;
 import data.ExRules;
@@ -29,6 +31,7 @@ import data.Modification;
 import data.ModificationNotification;
 import data.Module;
 import data.Subject;
+import data.User;
 
 @ManagedBean(name = "ModulBean")
 @SessionScoped
@@ -39,7 +42,7 @@ public class ModulBean {
 	public static final String MODULE = "Module";
 	public static final String FAECHER = "F\u00E4cher";
 	public static final String TO_FOR = "message-log";
-
+	
 	// Add your tag id's for ajax-update on menuItemClick here.
 	public static final String UPDATE_AJAX = "list-menu-edit back-menu-edit scrollPanel-edit";
 
@@ -58,8 +61,14 @@ public class ModulBean {
 	private boolean editable, emptyFieldList;
 	private Editable selectedEditable;
 	private String message;
+	
+	private String currentUser;
 
 	public ModulBean() {
+		//get User Session
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		currentUser = (String) session.getAttribute("email");
+		//continue with normal init
 		backModel = new DefaultMenuModel();
 
 		model = new DefaultMenuModel();
@@ -95,8 +104,7 @@ public class ModulBean {
 				fieldList.add(new Field("", sub.getVersion(),
 						sub.getSubTitle(), sub.getModTitle(), ""));
 			}
-
-			System.out.println(fieldList.size() + " " + oldFieldList.size());
+			
 			emptyFieldList = false;
 		}
 	}
@@ -121,7 +129,10 @@ public class ModulBean {
 		selectedEditable = sub;
 		oldFieldList = DBField.loadFieldList(sub.getModTitle(),
 				sub.getVersion(), sub.getSubTitle());
-		fieldList = new LinkedList<Field>(oldFieldList);
+		fieldList = new LinkedList<Field>();
+		for (Field field : oldFieldList) {
+			fieldList.add(field.getCopy());
+		}
 		if (fieldList.size() == 0)
 			emptyFieldList = true;
 		title = sub.getSubTitle();
@@ -241,23 +252,21 @@ public class ModulBean {
 					// if old sub isn't the same as the new sub
 					// we create new database entries and create a notification
 					if (!oldSub.equals(newSub)) {
-						System.out.println("not equal");
 						if (handleAccept(newSub, oldSub)) {
-							oldFieldList = new LinkedList<Field>(fieldList);
+							oldFieldList = new LinkedList<Field>();
+							for (Field field : fieldList) {
+								oldFieldList.add(field.getCopy());
+							}
 							selectedEditable = newSub;
 							addMessage(TO_FOR, "Erfolg: ",
 									"Ihre Änderung wurde erfolgreich verschickt.");
 						}
 					} else {
-						System.out.println(fieldList.size() + " "
-								+ oldFieldList.size());
 						boolean differ = false;
 						if (fieldList.size() != oldFieldList.size()) {
-							System.out.println("Unterschiedlich lang");
 							differ = true;
 						} else {
 							for (int i = 0; i < oldFieldList.size(); i++) {
-								System.out.println("Vergleich: " + fieldList.get(i).getDescription() + "\n" + oldFieldList.get(i).getDescription());
 								if (!fieldList.get(i).equals(
 										oldFieldList.get(i))) {
 									differ = true;
@@ -266,7 +275,6 @@ public class ModulBean {
 							}
 						}
 						if (differ) {
-							System.out.println("differ");
 							boolean empty = false;
 							for (Field field : fieldList) {
 								if (field.getFieldTitle() == "") {
@@ -278,8 +286,10 @@ public class ModulBean {
 							}
 							if (!empty) {
 								if (handleAccept(newSub, oldSub)) {
-									oldFieldList = new LinkedList<Field>(
-											fieldList);
+									oldFieldList = new LinkedList<Field>();
+									for (Field field : fieldList) {
+										oldFieldList.add(field.getCopy());
+									}
 									selectedEditable = newSub;
 									addMessage(TO_FOR, "Erfolg: ",
 											"Ihre Änderung wurde erfolgreich verschickt.");
@@ -317,7 +327,15 @@ public class ModulBean {
 	public void decline() {
 		if (selectedEditable instanceof Subject) {
 			Subject oldSub = (Subject) selectedEditable;
-			fieldList = new LinkedList<Field>(oldFieldList);
+			fieldList = new LinkedList<Field>();
+			for (Field field : oldFieldList) {
+				fieldList.add(field.getCopy());
+			}
+			if(fieldList.size() > 0) {
+				emptyFieldList = false;
+			} else {
+				emptyFieldList = true;
+			}
 			title = oldSub.getSubTitle();
 			description = oldSub.getDescription();
 			ects = String.valueOf(oldSub.getEcts());
@@ -349,9 +367,12 @@ public class ModulBean {
 				fieldList.get(i).setSubjectversion(newSub.getVersion());
 				DBField.saveField(fieldList.get(i));
 			}
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			
+			//TODO load List of Redakteurs for the specific subject
 			ModificationNotification mn = new ModificationNotification(
-					"adam.admin@uni-ulm.de", "adam.admin@uni-ulm.de",
-					new Timestamp(System.currentTimeMillis()), message, "edit",
+					currentUser, "adam.admin@uni-ulm.de",
+					timestamp, message, "edit",
 					"queued", false, new Modification(oldSub, newSub));
 			DBNotification.saveNotification(mn);
 		} catch (SQLException e) {
@@ -576,7 +597,6 @@ public class ModulBean {
 	 *            the description to set
 	 */
 	public void setDescription(String description) {
-		System.out.println(description);
 		this.description = description;
 	}
 
@@ -803,6 +823,13 @@ public class ModulBean {
 	 */
 	public void setEmptyFieldList(boolean emptyFieldList) {
 		this.emptyFieldList = emptyFieldList;
+	}
+
+	/**
+	 * @return the currentUser
+	 */
+	public String getCurrentUser() {
+		return currentUser;
 	}
 
 }

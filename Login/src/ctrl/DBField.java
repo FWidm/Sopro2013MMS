@@ -21,7 +21,7 @@ public class DBField extends DBManager {
 	 */
 	public static void saveField(Field f) throws SQLException {
 		Connection con = null;
-		
+
 		con = openConnection();
 		Statement stmt = con.createStatement();
 		String update = "INSERT INTO field VALUES('" + f.getFieldTitle()
@@ -60,6 +60,41 @@ public class DBField extends DBManager {
 					+ subjectmodTitle + "' AND version = " + subjectversion
 					+ " AND subTitle = '" + subjectsubTitle
 					+ "' AND fieldTitle = '" + fieldTitle + "'";
+
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Deletes all fields related to a specific subject
+	 * 
+	 * @param subjectversion
+	 * @param subjectsubTitle
+	 * @param subjectmodTitle
+	 */
+	public static void deleteFields(int subjectversion, String subjectsubTitle,
+			String subjectmodTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM field WHERE modTitle = '"
+					+ subjectmodTitle + "' AND version = " + subjectversion
+					+ " AND subTitle = '" + subjectsubTitle + "'";
 
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
