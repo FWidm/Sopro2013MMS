@@ -30,7 +30,9 @@ public class AccessBean {
 	private String selectedAccess;
 	
 	private ModAccess deleteMod;
-	
+	/**
+	 * preload all lists that are being used to display stuff
+	 */
 	public AccessBean() {
 		// TODO Remove link between adam.admin and the testmodule in the
 		// database.
@@ -85,6 +87,10 @@ public class AccessBean {
 					"The selected User is already able to edit the selected Module.");
 	}
 	
+	/**
+	 * Filters the List by only displaying the selectedUserFilter's module access rights
+	 * @param e
+	 */
 	public void filterSelectionList(ActionEvent e){
 		if(selectedUserFilter.equals("-1")){
 			System.out.println("none selected - display all");
@@ -97,6 +103,9 @@ public class AccessBean {
 			
 	}
 	
+	/**
+	 * deletes the row that got selected - is confirmed by a dialog
+	 */
 	public void deleteRow(){
 		System.out.println("delete \t "+deleteMod);
 		DBModAccess.deleteModAccess(deleteMod.getModTitle(), deleteMod.getEmail());
