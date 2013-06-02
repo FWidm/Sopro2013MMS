@@ -141,7 +141,7 @@ public class PdfBox {
 			String version = "v" + sub.getVersion();
 			// remove all chars that are not a-z or A-Z
 			String charsOnly = name.replaceAll("[^a-zA-Z]+", "");
-			doc.save("src/server/" + charsOnly + "_" + version + ".pdf");
+			doc.save("WebContent/pdf/" + charsOnly + "_" + version + ".pdf");
 			doc.close();
 			return "pdf/" + charsOnly + "_" + version + ".pdf";
 		} catch (IOException | COSVisitorException e) {

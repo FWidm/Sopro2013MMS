@@ -3,7 +3,10 @@ package server;
 import java.io.InputStream;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.ServletContext;
+
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -28,12 +31,16 @@ public class DownloadBean {
 	 * @param e
 	 */
 	public void prepareStream(ActionEvent e){
-		pathToFile="AlgorithmenundDatenstrukturen_v1.pdf";
-		
-		InputStream stream = this.getClass().getResourceAsStream(pathToFile);
+		pathToFile="/pdf/ASQI_v1.pdf";
+		//split the path to remove the pdf prefix.
+		String filename=pathToFile.split("/pdf/")[1];
+		System.out.println(filename);
+		//InputStream stream = this.getClass().getResourceAsStream(pathToFile);
+		InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(pathToFile);  
 		System.out.println("stream is null: "+(stream==null));
+		
 		file = new DefaultStreamedContent(stream, "pdf",
-				pathToFile);
+				filename);
 		System.out.println(file==null);
 	}
 
