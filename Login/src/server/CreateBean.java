@@ -54,7 +54,10 @@ public class CreateBean {
 		return (T) context.getApplication().evaluateExpressionGet(context,
 				"#{" + beanName + "}", Object.class);
 	}
-
+	/**
+	 * checks if the user is an admin
+	 * @param event
+	 */
 	public void checkAdmin(ComponentSystemEvent event) {
 		if (loggedInUser == null) {
 			loggedInUser = login.getDbUser();

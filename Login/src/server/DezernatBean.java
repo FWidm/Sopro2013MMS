@@ -1,6 +1,5 @@
 package server;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -21,13 +20,11 @@ public class DezernatBean {
 	private List<Subject> subjectList;
 	private List<Field> fieldList;
 
-	private HashMap<Subject, List<Field>> Map;
 	private Subject selected;
 
 	public DezernatBean() {
 
 		subjectList = DBSubject.loadSubjectsforDezernat();
-		Map = new HashMap<Subject, List<Field>>();
 
 		for (Subject s : subjectList) {
 			s.getSubTitle();
@@ -35,7 +32,6 @@ public class DezernatBean {
 				fieldList = DBField.loadFieldbySubjectTitle(s.getSubTitle());
 			}
 			
-			Map.put(s, fieldList);
 			if(!(fieldList==null))System.out.println(fieldList.toString());
 		}
 		System.out.println(subjectList.toString());
@@ -49,7 +45,10 @@ public class DezernatBean {
 			fieldList=DBField.loadFieldbySubjectTitle(selected.getSubTitle());
 		}
 	}
-	
+	/**
+	 * accept the Subject
+	 * @param e
+	 */
 	public void acceptChanges(ActionEvent e){
 		System.out.println(selected.getSubTitle()+" is accepted!");
 		if(DBSubject.updateSubjectAck(true,selected.getVersion(), selected.getSubTitle(), selected.getModTitle())){

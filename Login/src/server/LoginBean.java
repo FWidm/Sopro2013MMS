@@ -147,7 +147,10 @@ public class LoginBean {
 		return false;
 	}
 	
-
+	/**
+	 * checks if the user is logged in
+	 * @param event
+	 */
 	public void checkLoggedIn(ComponentSystemEvent event) {
 		System.out.println("checkLoggedIn");
 

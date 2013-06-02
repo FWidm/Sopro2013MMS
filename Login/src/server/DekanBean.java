@@ -21,9 +21,6 @@ import ctrl.DBModManual;
 import data.ExRules;
 import data.ModManual;
 
-
-
-//Changed to Sessionscope - if in doubt revert to RequestScoped
 @ManagedBean(name = "DekanBean")
 @SessionScoped
 public class DekanBean {
