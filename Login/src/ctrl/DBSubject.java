@@ -160,7 +160,7 @@ public class DBSubject extends DBManager {
 	 * 
 	 * @param version
 	 * @param modTitle
-	 * @return
+	 * @return list of subjects
 	 */
 	public static List<Subject> loadSubject(int version, String modTitle) {
 		List<Subject> subs = new LinkedList<Subject>();
@@ -198,7 +198,7 @@ public class DBSubject extends DBManager {
 	/**
 	 * get all previously unchecked subjects
 	 * 
-	 * @return
+	 * @return a list of unacked subjects
 	 */
 	public static List<Subject> loadSubjectsforDezernat() {
 		List<Subject> subs = new LinkedList<Subject>();
@@ -236,7 +236,7 @@ public class DBSubject extends DBManager {
 	 * load the Subject specified subtitle and modtitle where ack = true
 	 * @param subTitle
 	 * @param modTitle
-	 * @return
+	 * @return a subject
 	 */
 	public static Subject loadSubjectMaxVersion(String subTitle, String modTitle){
 		Subject sub=null;
@@ -278,7 +278,7 @@ public class DBSubject extends DBManager {
 	 * load the Subject specified subtitle and modtitle
 	 * @param subTitle
 	 * @param modTitle
-	 * @return
+	 * @return a subject
 	 */
 	public static Subject loadSubjectMaxVersionModNotif(String subTitle, String modTitle){
 		Subject sub=null;
@@ -320,7 +320,7 @@ public class DBSubject extends DBManager {
 	 * for ack = false
 	 * @param subTitle
 	 * @param modTitle
-	 * @return
+	 * @return a subject
 	 */
 	public static Subject loadSubjectMaxVersionForRedakNotif(String subTitle, String modTitle){
 		Subject sub=null;
@@ -362,7 +362,7 @@ public class DBSubject extends DBManager {
 	 * load a subjectlist
 	 * @param subTitle
 	 * @param modTitle
-	 * @return
+	 * @return list of subjects
 	 */
 	public static List<Subject> loadSubjectListMaxVersion(String modTitle){
 		List<Subject> subs=new LinkedList<Subject>();
@@ -407,7 +407,7 @@ public class DBSubject extends DBManager {
 	 * @param version
 	 * @param subTitle
 	 * @param modTitle
-	 * @return
+	 * @return success
 	 */
 	public static boolean updateSubjectAck(boolean b, int version,
 			String subTitle, String modTitle) {
@@ -444,7 +444,7 @@ public class DBSubject extends DBManager {
 	 * load all versions from one subject
 	 * @param subTitle
 	 * @param modTitle
-	 * @return
+	 * @return list of subjects
 	 */
 	public static List<Subject> loadSubject(String subTitle, String modTitle) {
 		List<Subject> subs = new LinkedList<Subject>();
@@ -484,7 +484,7 @@ public class DBSubject extends DBManager {
 	 * subTitle,modtitle,description,aim,ects,id,ack, max(version) FROM subject
 	 * GROUP BY subTitle
 	 * 
-	 * @return
+	 * @return list of subjects
 	 */
 	public static List<Subject> loadSubjects() {
 		List<Subject> subs = new LinkedList<Subject>();

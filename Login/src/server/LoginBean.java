@@ -63,8 +63,6 @@ public class LoginBean {
 
 	/**
 	 * checks if the login failed or was valid
-	 * 
-	 * @return either success page or the login-failed page
 	 */
 	public void checkSuccess() {
 		if (checkValidUser()) {

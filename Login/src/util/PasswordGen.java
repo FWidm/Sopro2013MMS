@@ -4,7 +4,7 @@ public class PasswordGen {
 	/**
 	 * Generates a password with given length that is alphanumeric(a-z;A-Z;0-9)
 	 * @param length
-	 * @return
+	 * @return password
 	 */
 	public static String generatePassword(int length) {
 		String ret = "";

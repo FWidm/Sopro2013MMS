@@ -62,7 +62,7 @@ public class PdfBox {
 	/**
 	 * Function that takes a subject that prints a PDF into the ./pdf directory.
 	 * 
-	 * @param list
+	 * @param sub
 	 */
 	public static String processSubject(Subject sub) {
 		// LOAD FIELDS FROM DB
@@ -88,7 +88,7 @@ public class PdfBox {
 	 * 
 	 * @param sub
 	 * @param fields
-	 * @return
+	 * @return Filepath
 	 * @throws IOException
 	 */
 	private static String printPDF(Subject sub, List<Field> fields)
@@ -207,7 +207,7 @@ public class PdfBox {
 	 * 
 	 * @param string
 	 * @param partitionSize
-	 * @return
+	 * @return splitted stringlist
 	 */
 	private static List<String> getParts(String string, int partitionSize) {
 		List<String> parts = new ArrayList<String>();
@@ -260,7 +260,7 @@ public class PdfBox {
 	 * @param x
 	 * @param y
 	 * @param size
-	 * @return
+	 * @return linecount
 	 * @throws IOException
 	 */
 	private static int printMultipleLines(PDPageContentStream contentStream,

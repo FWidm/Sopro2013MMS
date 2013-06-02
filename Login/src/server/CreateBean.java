@@ -46,7 +46,7 @@ public class CreateBean {
 	 * finds the bean with corresponding name
 	 * 
 	 * @param beanName
-	 * @return
+	 * @return bean
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T findBean(String beanName) {
@@ -79,10 +79,7 @@ public class CreateBean {
 	}
 
 	/**
-	 * loads the user with the specified email from the database
-	 * 
-	 * @param Email
-	 * @return boolean
+	 * Method that is colled from the xhtml admin-index page that checks if parameters are nonempty and then saves the user if email is not already in the database
 	 */
 	public void saveUser(ActionEvent action) {
 		success = true;
@@ -204,7 +201,7 @@ public class CreateBean {
 	 * Translates numbers into Strings that are way more readable
 	 * 
 	 * @param rol
-	 * @return
+	 * @return role
 	 */
 	private String decodeRole(int rol) {
 		switch (rol) {

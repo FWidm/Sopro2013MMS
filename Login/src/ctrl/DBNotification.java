@@ -437,7 +437,7 @@ public class DBNotification extends DBManager {
 	 * Loads all notification that were sent or recieved by one user.
 	 * 
 	 * @param email
-	 * @return
+	 * @return 
 	 */
 	public static List<Notification> loadNotification(String email) {
 		List<Notification> notif = new LinkedList<Notification>();
