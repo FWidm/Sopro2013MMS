@@ -48,10 +48,10 @@ public class PdfBox {
 	public static List<String> processSubjects(List<Subject> loadSubjects) {
 		List<String> subtitles = new LinkedList<String>();
 		for (Subject s : loadSubjects) {
-			String filename=processSubject(s);
+			String filename = processSubject(s);
 			System.out.println(filename);
 			subtitles.add(filename);
-			
+
 		}
 		// merge list of files -
 		// http://java.dzone.com/news/merging-pdf%E2%80%99s-with-pdfbox
@@ -68,10 +68,12 @@ public class PdfBox {
 		// LOAD FIELDS FROM DB
 		List<Field> fields = DBField.loadFieldList(sub.getModTitle(),
 				sub.getVersion(), sub.getSubTitle());
-		System.out.println(sub.getSubTitle()+" "+fields.toString());
-		
+		System.out.println(sub.getSubTitle() + " " + fields.toString());
+
 		try {
-			return printPDF(sub, fields);
+			String returnVal = printPDF(sub, fields);
+			System.out.println("PDFBox >> "+returnVal);
+			return returnVal;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,25 +126,26 @@ public class PdfBox {
 			printLine(content, "Version: " + sub.getVersion(), headX + 20,
 					headY - y, 10);
 			y += 12;
-			printLine(content, "Ziel: " + sub.getAim(), headX + 20,
-					headY - y, 10);
+			printLine(content, "Ziel: " + sub.getAim(), headX + 20, headY - y,
+					10);
 			y += 12;
 			List<String> lines = getParts(sub.getDescription(), 100);
-			int lineCount = printMultipleLines(content, lines, headX + 20, headY - y, 10);
-			y += 12*lineCount;
-			System.out.println(lineCount +  " "+y);
+			int lineCount = printMultipleLines(content, lines, headX + 20,
+					headY - y, 10);
+			y += 12 * lineCount;
+			System.out.println(lineCount + " " + y);
 			printFields(content, page, doc, fields, y);
 
 			content.close();
 			String name = sub.getSubTitle();
 			String version = "v" + sub.getVersion();
-			//remove all chars that are not  a-z or A-Z
+			// remove all chars that are not a-z or A-Z
 			String charsOnly = name.replaceAll("[^a-zA-Z]+", "");
-			doc.save("pdf/" + charsOnly + "_" + version + ".pdf");
+			doc.save("src/server/" + charsOnly + "_" + version + ".pdf");
 			doc.close();
 			return "pdf/" + charsOnly + "_" + version + ".pdf";
 		} catch (IOException | COSVisitorException e) {
-			System.out.println(e);
+			System.out.println("PDFBOX "+e);
 		}
 		return "";
 	}
@@ -166,9 +169,9 @@ public class PdfBox {
 		int offset = 0;
 		int tmpsize = 0;
 		int bottomborder = 115;
-		int tmpY = headY - y + offset +25;
-		content.drawLine(headX, tmpY-35,
-				page.getMediaBox().getWidth() - 50, tmpY-35);
+		int tmpY = headY - y + offset + 25;
+		content.drawLine(headX, tmpY - 35, page.getMediaBox().getWidth() - 50,
+				tmpY - 35);
 		for (Field f : fields) {
 			tmpY -= 55;
 			if (tmpY < bottomborder) {
