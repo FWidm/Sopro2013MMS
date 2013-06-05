@@ -3,7 +3,7 @@ package server;
 import java.sql.Timestamp;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -16,19 +16,22 @@ import data.ModManual;
 import data.ModificationNotification;
 import data.Module;
 import data.Subject;
+
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 import ctrl.DBField;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
 
-@ManagedBean(name = "NotificationBean")
-@RequestScoped
-public class NotificationBeanNonRedakteur {
+@ManagedBean(name = "RedDezNotificationBean")
+@SessionScoped
+public class RedDezNotificationBean {
+	
+	public static final String TO_FOR = "message-log-edit-dez";
 
 	private String recipientEmail;
 	private String senderEmail;
@@ -38,7 +41,6 @@ public class NotificationBeanNonRedakteur {
 	private String status;
 	private List<ModificationNotification> notificationList;
 	private ModificationNotification selectedNotification;
-	private ModificationNotification selectedMessage;
 	Editable selectedEditableAfter, selectedEditableBefore;
 	private String strTimeStamp;
 
@@ -48,57 +50,52 @@ public class NotificationBeanNonRedakteur {
 	private String title2, description2, ects2, aim2;
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
+	
+	private String currentUser; 
 
-	@PostConstruct
-	void init() {
-		notificationList = DBNotification.loadModificationNotification();
-	}
-
-	/**
-	 * actualize notificationlist after declining/accepting
-	 */
-	private void actualizeNotificationList() {
-		setNotificationList(DBNotification.loadModificationNotification());
+	public RedDezNotificationBean() {
+		// get User Session
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		currentUser = (String) session.getAttribute("email");
+		loadNotifications();
 	}
 
 	/**
 	 * Clicking on the tablerow sets isRead to true
 	 */
 	public void selectedNotificationIsRead(SelectEvent e) {
-		System.out.println("isRead");
-
-		if (selectedNotification != null) {
-			DBNotification.updateNotificationIsRead(getSelectedNotification());
-		} else
-			System.out.println("null jetzt");
+		DBNotification.updateNotificationIsRead(getSelectedNotification());
 	}
 
 	/**
 	 * Deletes a specific notification from DB
 	 */
 	public void cancelSelectedNotification(ActionEvent e) {
-		// System.out.println("deleting"+selectedNotification.getSenderEmail());
-
 		if (selectedNotification != null) {
-			DBNotification.deleteNotification(getSelectedNotification());
-			actualizeNotificationList();
+			if (selectedNotification.getStatus().equals("declined")) {
+				DBNotification.deleteNotification(getSelectedNotification());
+				addMessage(TO_FOR, "Benachrichtigung erfolgreich entfernt: ",
+						"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
+			} else {
+				DBNotification.deleteNotification(getSelectedNotification());
+				Subject sub = (Subject) selectedEditableAfter;
+				if (!sub.isAck()) {
+					DBSubject.deleteSubject(sub);
+					DBField.deleteFields(sub.getVersion(), sub.getSubTitle(),
+							sub.getModTitle());
+					addMessage(TO_FOR, "Änderung erfolgreich widerrufen: ",
+							"Das dazu gehörige Fach wurde gelöscht.");
+				} else {
+					addMessage(TO_FOR,
+							"Benachrichtigung erfolgreich entfernt: ",
+							"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
+				}
+			}
+			loadNotifications();
 		} else {
 			System.out.println("null");
 		}
-	}
-
-	/**
-	 * Editing a specific notification and updates the DB
-	 */
-	public void editSelectedNotification(ActionEvent e) {
-		// System.out.println("editing" +
-		// getSelectedNotification().getSenderEmail());
-
-		if (selectedNotification != null) {
-			DBNotification.updateNotificationEdit(getSelectedNotification());
-			actualizeNotificationList();
-		} else
-			System.out.println("null");
 	}
 
 	/**
@@ -106,7 +103,7 @@ public class NotificationBeanNonRedakteur {
 	 * tab
 	 */
 	public void onTabChange(TabChangeEvent event) {
-		System.out.println("tabchanged");
+		loadNotifications();
 		boolean glbIsRead = false;
 		String glbSender = new String();
 		int cntr = 0;
@@ -115,9 +112,7 @@ public class NotificationBeanNonRedakteur {
 				glbIsRead = true;
 				cntr += 1;
 				glbSender += cntr + ". "
-						+ getNotificationList().get(i).getSenderEmail() + " \n"; // TODO
-																					// Line
-																					// break
+						+ getNotificationList().get(i).getSenderEmail() + "&#x0d;&#x0A"; 
 			}
 		}
 		if (glbIsRead) {
@@ -129,52 +124,33 @@ public class NotificationBeanNonRedakteur {
 	}
 
 	/**
-	 * declines the selected notification
-	 */
-	public void declineSelectedNotification(ActionEvent e) {
-		System.out.println("decline");
-
-		if (selectedNotification != null) {
-			if (DBNotification.declineNotification(getSelectedNotification())) {
-				selectedNotification.setStatus("declined");
-				actualizeNotificationList();
-				System.out.println(selectedNotification.getMessage()
-						+ " was declined");
-			} else
-				System.out.println("nothing to decline");
-		} else
-			System.out.println("null");
-		loadNotifications();
-	}
-
-	/**
-	 * accepts selected notification
-	 */
-	public void acceptSelectedNotification(ActionEvent e) {
-		System.out.println("accept");
-
-		if (selectedNotification != null) {
-			if (DBNotification.acceptNotification(getSelectedNotification())) {
-				selectedNotification.setStatus("accepted");
-				actualizeNotificationList();
-				System.out.println(selectedNotification.getMessage()
-						+ " was accepted");
-				Subject newSub = (Subject) selectedEditableAfter;
-				DBSubject.updateSubjectAck(true, newSub.getVersion(),
-						newSub.getSubTitle(), newSub.getModTitle());
-			} else
-				System.out.println("nothing to accept");
-		} else
-			System.out.println("null");
-		loadNotifications();
-	}
-
-	/**
 	 * Loads all Notifications from the database
 	 * 
 	 */
 	public void loadNotifications() {
-		setNotificationList(DBNotification.loadModificationNotification());
+		setNotificationList(DBNotification.loadModificationNotificationModEx(currentUser));
+	}
+
+	/**
+	 * if anything goes wrong - display an Error
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addErrorMessage(String toFor, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
+	}
+
+	/**
+	 * Informs the User via message.
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addMessage(String toFor, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
 
 	/**
@@ -377,21 +353,6 @@ public class NotificationBeanNonRedakteur {
 				addInfoVisible2 = false;
 			}
 		}
-	}
-
-	/**
-	 * @return the selectedMessage
-	 */
-	public ModificationNotification getSelectedMessage() {
-		return selectedMessage;
-	}
-
-	/**
-	 * @param selectedMessage
-	 *            the selectedMessage to set
-	 */
-	public void setSelectedMessage(ModificationNotification selectedMessage) {
-		this.selectedMessage = selectedMessage;
 	}
 
 	/**

@@ -8,97 +8,207 @@
 
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
-	<title>Dezernat Panel</title>
+	<title>Dezernat</title>
 
-	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/default.css" /> 
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
 <h:body>
-	<!-- body -->
 	<div style="height: 120px;">
 		<p:graphicImage value="/Image/iui_19.png"
 			style="position:absolute; top:20px; right:20px;" />
 	</div>
-
+	<!-- body -->
 	<h:form id="form">
-
-		<!-- Dialog for the review button -->
-		<p:dialog id="reviewDialog" appendToBody="true"
-			header="Selected Details for '#{DezernatBean.selected.subTitle}'"
-			showEffect="fade" widgetVar="reviewDialog" modal="true">
-			<p:outputPanel id="documentPanel">
-				<p:scrollPanel style="max-height:480px;max-width:800px">
-					<div style="margin: 10px;">
-						<ui:repeat var="iterator" value="#{DezernatBean.fieldList}">
-							<h4>#{iterator.fieldTitle}</h4>
-							 #{iterator.description}
-							<br />
-							<br />
-						</ui:repeat>
-					</div>
-				</p:scrollPanel>
-			</p:outputPanel>
-			<br />
-			<p:commandButton id="confirm" value="Accept Changes"
-				actionListener="#{DezernatBean.acceptChanges}"
-				update=":form:tabview-dezernat:subjects :form:tabview-dezernat:messages-approve"
-				oncomplete="reviewDialog.hide()" />
-			<p:commandButton id="decline" value="Not Yet"
-				onclick="reviewDialog.hide()" type="button" />
-		</p:dialog>
-
-
-		<p:tabView id="tabview-dezernat">
+		<p:tabView id="tabview-redak" scrollable="true">
 			<!-- TabView -->
-			<p:tab title="Approve Changes">
+			<p:tab title="Start" id="tabStart">
 
-				<p:layout style="min-width:400px;min-height:500px;"
-					id="changes-layout">
+				<!-- Begin of first tab // Start -->
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;"
+					id="gblLayout">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
 
-					<p:layoutUnit id="changeUnit" position="center">
+						<p:menu id="back-menu" model="#{TemplateBean.backModel}" />
+						<p:menu id="list-menu" model="#{TemplateBean.model}" />
 
-						<p:dataTable id="subjects" var="sub"
-							value="#{DezernatBean.subjectList}" scrollable="true"
-							rowKey="#{sub.subTitle}" scrollHeight="250"
-							selection="#{DezernatBean.selected}" selectionMode="single">
-							<f:facet name="header">
-							select a row, then click the button to review the details
-							</f:facet>
-							<p:column headerText="Name" footerText="">
-								<h:outputText value="#{sub.subTitle}" />
-							</p:column>
-							<p:column headerText="Module" footerText="">
-								<h:outputText value="#{sub.modTitle}" />
-							</p:column>
-							<p:column headerText="Description" footerText="">
-								<h:outputText value="#{sub.description}" />
-							</p:column>
-							<p:column headerText="ECTS" footerText="" style="width:40px">
-								<h:outputText value="#{sub.ects}" />
-							</p:column>
-							<p:column headerText="Aims" footerText="">
-								<h:outputText value="#{sub.aim}" />
-							</p:column>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" id="content" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel id="pnlTitle" header="#{TemplateBean.title}"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.mainVisible}">
+	
+								#{TemplateBean.description}
+							
+							</p:panel>
+							<p:panel id="pnlEcts" header="Leistungspunkte und Lernziele"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.ectsAimVisible}">
+
+								<strong>leistungspunkte:</strong> #{TemplateBean.ects}<br />
+								<br />
+								<strong>Lernziele:</strong> #{TemplateBean.aim}
+	
+							</p:panel>
+							<p:panel id="pnlDescription" header="Zusaetzliche Informationen"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.addInfoVisible}">
+
+								<ui:repeat var="iterator" value="#{TemplateBean.fieldList}">
+									<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+									<strong>Beschreibung: </strong>#{iterator.description}<br />
+									<br />
+								</ui:repeat>
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton type="push" value="Drucken" title="Drucken"
+								icon="ui-icon-print">
+							</p:commandButton>
+							<p:commandButton type="push" value="Download" title="Download"
+								icon="ui-icon-disk">
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<!-- End first tab // Start -->
+
+			<!-- No Edit Tab for Dezernat -->
+			
+			<!-- Start Notification Tab -->
+			<p:tab title="Notification">
+				<p:layout
+					style="min-width:800px; min-height:500px; max-height:500px;"
+					id="notify-layout">
+
+					<p:layoutUnit position="west" resizable="true" size="400"
+						minSize="215" maxSize="400" header="Nachrichten"
+						collapsible="true">
+
+
+						<p:dataTable id="notifications" var="noti"
+							value="#{DezernatNotificationBean.notificationList}"
+							scrollable="true" rowKey="#{noti.timeStamp}" scrollHeight="400"
+							selection="#{DezernatNotificationBean.selectedNotification}"
+							selectionMode="single" autoUpdate="true">
+							<p:ajax event="rowSelect"
+								listener="#{DezernatNotificationBean.selectedNotificationIsRead}"
+								update=":form:tabview-redak:notify-layout" />
+
+							<p:column>
+								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
+									style="width: 40px;" />
+                    #{noti.senderEmail}
+
+                </p:column>
 							<f:facet name="footer">
-								<div align="right">
-									<p:commandButton value="review" icon="ui-icon-search"
-										actionListener="#{DezernatBean.loadFields}"
-										update=":form:reviewDialog" oncomplete="reviewDialog.show();" />
+								<div align="center">
+									<p:commandButton value="aktualisieren" icon="ui-icon-refresh"
+										actionListener="#{DezernatNotificationBean.loadNotifications}"
+										update=":form:tabview-redak:notify-layout" />
+									<p:commandButton value="ablehnen" icon="ui-icon-closethick"
+										actionListener="#{DezernatNotificationBean.declineSelectedNotification}"
+										update=":form:tabview-redak:notify-layout" />
+									<p:commandButton value="akzeptieren" icon="ui-icon-check"
+										actionListener="#{DezernatNotificationBean.acceptSelectedNotification}"
+										update=":form:tabview-redak:notify-layout" />
 								</div>
 							</f:facet>
 						</p:dataTable>
-						<p:messages id="messages-approve" for="approve" showDetail="true" autoUpdate="true"
-							closable="true"/>
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center">
+						<p:layout>
+							<p:layoutUnit position="north" minSize="80"
+								header="Date: #{DezernatNotificationBean.selectedNotification.timeStamp}
+				Sender: #{DezernatNotificationBean.selectedNotification.senderEmail} 
+				Action: #{DezernatNotificationBean.selectedNotification.action}">
+								<h:outputText id="message"
+									value="#{DezernatNotificationBean.selectedNotification.message}" />
+							</p:layoutUnit>
+							<p:layoutUnit position="center" minSize="200"
+								header="Neue Version (vom Verantwortlichen bearbeitet)">
+								<p:panel id="pnlTitle1"
+									header="#{DezernatNotificationBean.title}" toggleable="true"
+									toggleSpeed="500"
+									visible="#{DezernatNotificationBean.mainVisible}">
+
+                        #{DezernatNotificationBean.description}
+
+                    </p:panel>
+								<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
+									toggleable="true" toggleSpeed="500"
+									visible="#{DezernatNotificationBean.ectsAimVisible}">
+
+									<strong>Leistungspunkte:</strong> #{DezernatNotificationBean.ects}<br />
+									<br />
+									<strong>Lernziele:</strong> #{DezernatNotificationBean.aim}
+
+                    </p:panel>
+								<p:panel id="pnlDescription1"
+									header="Zusaetzliche Informationen" toggleable="true"
+									toggleSpeed="500"
+									visible="#{DezernatNotificationBean.addInfoVisible}">
+
+									<ui:repeat var="iterator"
+										value="#{DezernatNotificationBean.fieldList}">
+										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<br />
+									</ui:repeat>
+								</p:panel>
+							</p:layoutUnit>
+							<p:layoutUnit position="east" resizable="true" minSize="200"
+								maxSize="600"
+								header="Alte Version (aktuell verfuegbare Version)">
+								<p:panel id="pnlTitle2"
+									header="#{DezernatNotificationBean.title2}" toggleable="true"
+									toggleSpeed="500"
+									visible="#{DezernatNotificationBean.mainVisible2}">
+
+                        #{DezernatNotificationBean.description2}
+
+                    </p:panel>
+								<p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
+									toggleable="true" toggleSpeed="500"
+									visible="#{DezernatNotificationBean.ectsAimVisible2}">
+
+									<font color="red"><strong>Leistungspunkte:</strong> #{DezernatNotificationBean.ects2}</font><br />
+									<br />
+									<strong>Lernziele:</strong> #{DezernatNotificationBean.aim2}
+
+                    </p:panel>
+								<p:panel id="pnlDescription2"
+									header="Zusaetzliche Informationen" toggleable="true"
+									toggleSpeed="500"
+									visible="#{DezernatNotificationBean.addInfoVisible2}">
+
+									<ui:repeat var="iterator"
+										value="#{DezernatNotificationBean.fieldList2}">
+										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<br />
+									</ui:repeat>
+								</p:panel>
+							</p:layoutUnit>
+						</p:layout>
 					</p:layoutUnit>
 
 				</p:layout>
+			</p:tab>
 
-			</p:tab>
-			<p:tab title="Notifications">
-			</p:tab>
-			
 			<p:tab title="Logout">
 				<table width="350" border="0" cellpadding="2">
 					<tr>
@@ -108,7 +218,8 @@
 					</tr>
 				</table>
 			</p:tab>
-			
+			<!-- End Notification Tab -->
+
 		</p:tabView>
 		<!-- End TabView -->
 	</h:form>

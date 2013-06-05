@@ -1,327 +1,328 @@
 <?xml version="1.0" encoding="US-ASCII" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
-    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
-    <title>ModuleExecutive</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+	<title>ModuleExecutive</title>
 
-    <link rel="stylesheet" href="./css/default.css"/>
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
 <h:body>
-<!-- body -->
-<div style="height: 120px;">
-    <p:graphicImage value="/Image/iui_19.png"
-                    style="position:absolute; top:20px; right:20px;"/>
-</div>
-<h:form id="form">
-<p:growl id="growl" showDetail="true"/>
-<p:tabView id="tabview-modEx" scrollable="true" dynamic="true">
-<p:ajax event="tabChange"
-        listener="#{ModulNotificationBean.onTabChange}"
-        update=":form:growl"/>
-<!-- TabView -->
-<p:tab title="Start" id="tabStart">
-    <!-- Begin of first tab // Start -->
-    <p:layout
-            style="min-width:800px; min-height:600px; max-height:600px;"
-            id="gblLayout">
-        <!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
-        <p:layoutUnit position="west" resizable="true" size="215"
-                      minSize="215" header="Modulelist" collapsible="true">
+	<!-- body -->
+	<div style="height: 120px;">
+		<p:graphicImage value="/Image/iui_19.png"
+			style="position:absolute; top:20px; right:20px;" />
+	</div>
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		<p:tabView id="tabview-modEx" scrollable="true" dynamic="true">
+			<p:ajax event="tabChange"
+				listener="#{ModulNotificationBean.onTabChange}" update=":form:growl" />
+			<!-- TabView -->
+			<p:tab title="Start" id="tabStart">
+				<!-- Begin of first tab // Start -->
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;"
+					id="gblLayout">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
 
-            <p:menu id="back-menu" model="#{TemplateBean.backModel}"/>
-            <p:menu id="list-menu" model="#{TemplateBean.model}"/>
+						<p:menu id="back-menu" model="#{TemplateBean.backModel}" />
+						<p:menu id="list-menu" model="#{TemplateBean.model}" />
 
-        </p:layoutUnit>
+					</p:layoutUnit>
 
-        <p:layoutUnit position="center" id="content" header="Modulemanual">
-            <p:scrollPanel id="scrollPanel" mode="native"
-                           style="min-width:400px; min-height:470px;">
-                <p:panel id="pnlTitle" header="#{TemplateBean.title}"
-                         toggleable="true" toggleSpeed="500"
-                         visible="#{TemplateBean.mainVisible}">
+					<p:layoutUnit position="center" id="content" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel id="pnlTitle" header="#{TemplateBean.title}"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.mainVisible}">
 
                     #{TemplateBean.description}
 
                 </p:panel>
-                <p:panel id="pnlEcts" header="Leistungspunkte und Lernziele"
-                         toggleable="true" toggleSpeed="500"
-                         visible="#{TemplateBean.ectsAimVisible}">
+							<p:panel id="pnlEcts" header="Leistungspunkte und Lernziele"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.ectsAimVisible}">
 
-                    <strong>Leistungspunkte:</strong> #{TemplateBean.ects}<br/>
-                    <br/>
-                    <strong>Lernziele:</strong> #{TemplateBean.aim}
-
-                </p:panel>
-                <p:panel id="pnlDescription" header="Zusaetzliche Informationen"
-                         toggleable="true" toggleSpeed="500"
-                         visible="#{TemplateBean.addInfoVisible}">
-
-                    <ui:repeat var="iterator" value="#{TemplateBean.fieldList}">
-                        <strong>Titel: </strong>#{iterator.fieldTitle}<br/>
-                        <strong>Beschreibung: </strong>#{iterator.description}<br/>
-                        <br/>
-                    </ui:repeat>
-                </p:panel>
-            </p:scrollPanel>
-        </p:layoutUnit>
-
-        <p:layoutUnit position="south" resizable="false">
-            <div align="center">
-                <p:commandButton type="push" value="Drucken" title="Drucken"
-                                 icon="ui-icon-print">
-                </p:commandButton>
-                <p:commandButton type="push" value="Download" title="Download"
-                                 icon="ui-icon-disk">
-                </p:commandButton>
-            </div>
-        </p:layoutUnit>
-    </p:layout>
-</p:tab>
-<!-- End first tab // Start -->
-
-<p:tab title="Edit">
-    <!-- Begin of second tab // Edit -->
-    <p:messages id="message-log" for="message-log" showDetail="true"
-                autoUpdate="true" closable="true"/>
-    <p:layout
-            style="min-width:800px; min-height:600px; max-height:600px;">
-        <!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
-        <p:layoutUnit position="west" resizable="true" size="215"
-                      minSize="215" header="Modulelist" collapsible="true">
-
-            <p:menu id="back-menu-edit" model="#{ModulBean.backModel}"/>
-            <p:menu id="list-menu-edit" model="#{ModulBean.model}"/>
-
-        </p:layoutUnit>
-
-        <p:layoutUnit position="center" header="Modulemanual">
-            <p:scrollPanel id="scrollPanel-edit" mode="native"
-                           style="min-width:400px; min-height:470px;">
-                <p:panel header="Kommentare und Notizen" toggleable="false"
-                         toggleSpeed="500" visible="#{ModulBean.editable}">
-                    <p:inputTextarea rows="1" cols="200" readonly="false"
-                                     value="#{ModulBean.message}">
-                        <p:ajax event="blur"/>
-                    </p:inputTextarea>
-                </p:panel>
-                <p:panel header="#{ModulBean.title}" toggleable="true"
-                         toggleSpeed="500" visible="#{ModulBean.mainVisible}">
-                    <p:inputTextarea rows="1" cols="200"
-                                     readonly="#{ModulBean.descriptionEdit}"
-                                     value="#{ModulBean.description}">
-                        <p:ajax event="blur"/>
-                    </p:inputTextarea>
+								<strong>Leistungspunkte:</strong> #{TemplateBean.ects}<br />
+								<br />
+								<strong>Lernziele:</strong> #{TemplateBean.aim}
 
                 </p:panel>
-                <p:panel header="Leistungspunkte und Lernziele" toggleable="true"
-                         toggleSpeed="500" visible="#{ModulBean.ectsAimVisible}">
+							<p:panel id="pnlDescription" header="Zusaetzliche Informationen"
+								toggleable="true" toggleSpeed="500"
+								visible="#{TemplateBean.addInfoVisible}">
 
-                    <strong>Leistungspunkte:</strong>
-                    <p:inputText readonly="#{ModulBean.ectsEdit}"
-                                 value="#{ModulBean.ects}">
-                        <p:ajax event="blur"/>
-                    </p:inputText>
-                    <br/>
-                    <br/>
-                    <strong>Lernziele:</strong>
-                    <p:inputTextarea readonly="#{ModulBean.aimEdit}" rows="1"
-                                     cols="200" value="#{ModulBean.aim}">
-                        <p:ajax event="blur"/>
-                    </p:inputTextarea>
+								<ui:repeat var="iterator" value="#{TemplateBean.fieldList}">
+									<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+									<strong>Beschreibung: </strong>#{iterator.description}<br />
+									<br />
+								</ui:repeat>
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
 
-                </p:panel>
-                <p:panel header="Zusaetzliche Informationen" toggleable="true"
-                         toggleSpeed="500" visible="#{ModulBean.addInfoVisible}">
-                    <p:panel visible="#{ModulBean.emptyFieldList}">
-                        <p:commandButton type="push" icon="ui-icon-plusthick"
-                                         update=":form:tabview-modEx:scrollPanel-edit"
-                                         actionListener="#{ModulBean.addField(0)}"/>
-                    </p:panel>
-                    <ui:repeat var="iterator" value="#{ModulBean.fieldList}"
-                               varStatus="status">
-                        <strong>Titel: </strong>
-                        <p:inputText readonly="#{ModulBean.fieldTitleEdit}"
-                                     value="#{iterator.fieldTitle}">
-                            <p:ajax event="blur"/>
-                        </p:inputText>
-                        <br/>
-                        <strong>Beschreibung: </strong>
-                        <p:inputTextarea rows="1" cols="200"
-                                         readonly="#{ModulBean.fieldDescriptionEdit}"
-                                         value="#{iterator.description}">
-                            <p:ajax event="blur"/>
-                        </p:inputTextarea>
-                        <p:commandButton type="push" icon="ui-icon-plusthick"
-                                         update=":form:tabview-modEx:scrollPanel-edit"
-                                         actionListener="#{ModulBean.addField(status.index)}"/>
-                        <p:commandButton icon="ui-icon-minusthick"
-                                         update=":form:tabview-modEx:scrollPanel-edit"
-                                         actionListener="#{ModulBean.removeField(status.index)}"/>
-                        <br/>
-                        <br/>
-                    </ui:repeat>
-                </p:panel>
-            </p:scrollPanel>
-        </p:layoutUnit>
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton type="push" value="Drucken" title="Drucken"
+								icon="ui-icon-print">
+							</p:commandButton>
+							<p:commandButton type="push" value="Download" title="Download"
+								icon="ui-icon-disk">
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<!-- End first tab // Start -->
 
-        <p:layoutUnit position="south" resizable="false">
-            <div align="center">
-                <p:commandButton type="push" value="Zur&#252;cksetzen"
-                                 icon="ui-icon-trash" actionListener="#{ModulBean.decline}"
-                                 update=":form:tabview-modEx:scrollPanel-edit">
-                </p:commandButton>
-                <p:commandButton type="push" value="&#220;bernehmen"
-                                 update=":form:tabview-modEx:message-log" icon="ui-icon-disk"
-                                 actionListener="#{ModulBean.accept}">
-                </p:commandButton>
-            </div>
-        </p:layoutUnit>
-    </p:layout>
-</p:tab>
-<p:tab title="notifications">
-	    <p:messages id="message-log-edit" for="message-log-edit" showDetail="true"
-                autoUpdate="true" closable="true"/>
-    <p:layout
-            style="min-width:800px; min-height:500px; max-height:500px;"
-            id="notify-layout">
+			<p:tab title="Edit">
+				<!-- Begin of second tab // Edit -->
+				<p:messages id="message-log" for="message-log" showDetail="true"
+					autoUpdate="true" closable="true" />
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
 
-        <p:layoutUnit position="west" resizable="true" size="400"
-                      minSize="215" maxSize="400" header="Nachrichten"
-                      collapsible="true">
+						<p:menu id="back-menu-edit" model="#{ModulBean.backModel}" />
+						<p:menu id="list-menu-edit" model="#{ModulBean.model}" />
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel-edit" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel header="Kommentare und Notizen" toggleable="false"
+								toggleSpeed="500" visible="#{ModulBean.editable}">
+								<p:inputTextarea rows="1" cols="200" readonly="false"
+									value="#{ModulBean.message}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+							</p:panel>
+							<p:panel header="#{ModulBean.title}" toggleable="true"
+								toggleSpeed="500" visible="#{ModulBean.mainVisible}">
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{ModulBean.descriptionEdit}"
+									value="#{ModulBean.description}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+
+							</p:panel>
+							<p:panel header="Leistungspunkte und Lernziele" toggleable="true"
+								toggleSpeed="500" visible="#{ModulBean.ectsAimVisible}">
+
+								<strong>Leistungspunkte:</strong>
+								<p:inputText readonly="#{ModulBean.ectsEdit}"
+									value="#{ModulBean.ects}">
+									<p:ajax event="blur" />
+								</p:inputText>
+								<br />
+								<br />
+								<strong>Lernziele:</strong>
+								<p:inputTextarea readonly="#{ModulBean.aimEdit}" rows="1"
+									cols="200" value="#{ModulBean.aim}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+
+							</p:panel>
+							<p:panel header="Zusaetzliche Informationen" toggleable="true"
+								toggleSpeed="500" visible="#{ModulBean.addInfoVisible}">
+								<p:panel visible="#{ModulBean.emptyFieldList}">
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{ModulBean.hasPermission}"
+										update=":form:tabview-modEx:scrollPanel-edit"
+										actionListener="#{ModulBean.addField(0)}" />
+								</p:panel>
+								<ui:repeat var="iterator" value="#{ModulBean.fieldList}"
+									varStatus="status">
+									<strong>Titel: </strong>
+									<p:inputText readonly="#{ModulBean.fieldTitleEdit}"
+										value="#{iterator.fieldTitle}">
+										<p:ajax event="blur" />
+									</p:inputText>
+									<br />
+									<strong>Beschreibung: </strong>
+									<p:inputTextarea rows="1" cols="200"
+										readonly="#{ModulBean.fieldDescriptionEdit}"
+										value="#{iterator.description}">
+										<p:ajax event="blur" />
+									</p:inputTextarea>
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{ModulBean.hasPermission}"
+										update=":form:tabview-modEx:scrollPanel-edit"
+										actionListener="#{ModulBean.addField(status.index)}" />
+									<p:commandButton icon="ui-icon-minusthick"
+										disabled="#{ModulBean.hasPermission}"
+										update=":form:tabview-modEx:scrollPanel-edit"
+										actionListener="#{ModulBean.removeField(status.index)}" />
+									<br />
+									<br />
+								</ui:repeat>
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton id="btn1" type="push" value="Zur&#252;cksetzen"
+								disabled="#{ModulBean.hasPermission}" icon="ui-icon-trash"
+								actionListener="#{ModulBean.decline}"
+								update=":form:tabview-modEx:scrollPanel-edit">
+							</p:commandButton>
+							<p:commandButton id="btn2" type="push" value="&#220;bernehmen"
+								disabled="#{ModulBean.hasPermission}"
+								update=":form:tabview-modEx:message-log" icon="ui-icon-disk"
+								actionListener="#{ModulBean.accept}">
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<p:tab title="notifications">
+				<p:messages id="message-log-edit" for="message-log-edit"
+					showDetail="true" autoUpdate="true" closable="true" />
+				<p:layout
+					style="min-width:800px; min-height:500px; max-height:500px;"
+					id="notify-layout">
+
+					<p:layoutUnit position="west" resizable="true" size="400"
+						minSize="215" maxSize="400" header="Nachrichten"
+						collapsible="true">
 
 
-            <p:dataTable id="notifications" var="noti"
-                         value="#{ModulNotificationBean.notificationList}"
-                         scrollable="true" rowKey="#{noti.timeStamp}" scrollHeight="400"
-                         selection="#{ModulNotificationBean.selectedNotification}"
-                         selectionMode="single" autoUpdate="true">
-                <p:ajax event="rowSelect"
-                        listener="#{ModulNotificationBean.selectedNotificationIsRead}"
-                        update=":form:tabview-modEx:notify-layout"/>
+						<p:dataTable id="notifications" var="noti"
+							value="#{ModulNotificationBean.notificationList}"
+							scrollable="true" rowKey="#{noti.timeStamp}" scrollHeight="400"
+							selection="#{ModulNotificationBean.selectedNotification}"
+							selectionMode="single" autoUpdate="true">
+							<p:ajax event="rowSelect"
+								listener="#{ModulNotificationBean.selectedNotificationIsRead}"
+								update=":form:tabview-modEx:notify-layout" />
 
-                <p:column>
-                    <p:graphicImage value="/Image/Notification/#{noti.status}.png"
-                                    style="width: 40px;"/>
+							<p:column>
+								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
+									style="width: 40px;" />
                     #{noti.senderEmail}
 
                 </p:column>
-                <f:facet name="footer">
-                    <div align="center">
-                    	<p:commandButton value="Widerrufen/Entfernen" icon="ui-icon-trash"
-                                         actionListener="#{ModulNotificationBean.cancelSelectedNotification}"
-                                         update=":form:tabview-modEx:notify-layout"/>
-                        <p:commandButton value="Aktualisieren" icon="ui-icon-refresh"
-                                         actionListener="#{ModulNotificationBean.loadNotifications}"
-                                         update=":form:tabview-modEx:notify-layout"/>
-                    </div>
-                </f:facet>
-            </p:dataTable>
+							<f:facet name="footer">
+								<div align="center">
+									<p:commandButton value="Widerrufen/Entfernen"
+										icon="ui-icon-trash"
+										actionListener="#{ModulNotificationBean.cancelSelectedNotification}"
+										update=":form:tabview-modEx:notify-layout" />
+									<p:commandButton value="Aktualisieren" icon="ui-icon-refresh"
+										actionListener="#{ModulNotificationBean.loadNotifications}"
+										update=":form:tabview-modEx:notify-layout" />
+								</div>
+							</f:facet>
+						</p:dataTable>
 
-        </p:layoutUnit>
+					</p:layoutUnit>
 
-        <p:layoutUnit position="center">
-            <p:layout>
-                <p:layoutUnit position="north" minSize="80"
-                              header="Date: #{ModulNotificationBean.selectedNotification.timeStamp}
+					<p:layoutUnit position="center">
+						<p:layout>
+							<p:layoutUnit position="north" minSize="80"
+								header="Date: #{ModulNotificationBean.selectedNotification.timeStamp}
 				Sender: #{ModulNotificationBean.selectedNotification.senderEmail} 
 				Action: #{ModulNotificationBean.selectedNotification.action}">
-                    <h:outputText id="message"
-                                  value="#{ModulNotificationBean.selectedNotification.message}"/>
-                </p:layoutUnit>
-                <p:layoutUnit position="center" minSize="200"
-                              header="Neue Version (vom Verantwortlichen bearbeitet)">
-                    <p:panel id="pnlTitle1"
-                             header="#{ModulNotificationBean.title}" toggleable="true"
-                             toggleSpeed="500"
-                             visible="#{ModulNotificationBean.mainVisible}">
+								<h:outputText id="message"
+									value="#{ModulNotificationBean.selectedNotification.message}" />
+							</p:layoutUnit>
+							<p:layoutUnit position="center" minSize="200"
+								header="Neue Version (vom Verantwortlichen bearbeitet)">
+								<p:panel id="pnlTitle1" header="#{ModulNotificationBean.title}"
+									toggleable="true" toggleSpeed="500"
+									visible="#{ModulNotificationBean.mainVisible}">
 
                         #{ModulNotificationBean.description}
 
                     </p:panel>
-                    <p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
-                             toggleable="true" toggleSpeed="500"
-                             visible="#{ModulNotificationBean.ectsAimVisible}">
+								<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
+									toggleable="true" toggleSpeed="500"
+									visible="#{ModulNotificationBean.ectsAimVisible}">
 
-                        <strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects}<br/>
-                        <br/>
-                        <strong>Lernziele:</strong> #{ModulNotificationBean.aim}
+									<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects}<br />
+									<br />
+									<strong>Lernziele:</strong> #{ModulNotificationBean.aim}
 
                     </p:panel>
-                    <p:panel id="pnlDescription1"
-                             header="Zusaetzliche Informationen" toggleable="true"
-                             toggleSpeed="500"
-                             visible="#{ModulNotificationBean.addInfoVisible}">
+								<p:panel id="pnlDescription1"
+									header="Zusaetzliche Informationen" toggleable="true"
+									toggleSpeed="500"
+									visible="#{ModulNotificationBean.addInfoVisible}">
 
-                        <ui:repeat var="iterator"
-                                   value="#{ModulNotificationBean.fieldList}">
-                            <strong>Titel: </strong>#{iterator.fieldTitle}<br/>
-                            <strong>Beschreibung: </strong>#{iterator.description}<br/>
-                            <br/>
-                        </ui:repeat>
-                    </p:panel>
-                </p:layoutUnit>
-                <p:layoutUnit position="east" resizable="true" minSize="200"
-                              maxSize="600"
-                              header="Alte Version (aktuell verfuegbare Version)">
-                    <p:panel id="pnlTitle2"
-                             header="#{ModulNotificationBean.title2}" toggleable="true"
-                             toggleSpeed="500"
-                             visible="#{ModulNotificationBean.mainVisible2}">
+									<ui:repeat var="iterator"
+										value="#{ModulNotificationBean.fieldList}">
+										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<br />
+									</ui:repeat>
+								</p:panel>
+							</p:layoutUnit>
+							<p:layoutUnit position="east" resizable="true" minSize="200"
+								maxSize="600"
+								header="Alte Version (aktuell verfuegbare Version)">
+								<p:panel id="pnlTitle2" header="#{ModulNotificationBean.title2}"
+									toggleable="true" toggleSpeed="500"
+									visible="#{ModulNotificationBean.mainVisible2}">
 
                         #{ModulNotificationBean.description2}
 
                     </p:panel>
-                    <p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
-                             toggleable="true" toggleSpeed="500"
-                             visible="#{ModulNotificationBean.ectsAimVisible2}">
+								<p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
+									toggleable="true" toggleSpeed="500"
+									visible="#{ModulNotificationBean.ectsAimVisible2}">
 
-                        <strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects2}<br/>
-                        <br/>
-                        <strong>Lernziele:</strong> #{ModulNotificationBean.aim2}
+									<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects2}<br />
+									<br />
+									<strong>Lernziele:</strong> #{ModulNotificationBean.aim2}
 
                     </p:panel>
-                    <p:panel id="pnlDescription2"
-                             header="Zusaetzliche Informationen" toggleable="true"
-                             toggleSpeed="500"
-                             visible="#{ModulNotificationBean.addInfoVisible2}">
+								<p:panel id="pnlDescription2"
+									header="Zusaetzliche Informationen" toggleable="true"
+									toggleSpeed="500"
+									visible="#{ModulNotificationBean.addInfoVisible2}">
 
-                        <ui:repeat var="iterator"
-                                   value="#{ModulNotificationBean.fieldList2}">
-                            <strong>Titel: </strong>#{iterator.fieldTitle}<br/>
-                            <strong>Beschreibung: </strong>#{iterator.description}<br/>
-                            <br/>
-                        </ui:repeat>
-                    </p:panel>
-                </p:layoutUnit>
-            </p:layout>
-        </p:layoutUnit>
+									<ui:repeat var="iterator"
+										value="#{ModulNotificationBean.fieldList2}">
+										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<br />
+									</ui:repeat>
+								</p:panel>
+							</p:layoutUnit>
+						</p:layout>
+					</p:layoutUnit>
 
-    </p:layout>
-</p:tab>
+				</p:layout>
+			</p:tab>
 
-<p:tab title="Logout">
-    <table width="350" border="0" cellpadding="2">
-        <tr>
-            <td><h3>Wirklich ausloggen?</h3></td>
-            <td>
-                <p:commandButton value="OK" type="submit"
-                                 actionListener="#{LoginBean.logout}"/>
-            </td>
-        </tr>
-    </table>
-</p:tab>
+			<p:tab title="Logout">
+				<table width="350" border="0" cellpadding="2">
+					<tr>
+						<td><h3>Wirklich ausloggen?</h3></td>
+						<td><p:commandButton value="OK" type="submit"
+								actionListener="#{LoginBean.logout}" /></td>
+					</tr>
+				</table>
+			</p:tab>
 
-</p:tabView>
-<!-- End TabView -->
-</h:form>
+		</p:tabView>
+		<!-- End TabView -->
+	</h:form>
 </h:body>
 <!-- End body -->
 

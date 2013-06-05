@@ -24,8 +24,8 @@ public class DBSubject extends DBManager {
 		Statement stmt = con.createStatement();
 		String update = "INSERT INTO subject VALUES(" + sub.getVersion()
 				+ ", '" + sub.getSubTitle() + "', '" + sub.getModTitle()
-				+ "', '" + sub.getDescription() + "', '" + sub.getAim()
-				+ "', " + sub.getEcts() + ", " + sub.isAck() + ")";
+				+ "', '" + sub.getDescription() + "', '" + sub.getAim() + "', "
+				+ sub.getEcts() + ", " + sub.isAck() + ")";
 		con.setAutoCommit(false);
 		stmt.executeUpdate(update);
 		try {
@@ -232,24 +232,30 @@ public class DBSubject extends DBManager {
 		}
 		return subs;
 	}
+
 	/**
 	 * load the Subject specified subtitle and modtitle where ack = true
+	 * 
 	 * @param subTitle
 	 * @param modTitle
 	 * @return a subject
 	 */
-	public static Subject loadSubjectMaxVersion(String subTitle, String modTitle){
-		Subject sub=null;
-		
+	public static Subject loadSubjectMaxVersion(String subTitle, String modTitle) {
+		Subject sub = null;
+
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
 			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
-					+ " FROM subject "+
-					" WHERE ack=TRUE AND subtitle='"+subTitle+"' AND modtitle='"+modTitle+"'"+
-					" GROUP BY subtitle";
+					+ " FROM subject "
+					+ " WHERE ack=TRUE AND subtitle='"
+					+ subTitle
+					+ "' AND modtitle='"
+					+ modTitle
+					+ "'"
+					+ " GROUP BY subtitle";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {
@@ -261,7 +267,7 @@ public class DBSubject extends DBManager {
 				int ects = rs.getInt("ects");
 				boolean ack = rs.getBoolean("ack");
 
-				sub=new Subject(ver, subT, modT, desc, aim, ects, ack);
+				sub = new Subject(ver, subT, modT, desc, aim, ects, ack);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -273,25 +279,30 @@ public class DBSubject extends DBManager {
 		}
 		return sub;
 	}
-	
+
 	/**
 	 * load the Subject specified subtitle and modtitle
+	 * 
 	 * @param subTitle
 	 * @param modTitle
 	 * @return a subject
 	 */
-	public static Subject loadSubjectMaxVersionModNotif(String subTitle, String modTitle){
-		Subject sub=null;
-		
+	public static Subject loadSubjectMaxVersionModNotif(String subTitle,
+			String modTitle) {
+		Subject sub = null;
+
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
-			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
-					+ " FROM subject "+
-					" WHERE subtitle='"+subTitle+"' AND modtitle='"+modTitle+"'"+
-					" GROUP BY subtitle";
+			String query = "SELECT * FROM subject WHERE subtitle='"
+					+ subTitle
+					+ "' AND modtitle='"
+					+ modTitle
+					+ "'"
+					+ " AND version = (SELECT max(version) FROM subject where subtitle='"
+					+ subTitle + "' AND modtitle='" + modTitle + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {
@@ -303,7 +314,7 @@ public class DBSubject extends DBManager {
 				int ects = rs.getInt("ects");
 				boolean ack = rs.getBoolean("ack");
 
-				sub=new Subject(ver, subT, modT, desc, aim, ects, ack);
+				sub = new Subject(ver, subT, modT, desc, aim, ects, ack);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -315,25 +326,30 @@ public class DBSubject extends DBManager {
 		}
 		return sub;
 	}
-	
+
 	/**
 	 * for ack = false
+	 * 
 	 * @param subTitle
 	 * @param modTitle
 	 * @return a subject
 	 */
-	public static Subject loadSubjectMaxVersionForRedakNotif(String subTitle, String modTitle){
-		Subject sub=null;
-		
+	public static Subject loadSubjectMaxVersionForRedakNotif(String subTitle,
+			String modTitle) {
+		Subject sub = null;
+
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
-			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
-					+ " FROM subject "+
-					" WHERE ack=FALSE AND subtitle='"+subTitle+"' AND modtitle='"+modTitle+"'"+
-					" GROUP BY subtitle";
+			String query = "SELECT * FROM subject WHERE ack=false AND subtitle='"
+					+ subTitle
+					+ "' AND modtitle='"
+					+ modTitle
+					+ "'"
+					+ " AND version = (SELECT max(version) FROM subject where subtitle='"
+					+ subTitle + "' AND modtitle='" + modTitle + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {
@@ -345,7 +361,7 @@ public class DBSubject extends DBManager {
 				int ects = rs.getInt("ects");
 				boolean ack = rs.getBoolean("ack");
 
-				sub=new Subject(ver, subT, modT, desc, aim, ects, ack);
+				sub = new Subject(ver, subT, modT, desc, aim, ects, ack);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -357,25 +373,26 @@ public class DBSubject extends DBManager {
 		}
 		return sub;
 	}
-	
+
 	/**
 	 * load a subjectlist
+	 * 
 	 * @param subTitle
 	 * @param modTitle
 	 * @return list of subjects
 	 */
-	public static List<Subject> loadSubjectListMaxVersion(String modTitle){
-		List<Subject> subs=new LinkedList<Subject>();
-		
+	public static List<Subject> loadSubjectListMaxVersion(String modTitle) {
+		List<Subject> subs = new LinkedList<Subject>();
+
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
 			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
-					+ " FROM subject "+
-					" WHERE ack=TRUE AND modtitle='"+modTitle+"'"+
-					" GROUP BY subtitle";
+					+ " FROM subject "
+					+ " WHERE ack=TRUE AND modtitle='"
+					+ modTitle + "'" + " GROUP BY subtitle";
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -399,7 +416,7 @@ public class DBSubject extends DBManager {
 		}
 		return subs;
 	}
-	
+
 	/**
 	 * update a subjects ack field
 	 * 
@@ -442,6 +459,7 @@ public class DBSubject extends DBManager {
 
 	/**
 	 * load all versions from one subject
+	 * 
 	 * @param subTitle
 	 * @param modTitle
 	 * @return list of subjects
@@ -524,7 +542,5 @@ public class DBSubject extends DBManager {
 				"Algorithmen und Datenstrukturen");
 		System.out.println(modMans.get(0).getSubTitle());
 	}
-
-
 
 }

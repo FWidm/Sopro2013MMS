@@ -157,6 +157,38 @@ public class DBUser extends DBManager {
 		return u;
 	}
 	
+	/**
+	 * loads all email-addresses from a specific role
+	 * @param role
+	 * @return
+	 */
+	public static List<String> loadUsersEmailByRole(String role){
+		List<String> mailList = new LinkedList<String>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM user WHERE role = '" + role + "'";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String email = rs.getString("email");
+				
+				mailList.add(email);
+			}
+			
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return mailList;
+	}
+	
 	public static List<User> loadAllUsers() {
 		List<User> u = new LinkedList<User>();
 		Connection con = null;

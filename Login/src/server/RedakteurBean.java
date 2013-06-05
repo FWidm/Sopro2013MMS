@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
@@ -17,12 +18,18 @@ import org.primefaces.model.MenuModel;
 
 import ctrl.DBExRules;
 import ctrl.DBField;
+import ctrl.DBModAccess;
+import ctrl.DBModManAccess;
 import ctrl.DBModule;
+import ctrl.DBNotification;
 import ctrl.DBSubject;
+import ctrl.DBUser;
 import data.Editable;
 import data.ExRules;
 import data.Field;
 import data.ModManual;
+import data.Modification;
+import data.ModificationNotification;
 import data.Module;
 import data.RedakteurActionListener;
 import data.Subject;
@@ -38,7 +45,7 @@ public class RedakteurBean {
 	public static final String TO_FOR = "message-log";
 
 	// Add your tag id's for ajax-update on menuItemClick here.
-	public static final String UPDATE_AJAX = "list-menu-edit back-menu-edit scrollPanel-edit";
+	public static final String UPDATE_AJAX = "list-menu-edit back-menu-edit scrollPanel-edit btn1 btn2";
 
 	private String exRules, modMan, module;
 	private List<ExRules> exRulesList;
@@ -56,7 +63,20 @@ public class RedakteurBean {
 	private Editable selectedEditable;
 	private String message;
 
+	private String currentUser;
+	private List<String> userRights;
+	private boolean hasPermission;
+
 	public RedakteurBean() {
+		// get User Session
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		currentUser = (String) session.getAttribute("email");
+
+		// inizialize Rights
+		userRights = DBModManAccess.loadModuleModManTitleAccess(currentUser);
+		hasPermission = true;
+
 		backModel = new DefaultMenuModel();
 
 		model = new DefaultMenuModel();
@@ -130,12 +150,32 @@ public class RedakteurBean {
 		mainVisible = true;
 		ectsAimVisible = true;
 		addInfoVisible = true;
+
 		// sets the ability to edit
-		descriptionEdit = false;
-		ectsEdit = false;
-		aimEdit = false;
-		fieldTitleEdit = false;
-		fieldDescriptionEdit = false;
+		// checks if the user has the permission to edit the modMan
+		boolean found = false;
+		for (int i = 0; i < userRights.size(); i++) {
+			if (userRights.get(i).equals(modMan)) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			hasPermission = false;
+			descriptionEdit = false;
+			ectsEdit = false;
+			aimEdit = false;
+			fieldTitleEdit = false;
+			fieldDescriptionEdit = false;
+		} else {
+			hasPermission = true;
+			descriptionEdit = true;
+			ectsEdit = true;
+			aimEdit = true;
+			fieldTitleEdit = true;
+			fieldDescriptionEdit = true;
+		}
+
 		// set editable
 		editable = true;
 		// Only Test and can be removed
@@ -156,12 +196,30 @@ public class RedakteurBean {
 		mainVisible = true;
 		ectsAimVisible = false;
 		addInfoVisible = false;
+
 		// sets the ability to edit
-		descriptionEdit = false;
-		ectsEdit = false;
-		aimEdit = false;
-		fieldTitleEdit = false;
-		fieldDescriptionEdit = false;
+		// checks if the user has the permission to edit the modMan
+		boolean found = false;
+		for (int i = 0; i < userRights.size(); i++) {
+			if (userRights.get(i).equals(modMan)) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			descriptionEdit = false;
+			ectsEdit = false;
+			aimEdit = false;
+			fieldTitleEdit = false;
+			fieldDescriptionEdit = false;
+		} else {
+			descriptionEdit = true;
+			ectsEdit = true;
+			aimEdit = true;
+			fieldTitleEdit = true;
+			fieldDescriptionEdit = true;
+		}
+
 		// set editable
 		editable = true;
 		// Only Test and can be removed
@@ -191,6 +249,7 @@ public class RedakteurBean {
 		fieldDescriptionEdit = true;
 		// set editable
 		editable = false;
+		hasPermission = true;
 		// Only Test and can be removed
 		System.out.println(modMan.getModManTitle());
 
@@ -217,6 +276,7 @@ public class RedakteurBean {
 		fieldTitleEdit = true;
 		fieldDescriptionEdit = true;
 		// set editable
+		hasPermission = true;
 		editable = false;
 		// Only Test and can be removed
 		System.out.println(rule.getExRulesTitle());
@@ -237,6 +297,19 @@ public class RedakteurBean {
 							oldSub.getModTitle(), description, aim,
 							Integer.valueOf(ects), true);
 
+					// checks if it's a request for Dezernat
+					if (oldSub.getEcts() != newSub.getEcts()) {
+						if (handleAcceptDezernat(newSub, oldSub)) {
+							oldFieldList = new LinkedList<Field>();
+							for (Field field : fieldList) {
+								oldFieldList.add(field.getCopy());
+							}
+							selectedEditable = newSub;
+							addMessage(TO_FOR, "Erfolg: ",
+									"Ihre Änderung wurde erfolgreich an das Dezernat verschickt.");
+						}
+					}
+
 					// if old sub isn't the same as the new sub
 					// we create new database entries and create a notification
 					if (!oldSub.equals(newSub)) {
@@ -247,7 +320,7 @@ public class RedakteurBean {
 							}
 							selectedEditable = newSub;
 							addMessage(TO_FOR, "Erfolg: ",
-									"Ihre Änderung wurde erfolgreich verschickt.");
+									"Ihre Änderung wurde erfolgreich vorgenommen.");
 						}
 					} else {
 						boolean differ = false;
@@ -280,7 +353,7 @@ public class RedakteurBean {
 									}
 									selectedEditable = newSub;
 									addMessage(TO_FOR, "Erfolg: ",
-											"Ihre Änderung wurde erfolgreich verschickt.");
+											"Ihre Änderung wurde erfolgreich vorgenommen.");
 								} else {
 									// TODO inform about existing change
 									addErrorMessage(TO_FOR,
@@ -357,14 +430,53 @@ public class RedakteurBean {
 				fieldList.get(i).setSubjectversion(newSub.getVersion());
 				DBField.saveField(fieldList.get(i));
 			}
-			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			System.out.println("generated " + timestamp);
+			// No need, because he's Redakteur
+			// Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			/*
 			 * ModificationNotification mn = new ModificationNotification(
 			 * "adam.admin@uni-ulm.de", "adam.admin@uni-ulm.de", timestamp,
 			 * message, "edit", "queued", false, new Modification(oldSub,
 			 * newSub)); DBNotification.saveNotification(mn);
 			 */
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * handles the request for the edit of ects
+	 * 
+	 * @param newSub
+	 * @param oldSub
+	 * @return
+	 */
+	private boolean handleAcceptDezernat(Subject newSub, Subject oldSub) {
+		try {
+
+			List<String> dezernatList = DBUser
+					.loadAllUserEmailsByRole("Dezernat");
+
+			if (dezernatList.size() == 0)
+				return false;
+
+			DBSubject.saveSubject(newSub);
+			for (int i = 0; i < fieldList.size(); i++) {
+				fieldList.get(i).setSubjectversion(newSub.getVersion());
+				DBField.saveField(fieldList.get(i));
+			}
+
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+			for (int i = 0; i < dezernatList.size(); i++) {
+				ModificationNotification mn = new ModificationNotification(
+						dezernatList.get(i), currentUser, timestamp, message,
+						"edit", "queued", false, new Modification(oldSub,
+								newSub));
+				DBNotification.saveNotification(mn);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -813,6 +925,43 @@ public class RedakteurBean {
 	 */
 	public void setEmptyFieldList(boolean emptyFieldList) {
 		this.emptyFieldList = emptyFieldList;
+	}
+
+	/**
+	 * @return the userRights
+	 */
+	public List<String> getUserRights() {
+		return userRights;
+	}
+
+	/**
+	 * @param userRights
+	 *            the userRights to set
+	 */
+	public void setUserRights(List<String> userRights) {
+		this.userRights = userRights;
+	}
+
+	/**
+	 * @return the hasPermission
+	 */
+	public boolean isHasPermission() {
+		return hasPermission;
+	}
+
+	/**
+	 * @param hasPermission
+	 *            the hasPermission to set
+	 */
+	public void setHasPermission(boolean hasPermission) {
+		this.hasPermission = hasPermission;
+	}
+
+	/**
+	 * @return the currentUser
+	 */
+	public String getCurrentUser() {
+		return currentUser;
 	}
 
 }

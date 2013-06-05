@@ -315,10 +315,7 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "UPDATE notification SET status = 'declined', isRead = false "
-					+ "WHERE recipientEmail = '"
-					+ notif.getRecipientEmail()
-					+ "' AND "
-					+ "senderEmail = '"
+					+ "WHERE senderEmail = '"
 					+ notif.getSenderEmail()
 					+ "' AND "
 					+ " timeStamp = '"
@@ -357,9 +354,7 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "UPDATE notification SET status = 'accepted', isRead = false  "
-					+ "WHERE recipientEmail = '"
-					+ notif.getRecipientEmail()
-					+ "' AND "
+					+ "WHERE "
 					+ "senderEmail = '"
 					+ notif.getSenderEmail()
 					+ "' AND "
@@ -437,7 +432,7 @@ public class DBNotification extends DBManager {
 	 * Loads all notification that were sent or recieved by one user.
 	 * 
 	 * @param email
-	 * @return 
+	 * @return
 	 */
 	public static List<Notification> loadNotification(String email) {
 		List<Notification> notif = new LinkedList<Notification>();
@@ -511,13 +506,15 @@ public class DBNotification extends DBManager {
 	 * 
 	 * @return
 	 */
-	public static List<ModificationNotification> loadModificationNotification() {
+	public static List<ModificationNotification> loadModificationNotificationModEx(
+			String currentUser) {
 		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM notification";
+			String query = "SELECT * FROM notification WHERE senderEmail= '"
+					+ currentUser + "'";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -541,13 +538,29 @@ public class DBNotification extends DBManager {
 					// TODO add version for ExRule or not ;)
 				} else if (mod != null) {
 					if (sub != null) {
-						Subject subject = DBSubject
-								.loadSubjectMaxVersionModNotif(sub, mod);
-						notif.add(new ModificationNotification(recEm, senEm,
-								timS, mess, act, stat, isRead,
-								new Modification(DBSubject.loadSubject(
-										subject.getVersion() - 1, sub, mod),
-										subject)));
+						if (notif.size() != 0) {
+							if (!timS.equals(notif.get(notif.size() - 1)
+									.getTimeStamp())) {
+								Subject subject = DBSubject
+										.loadSubjectMaxVersionModNotif(sub, mod);
+								notif.add(new ModificationNotification(recEm,
+										senEm, timS, mess, act, stat, isRead,
+										new Modification(DBSubject.loadSubject(
+												subject.getVersion() - 1, sub,
+												mod), subject)));
+							}
+						} else {
+							System.out.println(timS);
+							Subject subject = DBSubject
+									.loadSubjectMaxVersionModNotif(sub, mod);
+							notif.add(new ModificationNotification(recEm,
+									senEm, timS, mess, act, stat, isRead,
+									new Modification(
+											DBSubject.loadSubject(
+													subject.getVersion() - 1,
+													sub, mod), subject)));
+							System.out.println("DBNotif: " + subject.getEcts());
+						}
 					}
 					// TODO add version for Module or not ;)
 				}
@@ -566,15 +579,19 @@ public class DBNotification extends DBManager {
 	/**
 	 * load all modNotifs where status is "queued"
 	 * 
+	 * @param currentUser
+	 * 
 	 * @return
 	 */
-	public static List<ModificationNotification> loadModificationNotificationRedakteur() {
+	public static List<ModificationNotification> loadModificationNotificationRedakteur(
+			String currentUser) {
 		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM notification where status='queued'";
+			String query = "SELECT * FROM notification where status='queued' AND recipientEmail = '"
+					+ currentUser + "'";
 
 			ResultSet rs = stmt.executeQuery(query);
 

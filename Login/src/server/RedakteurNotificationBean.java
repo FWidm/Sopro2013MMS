@@ -20,6 +20,7 @@ import data.Subject;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 import ctrl.DBField;
@@ -30,6 +31,8 @@ import ctrl.DBSubject;
 @SessionScoped
 public class RedakteurNotificationBean {
 
+	public static final String TO_FOR = "message-log-edit";
+	
 	private String recipientEmail;
 	private String senderEmail;
 	private Timestamp timeStamp;
@@ -47,20 +50,17 @@ public class RedakteurNotificationBean {
 	private String title2, description2, ects2, aim2;
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
-	public static final String TO_FOR = "message-log-edit";
+	
+	private String currentUser;
 
 	public RedakteurNotificationBean() {
-		notificationList = DBNotification
-				.loadModificationNotificationRedakteur();
+		// get User Session
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		currentUser = (String) session.getAttribute("email");
+		loadNotifications();
 	}
 
-	/**
-	 * actualize notificationlist after declining/accepting
-	 */
-	private void actualizeNotificationList() {
-		setNotificationList(DBNotification
-				.loadModificationNotificationRedakteur());
-	}
 
 	/**
 	 * Clicking on the tablerow sets isRead to true
@@ -83,9 +83,7 @@ public class RedakteurNotificationBean {
 				glbIsRead = true;
 				cntr += 1;
 				glbSender += cntr + ". "
-						+ getNotificationList().get(i).getSenderEmail() + " \n"; // TODO
-																					// Line
-																					// break
+						+ getNotificationList().get(i).getSenderEmail() + "&#x0d;&#x0A"; 
 			}
 		}
 		if (glbIsRead) {
@@ -144,7 +142,7 @@ public class RedakteurNotificationBean {
 	 */
 	public void loadNotifications() {
 		setNotificationList(DBNotification
-				.loadModificationNotificationRedakteur());
+				.loadModificationNotificationRedakteur(currentUser));
 	}
 	/**
 	 * if anything goes wrong - display an Error

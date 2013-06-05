@@ -139,6 +139,7 @@
 								toggleSpeed="500" visible="#{RedakteurBean.addInfoVisible}">
 								<p:panel visible="#{RedakteurBean.emptyFieldList}">
 									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{RedakteurBean.hasPermission}"
 										update=":form:tabview-redak:scrollPanel-edit"
 										actionListener="#{RedakteurBean.addField(0)}" />
 								</p:panel>
@@ -157,9 +158,11 @@
 										<p:ajax event="blur" />
 									</p:inputTextarea>
 									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{RedakteurBean.hasPermission}"
 										update=":form:tabview-redak:scrollPanel-edit"
 										actionListener="#{RedakteurBean.addField(status.index)}" />
 									<p:commandButton icon="ui-icon-minusthick"
+										disabled="#{RedakteurBean.hasPermission}"
 										update=":form:tabview-redak:scrollPanel-edit"
 										actionListener="#{RedakteurBean.removeField(status.index)}" />
 									<br />
@@ -171,11 +174,13 @@
 
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
-							<p:commandButton type="push" value="Zur&#252;cksetzen"
-								icon="ui-icon-trash" actionListener="#{RedakteurBean.decline}"
+							<p:commandButton id="btn1" type="push" value="Zur&#252;cksetzen"
+								disabled="#{RedakteurBean.hasPermission}" icon="ui-icon-trash"
+								actionListener="#{RedakteurBean.decline}"
 								update=":form:tabview-redak:scrollPanel-edit">
 							</p:commandButton>
-							<p:commandButton type="push" value="&#220;bernehmen"
+							<p:commandButton id="btn2" type="push" value="&#220;bernehmen"
+								disabled="#{RedakteurBean.hasPermission}"
 								update=":form:tabview-redak:message-log" icon="ui-icon-disk"
 								actionListener="#{RedakteurBean.accept}">
 							</p:commandButton>
@@ -304,6 +309,134 @@
 
 				</p:layout>
 			</p:tab>
+
+			<!-- Start Notification from Dezernat -->
+
+			<p:tab title="notifications from Dezernat">
+				<p:messages id="message-log-edit-dez" for="message-log-edit-dez"
+					showDetail="true" autoUpdate="true" closable="true" />
+				<p:layout
+					style="min-width:800px; min-height:500px; max-height:500px;"
+					id="notify-layout-dez">
+
+					<p:layoutUnit position="west" resizable="true" size="400"
+						minSize="215" maxSize="400" header="Nachrichten"
+						collapsible="true">
+
+
+						<p:dataTable id="notifications-dez" var="noti"
+							value="#{RedDezNotificationBean.notificationList}"
+							scrollable="true" rowKey="#{noti.timeStamp}" scrollHeight="400"
+							selection="#{RedDezNotificationBean.selectedNotification}"
+							selectionMode="single" autoUpdate="true">
+							<p:ajax event="rowSelect"
+								listener="#{RedDezNotificationBean.selectedNotificationIsRead}"
+								update=":form:tabview-redak:notify-layout-dez" />
+
+							<p:column>
+								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
+									style="width: 40px;" />
+                    #{noti.senderEmail}
+
+                </p:column>
+							<f:facet name="footer">
+								<div align="center">
+									<p:commandButton value="Widerrufen/Entfernen"
+										icon="ui-icon-trash"
+										actionListener="#{RedDezNotificationBean.cancelSelectedNotification}"
+										update=":form:tabview-redak:notify-layout-dez" />
+									<p:commandButton value="Aktualisieren" icon="ui-icon-refresh"
+										actionListener="#{RedDezNotificationBean.loadNotifications}"
+										update=":form:tabview-redak:notify-layout-dez" />
+								</div>
+							</f:facet>
+						</p:dataTable>
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center">
+						<p:layout>
+							<p:layoutUnit position="north" minSize="80"
+								header="Date: #{RedDezNotificationBean.selectedNotification.timeStamp}
+				Sender: #{RedDezNotificationBean.selectedNotification.senderEmail} 
+				Action: #{RedDezNotificationBean.selectedNotification.action}">
+								<h:outputText id="message-dez"
+									value="#{RedDezNotificationBean.selectedNotification.message}" />
+							</p:layoutUnit>
+							<p:layoutUnit position="center" minSize="200"
+								header="Neue Version (vom Dezernat bearbeitet)">
+								<p:panel id="pnlTitle1-dez"
+									header="#{RedDezNotificationBean.title}" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedDezNotificationBean.mainVisible}">
+
+                        #{RedDezNotificationBean.description}
+
+                    </p:panel>
+								<p:panel id="pnlEcts1-dez"
+									header="Leistungspunkte und Lernziele" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedDezNotificationBean.ectsAimVisible}">
+
+									<strong>Leistungspunkte:</strong> #{RedDezNotificationBean.ects}<br />
+									<br />
+									<strong>Lernziele:</strong> #{RedDezNotificationBean.aim}
+
+                    </p:panel>
+								<p:panel id="pnlDescription1-dez"
+									header="Zusaetzliche Informationen" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedDezNotificationBean.addInfoVisible}">
+
+									<ui:repeat var="iterator"
+										value="#{RedDezNotificationBean.fieldList}">
+										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<br />
+									</ui:repeat>
+								</p:panel>
+							</p:layoutUnit>
+							<p:layoutUnit position="east" resizable="true" minSize="200"
+								maxSize="600"
+								header="Alte Version (aktuell verfuegbare Version)">
+								<p:panel id="pnlTitle2-dez"
+									header="#{RedDezNotificationBean.title2}" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedDezNotificationBean.mainVisible2}">
+
+                        #{RedDezNotificationBean.description2}
+
+                    </p:panel>
+								<p:panel id="pnlEcts2-dez"
+									header="Leistungspunkte und Lernziele" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedDezNotificationBean.ectsAimVisible2}">
+
+									<strong>Leistungspunkte:</strong> #{RedDezNotificationBean.ects2}<br />
+									<br />
+									<strong>Lernziele:</strong> #{RedDezNotificationBean.aim2}
+
+                    </p:panel>
+								<p:panel id="pnlDescription2-dez"
+									header="Zusaetzliche Informationen" toggleable="true"
+									toggleSpeed="500"
+									visible="#{RedDezNotificationBean.addInfoVisible2}">
+
+									<ui:repeat var="iterator"
+										value="#{RedDezNotificationBean.fieldList2}">
+										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<br />
+									</ui:repeat>
+								</p:panel>
+							</p:layoutUnit>
+						</p:layout>
+					</p:layoutUnit>
+
+				</p:layout>
+			</p:tab>
+
+			<!-- End Notification from Dezernat -->
 
 			<p:tab title="Logout">
 				<table width="350" border="0" cellpadding="2">

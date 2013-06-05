@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBManager {
-
-	protected static final String URL = "jdbc:mysql://bolonka-zwetna-von-der-kreuzbergquelle.de/krm_db?";
+	
+	public static final boolean LOCAL = true;
+	
+	protected static String URL = "jdbc:mysql://localhost/krm_db?";
+	protected static String USERDATA = "user=krm_user&password=wlc93Qx6aoJ4v";
 	protected static final String DRIVER = "com.mysql.jdbc.Driver";
 
 	static {
@@ -28,15 +31,25 @@ public class DBManager {
 	 * @throws SQLException 
 	 */
 	protected static Connection openConnection() throws SQLException {
+		if(LOCAL) {
+			URL = "jdbc:mysql://localhost/krm_db?";
+			USERDATA ="user=root&password=1913";
+		}
+		else {
+			
+			USERDATA = "user=krm_user&password=wlc93Qx6aoJ4v";
+			URL = "jdbc:mysql://bolonka-zwetna-von-der-kreuzbergquelle.de/krm_db?";
+		}
 		Connection con = null; 
 		try {
-			con = DriverManager.getConnection(URL + "user=krm_user&password=wlc93Qx6aoJ4v");
+			con = DriverManager.getConnection(URL + USERDATA);
 		} catch (SQLException e) {
 			System.out.println("No connection to database possible.");
 			System.exit(2);
 		}
 		return con;
 	}
+	//end local databas connection
 
 	/**
 	 * Close the {@link Connection}

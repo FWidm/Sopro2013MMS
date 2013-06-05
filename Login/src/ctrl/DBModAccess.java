@@ -156,6 +156,36 @@ public class DBModAccess extends DBManager {
 		return ma;
 	}
 	
+	/**
+	 * returns all ModuleTitles for a specific email
+	 * @param email
+	 * @return
+	 */
+	public static List<String> loadAccessModTitles(String email) {
+		List<String>  ma = new LinkedList<String>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT modTitle FROM modAccess WHERE email = '" + email + "'";
+			
+			ResultSet rs = stmt.executeQuery(query);			
+			
+			while(rs.next()) {
+				String e = rs.getString("modTitle");
+				ma.add(e);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return ma;
+	}
+	
 	public static List<ModAccess> loadAccess() {
 		List<ModAccess>  ma = new LinkedList<ModAccess>();
 		Connection con = null;

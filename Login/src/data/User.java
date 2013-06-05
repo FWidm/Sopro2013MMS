@@ -41,6 +41,7 @@ public class User {
 
 		try {
 			this.password = util.PasswordHash.createHash(generatedPass);
+			System.out.println("hashed pwd: " + password);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			System.out.println("User.java @ line 32 - create Hash went wrong");
 			e.printStackTrace();

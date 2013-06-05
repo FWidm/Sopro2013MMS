@@ -18,6 +18,8 @@ import org.primefaces.model.MenuModel;
 
 import ctrl.DBExRules;
 import ctrl.DBField;
+import ctrl.DBModAccess;
+import ctrl.DBModManAccess;
 import ctrl.DBModule;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
@@ -31,7 +33,6 @@ import data.Modification;
 import data.ModificationNotification;
 import data.Module;
 import data.Subject;
-import data.User;
 
 @ManagedBean(name = "ModulBean")
 @SessionScoped
@@ -42,9 +43,9 @@ public class ModulBean {
 	public static final String MODULE = "Module";
 	public static final String FAECHER = "F\u00E4cher";
 	public static final String TO_FOR = "message-log";
-	
+
 	// Add your tag id's for ajax-update on menuItemClick here.
-	public static final String UPDATE_AJAX = "list-menu-edit back-menu-edit scrollPanel-edit";
+	public static final String UPDATE_AJAX = "list-menu-edit back-menu-edit scrollPanel-edit btn1 btn2";
 
 	private String exRules, modMan, module;
 	private List<ExRules> exRulesList;
@@ -61,14 +62,21 @@ public class ModulBean {
 	private boolean editable, emptyFieldList;
 	private Editable selectedEditable;
 	private String message;
-	
+
 	private String currentUser;
+	private List<String> userRights;
+	private boolean hasPermission;
 
 	public ModulBean() {
-		//get User Session
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		// get User Session
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
 		currentUser = (String) session.getAttribute("email");
-		//continue with normal init
+
+		// inizialize Rights
+		userRights = DBModAccess.loadAccessModTitles(currentUser);
+		hasPermission = true;
+		// continue with normal init
 		backModel = new DefaultMenuModel();
 
 		model = new DefaultMenuModel();
@@ -104,7 +112,7 @@ public class ModulBean {
 				fieldList.add(new Field("", sub.getVersion(),
 						sub.getSubTitle(), sub.getModTitle(), ""));
 			}
-			
+
 			emptyFieldList = false;
 		}
 	}
@@ -142,12 +150,33 @@ public class ModulBean {
 		mainVisible = true;
 		ectsAimVisible = true;
 		addInfoVisible = true;
+
 		// sets the ability to edit
-		descriptionEdit = false;
-		ectsEdit = false;
-		aimEdit = false;
-		fieldTitleEdit = false;
-		fieldDescriptionEdit = false;
+		// checks if the user has the permission to edit the modMan
+		boolean found = false;
+		for (int i = 0; i < userRights.size(); i++) {
+			System.err.println(userRights.get(i));
+			if (userRights.get(i).equals(sub.getModTitle())) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			hasPermission = false;
+			descriptionEdit = false;
+			ectsEdit = false;
+			aimEdit = false;
+			fieldTitleEdit = false;
+			fieldDescriptionEdit = false;
+		} else {
+			hasPermission = true;
+			descriptionEdit = true;
+			ectsEdit = true;
+			aimEdit = true;
+			fieldTitleEdit = true;
+			fieldDescriptionEdit = true;
+		}
+
 		// set editable
 		editable = true;
 		// Only Test and can be removed
@@ -176,6 +205,7 @@ public class ModulBean {
 		fieldDescriptionEdit = true;
 		// set editable
 		editable = false;
+		hasPermission = true;
 		// Only Test and can be removed
 		System.out.println(mod.getModTitle());
 		System.out.println(mod.getDescription());
@@ -202,6 +232,7 @@ public class ModulBean {
 		fieldTitleEdit = true;
 		fieldDescriptionEdit = true;
 		// set editable
+		hasPermission = true;
 		editable = false;
 		// Only Test and can be removed
 		System.out.println(modMan.getModManTitle());
@@ -229,6 +260,7 @@ public class ModulBean {
 		fieldTitleEdit = true;
 		fieldDescriptionEdit = true;
 		// set editable
+		hasPermission = true;
 		editable = false;
 		// Only Test and can be removed
 		System.out.println(rule.getExRulesTitle());
@@ -249,60 +281,74 @@ public class ModulBean {
 							oldSub.getModTitle(), description, aim,
 							Integer.valueOf(ects), false);
 
-					// if old sub isn't the same as the new sub
-					// we create new database entries and create a notification
-					if (!oldSub.equals(newSub)) {
-						if (handleAccept(newSub, oldSub)) {
+					// checks if it's a request for Dezernat
+					if (oldSub.getEcts() != newSub.getEcts()) {
+						System.out.println("ECTNEW: " + newSub.getEcts());
+						if (handleAcceptDezernat(newSub, oldSub)) {
 							oldFieldList = new LinkedList<Field>();
 							for (Field field : fieldList) {
 								oldFieldList.add(field.getCopy());
 							}
 							selectedEditable = newSub;
 							addMessage(TO_FOR, "Erfolg: ",
-									"Ihre Änderung wurde erfolgreich verschickt.");
+									"Ihre Änderung wurde erfolgreich an das Dezernat verschickt.");
 						}
 					} else {
-						boolean differ = false;
-						if (fieldList.size() != oldFieldList.size()) {
-							differ = true;
+						// if old sub isn't the same as the new sub
+						// we create new database entries and create a notification
+						if (!oldSub.equals(newSub)) {
+							if (handleAccept(newSub, oldSub)) {
+								oldFieldList = new LinkedList<Field>();
+								for (Field field : fieldList) {
+									oldFieldList.add(field.getCopy());
+								}
+								selectedEditable = newSub;
+								addMessage(TO_FOR, "Erfolg: ",
+										"Ihre Änderung wurde erfolgreich verschickt.");
+							}
 						} else {
-							for (int i = 0; i < oldFieldList.size(); i++) {
-								if (!fieldList.get(i).equals(
-										oldFieldList.get(i))) {
-									differ = true;
-									break;
-								}
-							}
-						}
-						if (differ) {
-							boolean empty = false;
-							for (Field field : fieldList) {
-								if (field.getFieldTitle() == "") {
-									// TODO inform about empty field
-									addErrorMessage(TO_FOR, "Leeres Feld: ",
-											"Bitte tragen Sie einen Titel ein oder löschen Sie das Feld.");
-									empty = true;
-								}
-							}
-							if (!empty) {
-								if (handleAccept(newSub, oldSub)) {
-									oldFieldList = new LinkedList<Field>();
-									for (Field field : fieldList) {
-										oldFieldList.add(field.getCopy());
+							boolean differ = false;
+							if (fieldList.size() != oldFieldList.size()) {
+								differ = true;
+							} else {
+								for (int i = 0; i < oldFieldList.size(); i++) {
+									if (!fieldList.get(i).equals(
+											oldFieldList.get(i))) {
+										differ = true;
+										break;
 									}
-									selectedEditable = newSub;
-									addMessage(TO_FOR, "Erfolg: ",
-											"Ihre Änderung wurde erfolgreich verschickt.");
-								} else {
-									// TODO inform about existing change
-									addErrorMessage(TO_FOR,
-											"Änderung existiert bereits: ",
-											"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
 								}
 							}
-						} else {
-							addErrorMessage(TO_FOR, "Fach ist identisch: ",
-									"Bitte tätigen Sie zuerst eine Änderung.");
+							if (differ) {
+								boolean empty = false;
+								for (Field field : fieldList) {
+									if (field.getFieldTitle() == "") {
+										// TODO inform about empty field
+										addErrorMessage(TO_FOR, "Leeres Feld: ",
+												"Bitte tragen Sie einen Titel ein oder löschen Sie das Feld.");
+										empty = true;
+									}
+								}
+								if (!empty) {
+									if (handleAccept(newSub, oldSub)) {
+										oldFieldList = new LinkedList<Field>();
+										for (Field field : fieldList) {
+											oldFieldList.add(field.getCopy());
+										}
+										selectedEditable = newSub;
+										addMessage(TO_FOR, "Erfolg: ",
+												"Ihre Änderung wurde erfolgreich verschickt.");
+									} else {
+										// TODO inform about existing change
+										addErrorMessage(TO_FOR,
+												"Änderung existiert bereits: ",
+												"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
+									}
+								}
+							} else {
+								addErrorMessage(TO_FOR, "Fach ist identisch: ",
+										"Bitte tätigen Sie zuerst eine Änderung.");
+							}
 						}
 					}
 				} else {
@@ -331,7 +377,7 @@ public class ModulBean {
 			for (Field field : oldFieldList) {
 				fieldList.add(field.getCopy());
 			}
-			if(fieldList.size() > 0) {
+			if (fieldList.size() > 0) {
 				emptyFieldList = false;
 			} else {
 				emptyFieldList = true;
@@ -362,19 +408,68 @@ public class ModulBean {
 	 */
 	private boolean handleAccept(Subject newSub, Subject oldSub) {
 		try {
+
+			LinkedList<String> modAccessList = DBModManAccess
+					.loadModuleModManAccessList(modMan);
+
+			if (modAccessList.size() == 0)
+				return false;
+
 			DBSubject.saveSubject(newSub);
 			for (int i = 0; i < fieldList.size(); i++) {
 				fieldList.get(i).setSubjectversion(newSub.getVersion());
 				DBField.saveField(fieldList.get(i));
 			}
+
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			
-			//TODO load List of Redakteurs for the specific subject
-			ModificationNotification mn = new ModificationNotification(
-					currentUser, "adam.admin@uni-ulm.de",
-					timestamp, message, "edit",
-					"queued", false, new Modification(oldSub, newSub));
-			DBNotification.saveNotification(mn);
+
+			for (int i = 0; i < modAccessList.size(); i++) {
+				ModificationNotification mn = new ModificationNotification(
+						modAccessList.get(i), currentUser, timestamp, message,
+						"edit", "queued", false, new Modification(oldSub,
+								newSub));
+				DBNotification.saveNotification(mn);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * handles the request for the edit of ects
+	 * 
+	 * @param newSub
+	 * @param oldSub
+	 * @return
+	 */
+	private boolean handleAcceptDezernat(Subject newSub, Subject oldSub) {
+		try {
+
+			List<String> dezernatList = DBUser
+					.loadAllUserEmailsByRole("Dezernat");
+
+			if (dezernatList.size() == 0)
+				return false;
+
+			DBSubject.saveSubject(newSub);
+			for (int i = 0; i < fieldList.size(); i++) {
+				fieldList.get(i).setSubjectversion(newSub.getVersion());
+				DBField.saveField(fieldList.get(i));
+			}
+
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+			for (int i = 0; i < dezernatList.size(); i++) {
+				ModificationNotification mn = new ModificationNotification(
+						dezernatList.get(i), currentUser, timestamp, message,
+						"edit", "queued", false, new Modification(oldSub,
+								newSub));
+				DBNotification.saveNotification(mn);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -830,6 +925,36 @@ public class ModulBean {
 	 */
 	public String getCurrentUser() {
 		return currentUser;
+	}
+
+	/**
+	 * @return the userRights
+	 */
+	public List<String> getUserRights() {
+		return userRights;
+	}
+
+	/**
+	 * @param userRights
+	 *            the userRights to set
+	 */
+	public void setUserRights(List<String> userRights) {
+		this.userRights = userRights;
+	}
+
+	/**
+	 * @return the hasPermission
+	 */
+	public boolean isHasPermission() {
+		return hasPermission;
+	}
+
+	/**
+	 * @param hasPermission
+	 *            the hasPermission to set
+	 */
+	public void setHasPermission(boolean hasPermission) {
+		this.hasPermission = hasPermission;
 	}
 
 }

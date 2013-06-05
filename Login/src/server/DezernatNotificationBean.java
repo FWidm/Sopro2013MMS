@@ -27,12 +27,12 @@ import ctrl.DBField;
 import ctrl.DBNotification;
 import ctrl.DBSubject;
 
-@ManagedBean(name = "ModulNotificationBean")
+@ManagedBean(name = "DezernatNotificationBean")
 @SessionScoped
-public class ModulNotificationBean {
-	
-	public static final String TO_FOR = "message-log-edit";
+public class DezernatNotificationBean {
 
+	public static final String TO_FOR = "message-log-edit";
+	
 	private String recipientEmail;
 	private String senderEmail;
 	private Timestamp timeStamp;
@@ -51,9 +51,9 @@ public class ModulNotificationBean {
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
 	
-	private String currentUser; 
+	private String currentUser;
 
-	public ModulNotificationBean() {
+	public DezernatNotificationBean() {
 		// get User Session
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
@@ -61,41 +61,12 @@ public class ModulNotificationBean {
 		loadNotifications();
 	}
 
+
 	/**
 	 * Clicking on the tablerow sets isRead to true
 	 */
 	public void selectedNotificationIsRead(SelectEvent e) {
 		DBNotification.updateNotificationIsRead(getSelectedNotification());
-	}
-
-	/**
-	 * Deletes a specific notification from DB
-	 */
-	public void cancelSelectedNotification(ActionEvent e) {
-		if (selectedNotification != null) {
-			if (selectedNotification.getStatus().equals("declined")) {
-				DBNotification.deleteNotification(getSelectedNotification());
-				addMessage(TO_FOR, "Benachrichtigung erfolgreich entfernt: ",
-						"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
-			} else {
-				DBNotification.deleteNotification(getSelectedNotification());
-				Subject sub = (Subject) selectedEditableAfter;
-				if (!sub.isAck()) {
-					DBSubject.deleteSubject(sub);
-					DBField.deleteFields(sub.getVersion(), sub.getSubTitle(),
-							sub.getModTitle());
-					addMessage(TO_FOR, "Änderung erfolgreich widerrufen: ",
-							"Das dazu gehörige Fach wurde gelöscht.");
-				} else {
-					addMessage(TO_FOR,
-							"Benachrichtigung erfolgreich entfernt: ",
-							"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
-				}
-			}
-			loadNotifications();
-		} else {
-			System.out.println("null");
-		}
 	}
 
 	/**
@@ -124,13 +95,55 @@ public class ModulNotificationBean {
 	}
 
 	/**
+	 * declines the selected notification
+	 */
+	public void declineSelectedNotification(ActionEvent e) {
+		System.out.println("decline");
+
+		if (selectedNotification != null) {
+			DBNotification.declineNotification(selectedNotification);
+			Subject sub = (Subject) selectedEditableAfter;
+			DBSubject.deleteSubject(sub);
+			DBField.deleteFields(sub.getVersion(), sub.getSubTitle(), sub.getModTitle());
+			selectedNotification.setStatus("declined");
+			// actualizeNotificationList();
+			System.out.println("was declined");
+		} else {
+			System.out.println("null");
+		}
+		loadNotifications();
+	}
+
+	/**
+	 * accepts selected notification
+	 */
+	public void acceptSelectedNotification(ActionEvent e) {
+		System.out.println("accept");
+
+		if (selectedNotification != null) {
+			if (DBNotification.acceptNotification(getSelectedNotification())) {
+				selectedNotification.setStatus("accepted");
+				// actualizeNotificationList();
+				System.out.println(selectedNotification.getSenderEmail()
+						+ " was accepted");
+				Subject newSub = (Subject) selectedEditableAfter;
+				DBSubject.updateSubjectAck(true, newSub.getVersion(),
+						newSub.getSubTitle(), newSub.getModTitle());
+			} else
+				System.out.println("nothing to accept");
+		} else
+			System.out.println("null");
+		loadNotifications();
+	}
+
+	/**
 	 * Loads all Notifications from the database
 	 * 
 	 */
 	public void loadNotifications() {
-		setNotificationList(DBNotification.loadModificationNotificationModEx(currentUser));
+		setNotificationList(DBNotification
+				.loadModificationNotificationRedakteur(currentUser));
 	}
-
 	/**
 	 * if anything goes wrong - display an Error
 	 * 
@@ -354,6 +367,7 @@ public class ModulNotificationBean {
 			}
 		}
 	}
+
 
 	/**
 	 * @return the strTimeStamp
