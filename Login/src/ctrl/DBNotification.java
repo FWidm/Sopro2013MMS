@@ -587,7 +587,9 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String query = "SELECT * FROM notification WHERE senderEmail= '"
-					+ currentUser + "' OR recipientEmail='" + currentUser + "'";
+					+ currentUser + "' OR recipientEmail='" + currentUser
+					+ "' AND senderEmail= '"
+					+ DBUser.loadUsersEmailByRole("Dekan").get(0) + "'";
 
 			ResultSet rs = stmt.executeQuery(query);
 
