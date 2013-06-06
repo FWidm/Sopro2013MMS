@@ -1,6 +1,6 @@
 package server;
 
-
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -12,12 +12,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
+import javax.swing.plaf.ListUI;
 
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.TabChangeEvent;
 
 import ctrl.DBExRules;
 import ctrl.DBModManual;
+import ctrl.DBNotification;
+import ctrl.DBUser;
+import data.DeadlineNotification;
 import data.ExRules;
 import data.ModManual;
 
@@ -36,15 +41,21 @@ public class DekanBean {
 	private List<ExRules> exRulesSearchList;
 	private String exRules;
 	private ExRules currentER;
-	
-	private static SimpleDateFormat sdf;
 
+	private String currentUser;
+
+	private static SimpleDateFormat sdf;
 
 	/**
 	 * Equivalent to a constructor
 	 */
 	@PostConstruct
 	public void init() {
+		// get User Session
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		currentUser = (String) session.getAttribute("email");
+
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		modManualList = new LinkedList<ModManual>();
 		modManualList = DBModManual.loadAllModManuals();
@@ -54,10 +65,11 @@ public class DekanBean {
 		exRulesSearchList = DBExRules.loadAllExRules();
 	}
 
-	public void onTabChange(TabChangeEvent event) {  
-		FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: " + event.getTab().getTitle());  
+	public void onTabChange(TabChangeEvent event) {
+		FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: "
+				+ event.getTab().getTitle());
 
-		FacesContext.getCurrentInstance().addMessage(null, msg);  
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 		System.out.println("Tab Changed!");
 	}
 
@@ -83,36 +95,59 @@ public class DekanBean {
 	 */
 	public void saveModManual(ActionEvent action) {
 		success = true;
-		if (modManTitle.isEmpty() || description.isEmpty() || exRules == null || exRules.equals("") || deadline == null) {
+		if (modManTitle.isEmpty() || description.isEmpty() || exRules == null
+				|| exRules.equals("") || deadline == null) {
 			success = false;
-			addErrorMessage("Empty Field error: ", "Fields may not be empty - be sure to edit every field.");
-			System.out.println(success);			
+			addErrorMessage("Empty Field error: ",
+					"Fields may not be empty - be sure to edit every field.");
+			System.out.println(success);
 			return;
-		}	
+		}
 
 		if (DBModManual.loadModManual(modManTitle) == null) {
-			DBModManual.saveModManual(new ModManual(modManTitle, description, exRules, deadline));
+			DBModManual.saveModManual(new ModManual(modManTitle, description,
+					exRules, deadline));
 			System.out.println(success);
-			addMessage("Module manual created: ", "" + modManTitle + ", " + exRules + ", " + deadline);
+			addMessage("Module manual created: ", "" + modManTitle + ", "
+					+ exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
 
 			// *******************************************************************************************************************
 			// add notification code here
 
-			// in der variable deadline ist das datum gespeichert. muss evtl noch in ein anderes datums-format umgewandelt werden.
-			// umwandeln in sql-kompatibles format geht mit der SimpleDateFormat klasse, bsp. siehe unten oder DBModManual.java
+			// in der variable deadline ist das datum gespeichert. muss evtl
+			// noch in ein anderes datums-format umgewandelt werden.
+			// umwandeln in sql-kompatibles format geht mit der SimpleDateFormat
+			// klasse, bsp. siehe unten oder DBModManual.java
 
-			// private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			// private static SimpleDateFormat sdf = new
+			// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			// String formattedDate = sdf.format(deadline);
 			// *******************************************************************************************************************
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			Timestamp date = new Timestamp(deadline.getTime());
+			List<String> mailAdresses = new LinkedList<String>();
+			List<String> modEx = DBUser.loadUsersEmailByRole("Redakteur");
+			List<String> redak = DBUser
+					.loadUsersEmailByRole("Modulverantwortlicher");
+			mailAdresses.addAll(modEx);
+			mailAdresses.addAll(redak);
 
+			for (int i = 0; i < mailAdresses.size(); i++) {
+				DBNotification.saveNotification(new DeadlineNotification(
+						mailAdresses.get(i), currentUser, timestamp, "", "",
+						"queued", false, date, modManTitle));
+			}
 			return;
 		}
 
 		success = false;
-		System.out.println("error - modMantitle already exists: " + modManTitle + " " + success);
-		addErrorMessage("Module manual title already exists: ", "'" + modManTitle + "' is already in the database - please doublecheck.");
+		System.out.println("error - modMantitle already exists: " + modManTitle
+				+ " " + success);
+		addErrorMessage("Module manual title already exists: ", "'"
+				+ modManTitle
+				+ "' is already in the database - please doublecheck.");
 	}
 
 	/**
@@ -125,9 +160,9 @@ public class DekanBean {
 		if (exRules.equals("") || exRules == null) {
 			success = false;
 			addErrorMessage("Empty Field error: ", "Field may not be empty.");
-			System.out.println(success);			
+			System.out.println(success);
 			return;
-		}	
+		}
 
 		if (DBExRules.loadExRules(exRules) == null) {
 			DBExRules.saveExRule(new ExRules(exRules));
@@ -140,10 +175,12 @@ public class DekanBean {
 		}
 
 		success = false;
-		System.out.println("error - exRules already exists: " + exRules + " " + success);
-		addErrorMessage("Examination rules title already exists: ", "'" + exRules + "' is already in the database - please doublecheck.");
+		System.out.println("error - exRules already exists: " + exRules + " "
+				+ success);
+		addErrorMessage("Examination rules title already exists: ", "'"
+				+ exRules
+				+ "' is already in the database - please doublecheck.");
 	}
-
 
 	/**
 	 * function that refreshes the ModManualsList for delete and edit mode
@@ -156,30 +193,36 @@ public class DekanBean {
 	}
 
 	/**
-	 * Event Triggered when the accept icon is clicked on edit module manual tab -
-	 * updates with new Values
+	 * Event Triggered when the accept icon is clicked on edit module manual tab
+	 * - updates with new Values
 	 * 
 	 * @param event
 	 */
 	public void onEdit(RowEditEvent event) {
 
 		ModManual m = (ModManual) event.getObject();
-		FacesMessage msg = new FacesMessage("User Edited", ((ModManual) event.getObject()).toString());
+		FacesMessage msg = new FacesMessage("User Edited",
+				((ModManual) event.getObject()).toString());
 		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
 
 			// if deadline was changed --> notify
-			if(!((DBModManual.loadModManual(m.getModManTitle())).getDeadline().toString().equals(sdf.format(m.getDeadline())))){
+			if (!((DBModManual.loadModManual(m.getModManTitle())).getDeadline()
+					.toString().equals(sdf.format(m.getDeadline())))) {
 				System.out.println("date changed!");
 				// *******************************************************************************************************************
 				// add notification code here
 
-				// in der variable deadline ist das datum gespeichert. muss evtl noch in ein anderes datums-format umgewandelt werden.
-				// umwandeln in sql-kompatibles format geht mit der SimpleDateFormat klasse, bsp. siehe unten oder DBModManual.java
+				// in der variable deadline ist das datum gespeichert. muss evtl
+				// noch in ein anderes datums-format umgewandelt werden.
+				// umwandeln in sql-kompatibles format geht mit der
+				// SimpleDateFormat klasse, bsp. siehe unten oder
+				// DBModManual.java
 
-				// private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				// private static SimpleDateFormat sdf = new
+				// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				// String formattedDate = sdf.format(deadline);
 				// *******************************************************************************************************************
-			}	
+			}
 			DBModManual.updateModManual(m, m.getModManTitle());
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
@@ -192,7 +235,8 @@ public class DekanBean {
 	 * @param event
 	 */
 	public void onCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("User edit cancelled", ((ModManual) event.getObject()).getModManTitle());
+		FacesMessage msg = new FacesMessage("User edit cancelled",
+				((ModManual) event.getObject()).getModManTitle());
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
 
@@ -215,18 +259,20 @@ public class DekanBean {
 	}
 
 	/**
-	 * deletes the exRule from the database, which was selected in the data table
+	 * deletes the exRule from the database, which was selected in the data
+	 * table
 	 */
-	public void deleteModManual(){
+	public void deleteModManual() {
 		DBModManual.deleteModManual(currentMM.getModManTitle());
 		exRules = null;
 		actualizeModManualList();
 	}
 
 	/**
-	 * deletes the exRule from the database, which was selected in the data table
+	 * deletes the exRule from the database, which was selected in the data
+	 * table
 	 */
-	public void deleteExRules(){
+	public void deleteExRules() {
 		DBExRules.deleteExRule(currentER.getExRulesTitle());
 		exRules = null;
 		actualizeExRulesList();
@@ -263,7 +309,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param modManualList the modManualList to set
+	 * @param modManualList
+	 *            the modManualList to set
 	 */
 	public void setModManualList(List<ModManual> modManualList) {
 		this.modManualList = modManualList;
@@ -277,7 +324,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param modManTitle the modManTitle to set
+	 * @param modManTitle
+	 *            the modManTitle to set
 	 */
 	public void setModManTitle(String modManTitle) {
 		this.modManTitle = modManTitle;
@@ -291,7 +339,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param deadline the deadline to set
+	 * @param deadline
+	 *            the deadline to set
 	 */
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
@@ -305,7 +354,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -319,12 +369,12 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param exRulesTitle the exRulesTitle to set
+	 * @param exRulesTitle
+	 *            the exRulesTitle to set
 	 */
 	public void setExRulesTitle(int exRulesTitle) {
 		this.exRulesTitle = exRulesTitle;
 	}
-
 
 	/**
 	 * @return the exRules
@@ -333,9 +383,9 @@ public class DekanBean {
 		return exRules;
 	}
 
-
 	/**
-	 * @param exRules the exRules to set
+	 * @param exRules
+	 *            the exRules to set
 	 */
 	public void setExRules(String exRules) {
 		this.exRules = exRules;
@@ -349,7 +399,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param exRulesList the exRulesList to set
+	 * @param exRulesList
+	 *            the exRulesList to set
 	 */
 	public void setExRulesList(List<ExRules> exRulesList) {
 		this.exRulesList = exRulesList;
@@ -363,7 +414,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param currentER the currentER to set
+	 * @param currentER
+	 *            the currentER to set
 	 */
 	public void setCurrentER(ExRules currentER) {
 		this.currentER = currentER;
@@ -377,7 +429,8 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param currentMM the currentMM to set
+	 * @param currentMM
+	 *            the currentMM to set
 	 */
 	public void setCurrentMM(ModManual currentMM) {
 		this.currentMM = currentMM;
@@ -391,12 +444,11 @@ public class DekanBean {
 	}
 
 	/**
-	 * @param exRulesSearchList the exRulesSearchList to set
+	 * @param exRulesSearchList
+	 *            the exRulesSearchList to set
 	 */
 	public void setExRulesSearchList(List<ExRules> exRulesSearchList) {
 		this.exRulesSearchList = exRulesSearchList;
 	}
-
-
 
 }

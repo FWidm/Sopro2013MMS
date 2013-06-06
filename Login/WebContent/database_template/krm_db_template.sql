@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 04. Jun 2013 um 18:23
+-- Erstellungszeit: 06. Jun 2013 um 15:49
 -- Server Version: 5.0.51a-24+lenny5
 -- PHP-Version: 5.3.3-7+squeeze15
 
@@ -251,6 +251,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `modManTitle` varchar(50) collate utf8_unicode_ci default NULL,
   `modTitle` varchar(50) collate utf8_unicode_ci default NULL,
   `subTitle` varchar(50) collate utf8_unicode_ci default NULL,
+  `deadline` timestamp NULL default NULL,
   PRIMARY KEY  (`recipientEmail`,`senderEmail`,`timeStamp`),
   KEY `senderEmail` (`senderEmail`),
   KEY `exRulesTitle` (`exRulesTitle`,`modManTitle`,`modTitle`,`subTitle`),

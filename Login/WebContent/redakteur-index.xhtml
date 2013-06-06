@@ -355,82 +355,91 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
-						<p:layout>
-							<p:layoutUnit position="north" minSize="80"
-								header="Date: #{RedDezNotificationBean.selectedNotification.timeStamp}
-				Sender: #{RedDezNotificationBean.selectedNotification.senderEmail} 
-				Action: #{RedDezNotificationBean.selectedNotification.action}">
-								<h:outputText id="message-dez"
-									value="#{RedDezNotificationBean.selectedNotification.message}" />
-							</p:layoutUnit>
-							<p:layoutUnit position="center" minSize="200"
-								header="Neue Version (vom Dezernat bearbeitet)">
-								<p:panel id="pnlTitle1-dez"
-									header="#{RedDezNotificationBean.title}" toggleable="true"
-									toggleSpeed="500"
-									visible="#{RedDezNotificationBean.mainVisible}">
+						<p:panel visible="#{!RedDezNotificationBean.isDeadline}">
+							<p:layout>
+								<p:layoutUnit position="north" minSize="80"
+									header="Date: #{RedDezNotificationBean.selectedNotification.timeStamp}
+					Sender: #{RedDezNotificationBean.selectedNotification.senderEmail} 
+					Action: #{RedDezNotificationBean.selectedNotification.action}">
+									<h:outputText id="message-dez"
+										value="#{RedDezNotificationBean.selectedNotification.message}" />
+								</p:layoutUnit>
+								<p:layoutUnit position="center" minSize="200"
+									header="Neue Version (vom Dezernat bearbeitet)">
+									<p:panel id="pnlTitle1-dez"
+										header="#{RedDezNotificationBean.title}" toggleable="true"
+										toggleSpeed="500"
+										visible="#{RedDezNotificationBean.mainVisible}">
+	
+	                        #{RedDezNotificationBean.description}
+	
+	                    </p:panel>
+									<p:panel id="pnlEcts1-dez"
+										header="Leistungspunkte und Lernziele" toggleable="true"
+										toggleSpeed="500"
+										visible="#{RedDezNotificationBean.ectsAimVisible}">
 
-                        #{RedDezNotificationBean.description}
-
-                    </p:panel>
-								<p:panel id="pnlEcts1-dez"
-									header="Leistungspunkte und Lernziele" toggleable="true"
-									toggleSpeed="500"
-									visible="#{RedDezNotificationBean.ectsAimVisible}">
-
-									<strong>Leistungspunkte:</strong> #{RedDezNotificationBean.ects}<br />
-									<br />
-									<strong>Lernziele:</strong> #{RedDezNotificationBean.aim}
-
-                    </p:panel>
-								<p:panel id="pnlDescription1-dez"
-									header="Zusaetzliche Informationen" toggleable="true"
-									toggleSpeed="500"
-									visible="#{RedDezNotificationBean.addInfoVisible}">
-
-									<ui:repeat var="iterator"
-										value="#{RedDezNotificationBean.fieldList}">
-										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
-										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<strong>Leistungspunkte:</strong> #{RedDezNotificationBean.ects}<br />
 										<br />
-									</ui:repeat>
-								</p:panel>
-							</p:layoutUnit>
-							<p:layoutUnit position="east" resizable="true" minSize="200"
-								maxSize="600"
-								header="Alte Version (aktuell verfuegbare Version)">
-								<p:panel id="pnlTitle2-dez"
-									header="#{RedDezNotificationBean.title2}" toggleable="true"
-									toggleSpeed="500"
-									visible="#{RedDezNotificationBean.mainVisible2}">
+										<strong>Lernziele:</strong> #{RedDezNotificationBean.aim}
+	
+	                    </p:panel>
+									<p:panel id="pnlDescription1-dez"
+										header="Zusaetzliche Informationen" toggleable="true"
+										toggleSpeed="500"
+										visible="#{RedDezNotificationBean.addInfoVisible}">
 
-                        #{RedDezNotificationBean.description2}
+										<ui:repeat var="iterator"
+											value="#{RedDezNotificationBean.fieldList}">
+											<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+											<strong>Beschreibung: </strong>#{iterator.description}<br />
+											<br />
+										</ui:repeat>
+									</p:panel>
+								</p:layoutUnit>
+								<p:layoutUnit position="east" resizable="true" minSize="200"
+									maxSize="600"
+									header="Alte Version (aktuell verfuegbare Version)">
+									<p:panel id="pnlTitle2-dez"
+										header="#{RedDezNotificationBean.title2}" toggleable="true"
+										toggleSpeed="500"
+										visible="#{RedDezNotificationBean.mainVisible2}">
+	
+	                        #{RedDezNotificationBean.description2}
+	
+	                    </p:panel>
+									<p:panel id="pnlEcts2-dez"
+										header="Leistungspunkte und Lernziele" toggleable="true"
+										toggleSpeed="500"
+										visible="#{RedDezNotificationBean.ectsAimVisible2}">
 
-                    </p:panel>
-								<p:panel id="pnlEcts2-dez"
-									header="Leistungspunkte und Lernziele" toggleable="true"
-									toggleSpeed="500"
-									visible="#{RedDezNotificationBean.ectsAimVisible2}">
-
-									<strong>Leistungspunkte:</strong> #{RedDezNotificationBean.ects2}<br />
-									<br />
-									<strong>Lernziele:</strong> #{RedDezNotificationBean.aim2}
-
-                    </p:panel>
-								<p:panel id="pnlDescription2-dez"
-									header="Zusaetzliche Informationen" toggleable="true"
-									toggleSpeed="500"
-									visible="#{RedDezNotificationBean.addInfoVisible2}">
-
-									<ui:repeat var="iterator"
-										value="#{RedDezNotificationBean.fieldList2}">
-										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
-										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<strong>Leistungspunkte:</strong> #{RedDezNotificationBean.ects2}<br />
 										<br />
-									</ui:repeat>
-								</p:panel>
-							</p:layoutUnit>
-						</p:layout>
+										<strong>Lernziele:</strong> #{RedDezNotificationBean.aim2}
+	
+	                    </p:panel>
+									<p:panel id="pnlDescription2-dez"
+										header="Zusaetzliche Informationen" toggleable="true"
+										toggleSpeed="500"
+										visible="#{RedDezNotificationBean.addInfoVisible2}">
+
+										<ui:repeat var="iterator"
+											value="#{RedDezNotificationBean.fieldList2}">
+											<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+											<strong>Beschreibung: </strong>#{iterator.description}<br />
+											<br />
+										</ui:repeat>
+									</p:panel>
+								</p:layoutUnit>
+							</p:layout>
+						</p:panel>
+						<p:panel visible="#{RedDezNotificationBean.isDeadline}"
+							header="Deadline">
+							Bitte taetigen Sie all ihre Aenderungen/Eintragungen fuer das Modulhandbuch <strong>#{RedDezNotificationBean.deadlineModMan}</strong> bis einschliesslich <strong>#{RedDezNotificationBean.deadline}</strong>.
+							<br />
+							<br />Freundliche Gruesse,
+							<br />Der Dekan
+						</p:panel>
 					</p:layoutUnit>
 
 				</p:layout>

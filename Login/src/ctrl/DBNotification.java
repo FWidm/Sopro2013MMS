@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
+import data.DeadlineNotification;
 import data.ExRules;
 import data.ModManual;
 import data.Modification;
@@ -131,6 +132,46 @@ public class DBNotification extends DBManager {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (notif instanceof DeadlineNotification) {
+			DeadlineNotification deadNotif = (DeadlineNotification) notif;
+			try {
+				con = openConnection();
+				Statement stmt = con.createStatement();
+				String update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modManTitle, deadline) Values('"
+						+ notif.getRecipientEmail()
+						+ "', '"
+						+ notif.getSenderEmail()
+						+ "', '"
+						+ (Timestamp) notif.getTimeStamp()
+						+ "', '"
+						+ notif.getMessage()
+						+ "', '"
+						+ notif.getAction()
+						+ "', '"
+						+ notif.getStatus()
+						+ "', "
+						+ false
+						+ ", '"
+						+ deadNotif.getModManTitle()
+						+ "', '"
+						+ (Timestamp) deadNotif.getDeadline() + "')";
+				System.out.println(update);
+				con.setAutoCommit(false);
+				stmt.executeUpdate(update);
+				try {
+					con.commit();
+				} catch (SQLException exc) {
+					con.rollback(); // bei Fehlschlag Rollback der Transaktion
+					System.out
+							.println("COMMIT fehlgeschlagen - Rollback durchgefuehrt");
+				} finally {
+					closeQuietly(stmt);
+					closeQuietly(con); // Abbau Verbindung zur Datenbank
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (notif instanceof Notification) {
 			try {
 				con = openConnection();
@@ -175,6 +216,39 @@ public class DBNotification extends DBManager {
 			String update = "DELETE FROM notification WHERE senderEmail = '"
 					+ notif.getSenderEmail() + "' AND " + "timeStamp = '"
 					+ (Timestamp) notif.getTimeStamp() + "';";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * deletes one deadline notification specified by the sender and recipient
+	 * 
+	 * @param notif
+	 */
+	public static void deleteDeadlineNotification(Notification notif) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM notification WHERE senderEmail = '"
+					+ notif.getSenderEmail() + "' AND " + "timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp()
+					+ "' AND recipientEmail ='" + notif.getRecipientEmail()
+					+ "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
@@ -505,15 +579,15 @@ public class DBNotification extends DBManager {
 	 * 
 	 * @return
 	 */
-	public static List<ModificationNotification> loadModificationNotificationModEx(
+	public static List<Notification> loadModificationNotificationModEx(
 			String currentUser) {
-		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
+		List<Notification> notif = new LinkedList<Notification>();
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String query = "SELECT * FROM notification WHERE senderEmail= '"
-					+ currentUser + "'";
+					+ currentUser + "' OR recipientEmail='" + currentUser + "'";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -529,8 +603,12 @@ public class DBNotification extends DBManager {
 				String modMan = rs.getString("modManTitle");
 				String mod = rs.getString("modTitle");
 				String sub = rs.getString("subTitle");
+				Timestamp deadline = rs.getTimestamp("deadline");
 
-				if (exRules != null) {
+				if (deadline != null && modMan != null) {
+					notif.add(new DeadlineNotification(recEm, senEm, timS,
+							mess, act, stat, isRead, deadline, modMan));
+				} else if (exRules != null) {
 					if (modMan != null) {
 						// TODO add version for ModMan or not ;)
 					}

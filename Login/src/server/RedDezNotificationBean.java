@@ -9,12 +9,14 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.TabChangeEvent;
 
+import data.DeadlineNotification;
 import data.Editable;
 import data.ExRules;
 import data.Field;
 import data.ModManual;
 import data.ModificationNotification;
 import data.Module;
+import data.Notification;
 import data.Subject;
 
 import java.util.List;
@@ -39,8 +41,8 @@ public class RedDezNotificationBean {
 	private String message;
 	private String action;
 	private String status;
-	private List<ModificationNotification> notificationList;
-	private ModificationNotification selectedNotification;
+	private List<Notification> notificationList;
+	private Notification selectedNotification;
 	Editable selectedEditableAfter, selectedEditableBefore;
 	private String strTimeStamp;
 
@@ -50,6 +52,11 @@ public class RedDezNotificationBean {
 	private String title2, description2, ects2, aim2;
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
+
+	// variables for DeadlineNotification
+	private String deadlineModMan;
+	private Timestamp deadline;
+	private boolean isDeadline;
 
 	private String currentUser;
 
@@ -72,7 +79,8 @@ public class RedDezNotificationBean {
 	 * Deletes a specific notification from DB
 	 */
 	public void cancelSelectedNotification(ActionEvent e) {
-		if (selectedNotification != null) {
+		if (selectedNotification != null
+				&& selectedNotification instanceof ModificationNotification) {
 			DBNotification.deleteNotification(getSelectedNotification());
 			Subject sub = (Subject) selectedEditableAfter;
 			if (!sub.isAck()) {
@@ -92,8 +100,13 @@ public class RedDezNotificationBean {
 						"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
 			}
 			loadNotifications();
-		} else {
-			System.out.println("null");
+		} else if (selectedNotification != null
+				&& selectedNotification instanceof DeadlineNotification) {
+			DBNotification
+					.deleteDeadlineNotification(getSelectedNotification());
+			addMessage(TO_FOR, "Benachrichtigung erfolgreich entfernt: ",
+					"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
+			loadNotifications();
 		}
 	}
 
@@ -247,7 +260,7 @@ public class RedDezNotificationBean {
 	/**
 	 * @return the notificationList
 	 */
-	public List<ModificationNotification> getNotificationList() {
+	public List<Notification> getNotificationList() {
 		return notificationList;
 	}
 
@@ -255,15 +268,14 @@ public class RedDezNotificationBean {
 	 * @param notificationList
 	 *            the notificationList to set
 	 */
-	public void setNotificationList(
-			List<ModificationNotification> notificationList) {
+	public void setNotificationList(List<Notification> notificationList) {
 		this.notificationList = notificationList;
 	}
 
 	/**
 	 * @return the selectedNotification
 	 */
-	public ModificationNotification getSelectedNotification() {
+	public Notification getSelectedNotification() {
 		return selectedNotification;
 	}
 
@@ -271,87 +283,101 @@ public class RedDezNotificationBean {
 	 * @param selectedNotification
 	 *            the selectedNotification to set
 	 */
-	public void setSelectedNotification(
-			ModificationNotification selectedNotification) {
+	public void setSelectedNotification(Notification selectedNotification) {
 		this.selectedNotification = selectedNotification;
 		if (selectedNotification != null) {
-			selectedEditableAfter = selectedNotification.getModification()
-					.getAfter();
-			selectedEditableBefore = selectedNotification.getModification()
-					.getBefore();
-			if (selectedEditableAfter instanceof Subject
-					&& selectedEditableBefore instanceof Subject) {
-				// After
-				Subject sub = (Subject) selectedEditableAfter;
-				fieldList = DBField.loadFieldList(sub.getModTitle(),
-						sub.getVersion(), sub.getSubTitle());
-				title = sub.getSubTitle();
-				description = sub.getDescription();
-				ects = String.valueOf(sub.getEcts());
-				aim = sub.getAim();
-				mainVisible = true;
-				ectsAimVisible = true;
-				addInfoVisible = true;
-				System.out.println(description);
-				// Before
-				Subject sub2 = (Subject) selectedEditableBefore;
-				fieldList2 = DBField.loadFieldList(sub2.getModTitle(),
-						sub2.getVersion(), sub2.getSubTitle());
-				title2 = sub2.getSubTitle();
-				description2 = sub2.getDescription();
-				ects2 = String.valueOf(sub2.getEcts());
-				aim2 = sub2.getAim();
-				mainVisible2 = true;
-				ectsAimVisible2 = true;
-				addInfoVisible2 = true;
-			} else if (selectedEditableAfter instanceof Module
-					&& selectedEditableBefore instanceof Module) {
-				// After
-				Module mod = (Module) selectedEditableAfter;
-				title = mod.getModTitle();
-				description = mod.getDescription();
-				mainVisible = true;
-				ectsAimVisible = false;
-				addInfoVisible = false;
-				// Before
-				Module mod2 = (Module) selectedEditableBefore;
-				title2 = mod2.getModTitle();
-				description2 = mod2.getDescription();
-				mainVisible2 = true;
-				ectsAimVisible2 = false;
-				addInfoVisible2 = false;
-			} else if (selectedEditableAfter instanceof ModManual
-					&& selectedEditableBefore instanceof ModManual) {
-				// After
-				ModManual modMan = (ModManual) selectedEditableAfter;
-				title = modMan.getModManTitle();
-				description = modMan.getDescription();
-				mainVisible = true;
-				ectsAimVisible = false;
-				addInfoVisible = false;
-				// Before
-				ModManual modMan2 = (ModManual) selectedEditableBefore;
-				title2 = modMan2.getModManTitle();
-				description2 = modMan2.getDescription();
-				mainVisible2 = true;
-				ectsAimVisible2 = false;
-				addInfoVisible2 = false;
-			} else if (selectedEditableAfter instanceof ExRules
-					&& selectedEditableBefore instanceof ExRules) {
-				// After
-				ExRules rule = (ExRules) selectedEditableAfter;
-				title = rule.getExRulesTitle();
-				description = "";
-				mainVisible = true;
-				ectsAimVisible = false;
-				addInfoVisible = false;
-				// Before
-				ExRules rule2 = (ExRules) selectedEditableBefore;
-				title2 = rule2.getExRulesTitle();
-				description2 = "";
-				mainVisible2 = true;
-				ectsAimVisible2 = false;
-				addInfoVisible2 = false;
+			if (selectedNotification instanceof ModificationNotification) {
+
+				// set boolean for visibillity
+				isDeadline = false;
+
+				ModificationNotification selectedModNotification = (ModificationNotification) selectedNotification;
+				selectedEditableAfter = selectedModNotification
+						.getModification().getAfter();
+				selectedEditableBefore = selectedModNotification
+						.getModification().getBefore();
+				if (selectedEditableAfter instanceof Subject
+						&& selectedEditableBefore instanceof Subject) {
+					// After
+					Subject sub = (Subject) selectedEditableAfter;
+					fieldList = DBField.loadFieldList(sub.getModTitle(),
+							sub.getVersion(), sub.getSubTitle());
+					title = sub.getSubTitle();
+					description = sub.getDescription();
+					ects = String.valueOf(sub.getEcts());
+					aim = sub.getAim();
+					mainVisible = true;
+					ectsAimVisible = true;
+					addInfoVisible = true;
+					System.out.println(description);
+					// Before
+					Subject sub2 = (Subject) selectedEditableBefore;
+					fieldList2 = DBField.loadFieldList(sub2.getModTitle(),
+							sub2.getVersion(), sub2.getSubTitle());
+					title2 = sub2.getSubTitle();
+					description2 = sub2.getDescription();
+					ects2 = String.valueOf(sub2.getEcts());
+					aim2 = sub2.getAim();
+					mainVisible2 = true;
+					ectsAimVisible2 = true;
+					addInfoVisible2 = true;
+				} else if (selectedEditableAfter instanceof Module
+						&& selectedEditableBefore instanceof Module) {
+					// After
+					Module mod = (Module) selectedEditableAfter;
+					title = mod.getModTitle();
+					description = mod.getDescription();
+					mainVisible = true;
+					ectsAimVisible = false;
+					addInfoVisible = false;
+					// Before
+					Module mod2 = (Module) selectedEditableBefore;
+					title2 = mod2.getModTitle();
+					description2 = mod2.getDescription();
+					mainVisible2 = true;
+					ectsAimVisible2 = false;
+					addInfoVisible2 = false;
+				} else if (selectedEditableAfter instanceof ModManual
+						&& selectedEditableBefore instanceof ModManual) {
+					// After
+					ModManual modMan = (ModManual) selectedEditableAfter;
+					title = modMan.getModManTitle();
+					description = modMan.getDescription();
+					mainVisible = true;
+					ectsAimVisible = false;
+					addInfoVisible = false;
+					// Before
+					ModManual modMan2 = (ModManual) selectedEditableBefore;
+					title2 = modMan2.getModManTitle();
+					description2 = modMan2.getDescription();
+					mainVisible2 = true;
+					ectsAimVisible2 = false;
+					addInfoVisible2 = false;
+				} else if (selectedEditableAfter instanceof ExRules
+						&& selectedEditableBefore instanceof ExRules) {
+					// After
+					ExRules rule = (ExRules) selectedEditableAfter;
+					title = rule.getExRulesTitle();
+					description = "";
+					mainVisible = true;
+					ectsAimVisible = false;
+					addInfoVisible = false;
+					// Before
+					ExRules rule2 = (ExRules) selectedEditableBefore;
+					title2 = rule2.getExRulesTitle();
+					description2 = "";
+					mainVisible2 = true;
+					ectsAimVisible2 = false;
+					addInfoVisible2 = false;
+				}
+			} else if (selectedNotification instanceof DeadlineNotification) {
+
+				// set boolean for visibillity
+				isDeadline = true;
+
+				DeadlineNotification selectedDeadNotification = (DeadlineNotification) selectedNotification;
+				deadline = selectedDeadNotification.getDeadline();
+				deadlineModMan = selectedDeadNotification.getModManTitle();
 			}
 		}
 	}
@@ -639,6 +665,51 @@ public class RedDezNotificationBean {
 	 */
 	public void setFieldList2(List<Field> fieldList2) {
 		this.fieldList2 = fieldList2;
+	}
+
+	/**
+	 * @return the deadlineModMan
+	 */
+	public String getDeadlineModMan() {
+		return deadlineModMan;
+	}
+
+	/**
+	 * @param deadlineModMan
+	 *            the deadlineModMan to set
+	 */
+	public void setDeadlineModMan(String deadlineModMan) {
+		this.deadlineModMan = deadlineModMan;
+	}
+
+	/**
+	 * @return the deadline
+	 */
+	public Timestamp getDeadline() {
+		return deadline;
+	}
+
+	/**
+	 * @param deadline
+	 *            the deadline to set
+	 */
+	public void setDeadline(Timestamp deadline) {
+		this.deadline = deadline;
+	}
+
+	/**
+	 * @return the isDeadline
+	 */
+	public boolean isIsDeadline() {
+		return isDeadline;
+	}
+
+	/**
+	 * @param isDeadline
+	 *            the isDeadline to set
+	 */
+	public void setIsDeadline(boolean isDeadline) {
+		this.isDeadline = isDeadline;
 	}
 
 }

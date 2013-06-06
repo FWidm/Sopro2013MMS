@@ -233,78 +233,86 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
-						<p:layout>
-							<p:layoutUnit position="north" minSize="80"
-								header="Date: #{ModulNotificationBean.selectedNotification.timeStamp}
-				Sender: #{ModulNotificationBean.selectedNotification.senderEmail} 
-				Action: #{ModulNotificationBean.selectedNotification.action}">
-								<h:outputText id="message"
-									value="#{ModulNotificationBean.selectedNotification.message}" />
-							</p:layoutUnit>
-							<p:layoutUnit position="center" minSize="200"
-								header="Neue Version (vom Verantwortlichen bearbeitet)">
-								<p:panel id="pnlTitle1" header="#{ModulNotificationBean.title}"
-									toggleable="true" toggleSpeed="500"
-									visible="#{ModulNotificationBean.mainVisible}">
+						<p:panel visible="#{!ModulNotificationBean.isDeadline}">
+							<p:layout>
+								<p:layoutUnit position="north" minSize="80"
+									header="Date: #{ModulNotificationBean.selectedNotification.timeStamp}
+					Sender: #{ModulNotificationBean.selectedNotification.senderEmail} 
+					Action: #{ModulNotificationBean.selectedNotification.action}">
+									<h:outputText id="message"
+										value="#{ModulNotificationBean.selectedNotification.message}" />
+								</p:layoutUnit>
+								<p:layoutUnit position="center" minSize="200"
+									header="Neue Version (vom Verantwortlichen bearbeitet)">
+									<p:panel id="pnlTitle1" header="#{ModulNotificationBean.title}"
+										toggleable="true" toggleSpeed="500"
+										visible="#{ModulNotificationBean.mainVisible}">
+	
+	                        #{ModulNotificationBean.description}
+	
+	                    </p:panel>
+									<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
+										toggleable="true" toggleSpeed="500"
+										visible="#{ModulNotificationBean.ectsAimVisible}">
 
-                        #{ModulNotificationBean.description}
-
-                    </p:panel>
-								<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
-									toggleable="true" toggleSpeed="500"
-									visible="#{ModulNotificationBean.ectsAimVisible}">
-
-									<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects}<br />
-									<br />
-									<strong>Lernziele:</strong> #{ModulNotificationBean.aim}
-
-                    </p:panel>
-								<p:panel id="pnlDescription1"
-									header="Zusaetzliche Informationen" toggleable="true"
-									toggleSpeed="500"
-									visible="#{ModulNotificationBean.addInfoVisible}">
-
-									<ui:repeat var="iterator"
-										value="#{ModulNotificationBean.fieldList}">
-										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
-										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects}<br />
 										<br />
-									</ui:repeat>
-								</p:panel>
-							</p:layoutUnit>
-							<p:layoutUnit position="east" resizable="true" minSize="200"
-								maxSize="600"
-								header="Alte Version (aktuell verfuegbare Version)">
-								<p:panel id="pnlTitle2" header="#{ModulNotificationBean.title2}"
-									toggleable="true" toggleSpeed="500"
-									visible="#{ModulNotificationBean.mainVisible2}">
+										<strong>Lernziele:</strong> #{ModulNotificationBean.aim}
+	
+	                    </p:panel>
+									<p:panel id="pnlDescription1"
+										header="Zusaetzliche Informationen" toggleable="true"
+										toggleSpeed="500"
+										visible="#{ModulNotificationBean.addInfoVisible}">
 
-                        #{ModulNotificationBean.description2}
+										<ui:repeat var="iterator"
+											value="#{ModulNotificationBean.fieldList}">
+											<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+											<strong>Beschreibung: </strong>#{iterator.description}<br />
+											<br />
+										</ui:repeat>
+									</p:panel>
+								</p:layoutUnit>
+								<p:layoutUnit position="east" resizable="true" minSize="200"
+									maxSize="600"
+									header="Alte Version (aktuell verfuegbare Version)">
+									<p:panel id="pnlTitle2"
+										header="#{ModulNotificationBean.title2}" toggleable="true"
+										toggleSpeed="500"
+										visible="#{ModulNotificationBean.mainVisible2}">
+	
+	                        #{ModulNotificationBean.description2}
+	
+	                    </p:panel>
+									<p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
+										toggleable="true" toggleSpeed="500"
+										visible="#{ModulNotificationBean.ectsAimVisible2}">
 
-                    </p:panel>
-								<p:panel id="pnlEcts2" header="Leistungspunkte und Lernziele"
-									toggleable="true" toggleSpeed="500"
-									visible="#{ModulNotificationBean.ectsAimVisible2}">
-
-									<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects2}<br />
-									<br />
-									<strong>Lernziele:</strong> #{ModulNotificationBean.aim2}
-
-                    </p:panel>
-								<p:panel id="pnlDescription2"
-									header="Zusaetzliche Informationen" toggleable="true"
-									toggleSpeed="500"
-									visible="#{ModulNotificationBean.addInfoVisible2}">
-
-									<ui:repeat var="iterator"
-										value="#{ModulNotificationBean.fieldList2}">
-										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
-										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects2}<br />
 										<br />
-									</ui:repeat>
-								</p:panel>
-							</p:layoutUnit>
-						</p:layout>
+										<strong>Lernziele:</strong> #{ModulNotificationBean.aim2}
+	
+	                    </p:panel>
+									<p:panel id="pnlDescription2"
+										header="Zusaetzliche Informationen" toggleable="true"
+										toggleSpeed="500"
+										visible="#{ModulNotificationBean.addInfoVisible2}">
+
+										<ui:repeat var="iterator"
+											value="#{ModulNotificationBean.fieldList2}">
+											<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+											<strong>Beschreibung: </strong>#{iterator.description}<br />
+											<br />
+										</ui:repeat>
+									</p:panel>
+								</p:layoutUnit>
+							</p:layout>
+						</p:panel>
+						<p:panel visible="#{ModulNotificationBean.isDeadline}" header="Deadline">
+							Bitte taetigen Sie all ihre Aenderungen/Eintragungen fuer das Modulhandbuch <strong>#{ModulNotificationBean.deadlineModMan}</strong> bis einschliesslich <strong>#{ModulNotificationBean.deadline}</strong>.
+							<br /><br />Freundliche Gruesse,
+							<br />Der Dekan
+						</p:panel>
 					</p:layoutUnit>
 
 				</p:layout>
