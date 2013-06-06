@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import data.Editable;
 import data.Subject;
 
 public class DBSubject extends DBManager {

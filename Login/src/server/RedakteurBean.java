@@ -18,7 +18,6 @@ import org.primefaces.model.MenuModel;
 
 import ctrl.DBExRules;
 import ctrl.DBField;
-import ctrl.DBModAccess;
 import ctrl.DBModManAccess;
 import ctrl.DBModule;
 import ctrl.DBNotification;
