@@ -141,8 +141,11 @@ public class RedakteurBean {
 		for (Field field : oldFieldList) {
 			fieldList.add(field.getCopy());
 		}
-		if (fieldList.size() == 0)
+		if (fieldList.size() == 0) {
 			emptyFieldList = true;
+		} else {
+			emptyFieldList = false;
+		}
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());
@@ -300,13 +303,17 @@ public class RedakteurBean {
 					// checks if it's a request for Dezernat
 					if (oldSub.getEcts() != newSub.getEcts()) {
 						if (handleAcceptDezernat(newSub, oldSub)) {
-							oldFieldList = new LinkedList<Field>();
+							/*oldFieldList = new LinkedList<Field>();
 							for (Field field : fieldList) {
 								oldFieldList.add(field.getCopy());
 							}
-							selectedEditable = newSub;
+							selectedEditable = newSub;*/
 							addMessage(TO_FOR, "Erfolg: ",
 									"Ihre Änderung wurde erfolgreich an das Dezernat verschickt.");
+						} else {
+							addErrorMessage(TO_FOR,
+									"Änderung existiert bereits: ",
+									"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
 						}
 					}
 
@@ -321,6 +328,10 @@ public class RedakteurBean {
 							selectedEditable = newSub;
 							addMessage(TO_FOR, "Erfolg: ",
 									"Ihre Änderung wurde erfolgreich vorgenommen.");
+						} else {
+							addErrorMessage(TO_FOR,
+									"Änderung existiert bereits: ",
+									"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
 						}
 					} else {
 						boolean differ = false;
@@ -461,6 +472,7 @@ public class RedakteurBean {
 			if (dezernatList.size() == 0)
 				return false;
 
+			newSub.setAck(false);
 			DBSubject.saveSubject(newSub);
 			for (int i = 0; i < fieldList.size(); i++) {
 				fieldList.get(i).setSubjectversion(newSub.getVersion());

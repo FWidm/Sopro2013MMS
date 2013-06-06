@@ -172,8 +172,7 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "DELETE FROM notification WHERE recipientEmail = '"
-					+ notif.getRecipientEmail() + "' AND " + "senderEmail = '"
+			String update = "DELETE FROM notification WHERE senderEmail = '"
 					+ notif.getSenderEmail() + "' AND " + "timeStamp = '"
 					+ (Timestamp) notif.getTimeStamp() + "';";
 			con.setAutoCommit(false);
@@ -539,8 +538,14 @@ public class DBNotification extends DBManager {
 				} else if (mod != null) {
 					if (sub != null) {
 						if (notif.size() != 0) {
-							if (!timS.equals(notif.get(notif.size() - 1)
-									.getTimeStamp())) {
+							boolean isIn = false;
+							for (int i = 0; i < notif.size(); i++) {
+								if (notif.get(i).getTimeStamp().equals(timS)) {
+									isIn = true;
+									break;
+								}
+							}
+							if (!isIn) {
 								Subject subject = DBSubject
 										.loadSubjectMaxVersionModNotif(sub, mod);
 								notif.add(new ModificationNotification(recEm,
@@ -550,7 +555,6 @@ public class DBNotification extends DBManager {
 												mod), subject)));
 							}
 						} else {
-							System.out.println(timS);
 							Subject subject = DBSubject
 									.loadSubjectMaxVersionModNotif(sub, mod);
 							notif.add(new ModificationNotification(recEm,
@@ -559,7 +563,6 @@ public class DBNotification extends DBManager {
 											DBSubject.loadSubject(
 													subject.getVersion() - 1,
 													sub, mod), subject)));
-							System.out.println("DBNotif: " + subject.getEcts());
 						}
 					}
 					// TODO add version for Module or not ;)

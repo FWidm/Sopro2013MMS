@@ -141,8 +141,11 @@ public class ModulBean {
 		for (Field field : oldFieldList) {
 			fieldList.add(field.getCopy());
 		}
-		if (fieldList.size() == 0)
+		if (fieldList.size() == 0) {
 			emptyFieldList = true;
+		} else {
+			emptyFieldList = false;
+		}
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());
@@ -283,28 +286,36 @@ public class ModulBean {
 
 					// checks if it's a request for Dezernat
 					if (oldSub.getEcts() != newSub.getEcts()) {
-						System.out.println("ECTNEW: " + newSub.getEcts());
 						if (handleAcceptDezernat(newSub, oldSub)) {
-							oldFieldList = new LinkedList<Field>();
+							/*oldFieldList = new LinkedList<Field>();
 							for (Field field : fieldList) {
 								oldFieldList.add(field.getCopy());
 							}
-							selectedEditable = newSub;
+							selectedEditable = newSub;*/
 							addMessage(TO_FOR, "Erfolg: ",
 									"Ihre Änderung wurde erfolgreich an das Dezernat verschickt.");
+						} else {
+							addErrorMessage(TO_FOR,
+									"Änderung existiert bereits: ",
+									"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
 						}
 					} else {
 						// if old sub isn't the same as the new sub
-						// we create new database entries and create a notification
+						// we create new database entries and create a
+						// notification
 						if (!oldSub.equals(newSub)) {
 							if (handleAccept(newSub, oldSub)) {
-								oldFieldList = new LinkedList<Field>();
+								/*oldFieldList = new LinkedList<Field>();
 								for (Field field : fieldList) {
 									oldFieldList.add(field.getCopy());
 								}
-								selectedEditable = newSub;
+								selectedEditable = newSub;*/
 								addMessage(TO_FOR, "Erfolg: ",
 										"Ihre Änderung wurde erfolgreich verschickt.");
+							} else {
+								addErrorMessage(TO_FOR,
+										"Änderung existiert bereits: ",
+										"Bitte löschen Sie die bestehende Änderung oder warten Sie auf Bestätigung.");
 							}
 						} else {
 							boolean differ = false;
@@ -324,18 +335,19 @@ public class ModulBean {
 								for (Field field : fieldList) {
 									if (field.getFieldTitle() == "") {
 										// TODO inform about empty field
-										addErrorMessage(TO_FOR, "Leeres Feld: ",
+										addErrorMessage(TO_FOR,
+												"Leeres Feld: ",
 												"Bitte tragen Sie einen Titel ein oder löschen Sie das Feld.");
 										empty = true;
 									}
 								}
 								if (!empty) {
 									if (handleAccept(newSub, oldSub)) {
-										oldFieldList = new LinkedList<Field>();
+										/*oldFieldList = new LinkedList<Field>();
 										for (Field field : fieldList) {
 											oldFieldList.add(field.getCopy());
 										}
-										selectedEditable = newSub;
+										selectedEditable = newSub;*/
 										addMessage(TO_FOR, "Erfolg: ",
 												"Ihre Änderung wurde erfolgreich verschickt.");
 									} else {

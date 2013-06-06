@@ -248,14 +248,13 @@ public class DBSubject extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 
-			String query = "SELECT subtitle,modtitle,description,aim,ects,ack, max(version) AS version"
-					+ " FROM subject "
-					+ " WHERE ack=TRUE AND subtitle='"
+			String query = "SELECT * FROM subject WHERE subtitle='"
 					+ subTitle
 					+ "' AND modtitle='"
 					+ modTitle
-					+ "'"
-					+ " GROUP BY subtitle";
+					+ "' AND ack=true"
+					+ " AND version = (SELECT max(version) FROM subject where subtitle='"
+					+ subTitle + "' AND modtitle='" + modTitle + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {

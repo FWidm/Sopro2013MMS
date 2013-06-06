@@ -30,7 +30,7 @@ import ctrl.DBSubject;
 @ManagedBean(name = "RedDezNotificationBean")
 @SessionScoped
 public class RedDezNotificationBean {
-	
+
 	public static final String TO_FOR = "message-log-edit-dez";
 
 	private String recipientEmail;
@@ -50,8 +50,8 @@ public class RedDezNotificationBean {
 	private String title2, description2, ects2, aim2;
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
-	
-	private String currentUser; 
+
+	private String currentUser;
 
 	public RedDezNotificationBean() {
 		// get User Session
@@ -73,24 +73,23 @@ public class RedDezNotificationBean {
 	 */
 	public void cancelSelectedNotification(ActionEvent e) {
 		if (selectedNotification != null) {
-			if (selectedNotification.getStatus().equals("declined")) {
-				DBNotification.deleteNotification(getSelectedNotification());
-				addMessage(TO_FOR, "Benachrichtigung erfolgreich entfernt: ",
-						"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
-			} else {
-				DBNotification.deleteNotification(getSelectedNotification());
-				Subject sub = (Subject) selectedEditableAfter;
-				if (!sub.isAck()) {
-					DBSubject.deleteSubject(sub);
-					DBField.deleteFields(sub.getVersion(), sub.getSubTitle(),
-							sub.getModTitle());
-					addMessage(TO_FOR, "Änderung erfolgreich widerrufen: ",
-							"Das dazu gehörige Fach wurde gelöscht.");
-				} else {
+			DBNotification.deleteNotification(getSelectedNotification());
+			Subject sub = (Subject) selectedEditableAfter;
+			if (!sub.isAck()) {
+				DBSubject.deleteSubject(sub);
+				DBField.deleteFields(sub.getVersion(), sub.getSubTitle(),
+						sub.getModTitle());
+				if (selectedNotification.getStatus().equals("declined")) {
 					addMessage(TO_FOR,
 							"Benachrichtigung erfolgreich entfernt: ",
-							"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
+							"Die Benachrichtigung und das entsprechende Fach wurden erfolgreich gelöscht.");
+				} else {
+					addMessage(TO_FOR, "Änderung erfolgreich widerrufen: ",
+							"Das dazu gehörige Fach wurde gelöscht.");
 				}
+			} else {
+				addMessage(TO_FOR, "Benachrichtigung erfolgreich entfernt: ",
+						"Die Benachrichtigung wurde erfolgreich aus ihrer Liste entfernt.");
 			}
 			loadNotifications();
 		} else {
@@ -112,7 +111,8 @@ public class RedDezNotificationBean {
 				glbIsRead = true;
 				cntr += 1;
 				glbSender += cntr + ". "
-						+ getNotificationList().get(i).getSenderEmail() + "&#x0d;&#x0A"; 
+						+ getNotificationList().get(i).getSenderEmail()
+						+ "&#x0d;&#x0A";
 			}
 		}
 		if (glbIsRead) {
@@ -128,7 +128,8 @@ public class RedDezNotificationBean {
 	 * 
 	 */
 	public void loadNotifications() {
-		setNotificationList(DBNotification.loadModificationNotificationModEx(currentUser));
+		setNotificationList(DBNotification
+				.loadModificationNotificationModEx(currentUser));
 	}
 
 	/**

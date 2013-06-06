@@ -102,9 +102,9 @@ public class RedakteurNotificationBean {
 
 		if (selectedNotification != null) {
 			DBNotification.declineNotification(selectedNotification);
-			Subject sub = (Subject) selectedEditableAfter;
+			/*Subject sub = (Subject) selectedEditableAfter;
 			DBSubject.deleteSubject(sub);
-			DBField.deleteFields(sub.getVersion(), sub.getSubTitle(), sub.getModTitle());
+			DBField.deleteFields(sub.getVersion(), sub.getSubTitle(), sub.getModTitle());*/
 			selectedNotification.setStatus("declined");
 			// actualizeNotificationList();
 			System.out.println("was declined");
