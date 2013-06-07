@@ -148,7 +148,7 @@ public class DBNotification extends DBManager {
 						+ "', '"
 						+ notif.getAction()
 						+ "', '"
-						+ notif.getStatus()
+						+ "deadline"
 						+ "', "
 						+ false
 						+ ", '"

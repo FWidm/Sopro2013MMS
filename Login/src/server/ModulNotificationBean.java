@@ -378,6 +378,7 @@ public class ModulNotificationBean {
 				DeadlineNotification selectedDeadNotification = (DeadlineNotification) selectedNotification;
 				deadline = selectedDeadNotification.getDeadline();
 				deadlineModMan = selectedDeadNotification.getModManTitle();
+				//selectedDeadNotification.setStatus("deadline");
 			}
 		}
 	}

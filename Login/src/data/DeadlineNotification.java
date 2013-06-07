@@ -14,6 +14,7 @@ public class DeadlineNotification extends Notification {
 				isRead);
 		setDeadline(deadline);
 		setModManTitle(modManTitle);
+		setStatus("deadline");
 		// TODO Auto-generated constructor stub
 	}
 
