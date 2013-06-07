@@ -201,4 +201,34 @@ public class DBModManAccess extends DBManager {
 		}
 		return modManTitleList;
 	}
+
+	/**
+	 * Delete an moduleModMan based on it's unique email
+	 * 
+	 * @param email
+	 * @param modTitle
+	 */
+	public static void deleteModuleModManbyEmail(String email) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM modManAccess WHERE email = '" + email+"'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT ModuleManAccess fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

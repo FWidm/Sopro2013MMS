@@ -213,4 +213,32 @@ public class DBModAccess extends DBManager {
 		return ma;
 	}
 
+	/**
+	 * Delete ModAccess based on its email
+	 * @param modTitle
+	 * @param email
+	 */
+	public static void deleteModAccessbyEmail(String email) {
+		Connection con = null;		
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM modAccess WHERE email = '" + email + "'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT ModAccess fehlgeschlagen - Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

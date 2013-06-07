@@ -6,6 +6,9 @@ package server;
 import java.util.LinkedList;
 import java.util.List;
 import data.User;
+import ctrl.DBModAccess;
+import ctrl.DBModManAccess;
+import ctrl.DBNotification;
 import ctrl.DBUser;
 
 import javax.annotation.PostConstruct;
@@ -178,8 +181,13 @@ public class CreateBean {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		this.email = fc.getExternalContext().getRequestParameterMap()
 				.get("email");
-		// TODO: Delete notifications before deleting the user. - Methods are
+		// TODO: Delete notifications and modaccess/modmanaccess before deleting the user. - Methods are
 		// missing to do this until now.
+		//User tmp=DBUser.loadUser(email);
+		//Maybe check if the delete methods are neccessary, but should be no problem if the queries do nothing.
+		DBModManAccess.deleteModuleModManbyEmail(email);
+		DBModAccess.deleteModAccessbyEmail(email);
+		DBNotification.deleteNotificationFromUser(email);
 		DBUser.deleteUser(email);
 		System.out.println(email);
 		System.out.println(">>" + lastRole);

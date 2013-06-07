@@ -778,4 +778,35 @@ public class DBNotification extends DBManager {
 
 	}
 
+
+	/**
+	 * DELETE all notifications from one user with specified email
+	 * @param email
+	 */
+	public static void deleteNotificationFromUser(String email) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM notification WHERE recipientEmail = '"
+					+ email + "' OR " + "senderEmail = '"
+					+ email+"';";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }
