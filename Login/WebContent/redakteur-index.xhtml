@@ -210,7 +210,7 @@
 							<p:column>
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
-                    #{noti.senderEmail}
+                    #{noti.timeStamp}
 
                 </p:column>
 							<f:facet name="footer">
@@ -233,9 +233,8 @@
 					<p:layoutUnit position="center">
 						<p:layout>
 							<p:layoutUnit position="north" minSize="80"
-								header="Date: #{RedakteurNotificationBean.selectedNotification.timeStamp}
-				Sender: #{RedakteurNotificationBean.selectedNotification.senderEmail} 
-				Action: #{RedakteurNotificationBean.selectedNotification.action}">
+								header="Nachricht vom: #{RedakteurNotificationBean.selectedNotification.timeStamp}
+								Aktion: #{RedakteurNotificationBean.selectedNotification.action}">
 								<h:outputText id="message"
 									value="#{RedakteurNotificationBean.selectedNotification.message}" />
 							</p:layoutUnit>
