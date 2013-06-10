@@ -10,7 +10,7 @@
 	<title>Dekan Index</title>
 
 	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/default.css" /> 
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 <!-- body -->
@@ -20,7 +20,8 @@
 			style="position:absolute; top:20px; right:20px;" />
 	</div>
 	<p:tabView id="outer-tabview">
-		<p:ajax event="tabChange" listener="#{DekanBean.onTabChange}" update=":outer-tabview:tabview-exRules:exRules-create-frame"/> 
+		<p:ajax event="tabChange" listener="#{DekanBean.onTabChange}"
+			update=":outer-tabview:tabview-exRules:exRules-create-frame" />
 
 		<p:tab title="Module manual">
 			<p:tabView id="tabview-modManual">
@@ -45,10 +46,12 @@
 												styleClass="input_text" /></td>
 									</tr>
 									<tr>
-										<td><h:outputText value="examination rules: " /> <p:selectOneMenu style="width:220px"
-												value="#{DekanBean.exRules}" >
+										<td><h:outputText value="examination rules: " /> <p:selectOneMenu
+												style="width:220px" value="#{DekanBean.exRules}">
 												<f:selectItem itemLabel="examination rules" itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule" itemLabel="#{exRule.exRulesTitle}" itemValue="#{exRule.exRulesTitle}"/>
+												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+													itemLabel="#{exRule.exRulesTitle}"
+													itemValue="#{exRule.exRulesTitle}" />
 											</p:selectOneMenu></td>
 									</tr>
 									<tr>
@@ -61,7 +64,7 @@
 												update=":outer-tabview:tabview-modManual:dekan-frame"
 												action="#{DekanBean.resetFields}" /> <p:commandButton
 												icon="ui-icon-plusthick"
-												actionListener="#{DekanBean.saveModManual}" value="create" 
+												actionListener="#{DekanBean.saveModManual}" value="create"
 												update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals, 
 												:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
 									</tr>
@@ -83,11 +86,12 @@
 								<table class="admin-edit-t" width="250" border="0"
 									cellpadding="2">
 									<tr>
-										<td><h:outputText value="Examination rules  " /> <p:selectOneMenu style="width:220px"
-												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="All examination rules"
-													itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule" itemLabel="#{exRule.exRulesTitle}" itemValue="#{exRule.exRulesTitle}"/>
+										<td><h:outputText value="Examination rules  " /> <p:selectOneMenu
+												style="width:220px" value="#{DekanBean.exRules}">
+												<f:selectItem itemLabel="All examination rules" itemValue="" />
+												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+													itemLabel="#{exRule.exRulesTitle}"
+													itemValue="#{exRule.exRulesTitle}" />
 											</p:selectOneMenu></td>
 									</tr>
 									<tr>
@@ -135,7 +139,9 @@
 											</f:facet>
 											<f:facet name="input">
 												<h:selectOneMenu value="#{modManual.exRulesTitle}">
-													<f:selectItems value="#{DekanBean.exRulesList}" var="exRule" itemLabel="#{exRule.exRulesTitle}" itemValue="#{exRule.exRulesTitle}"/>
+													<f:selectItems value="#{DekanBean.exRulesList}"
+														var="exRule" itemLabel="#{exRule.exRulesTitle}"
+														itemValue="#{exRule.exRulesTitle}" />
 												</h:selectOneMenu>
 											</f:facet>
 										</p:cellEditor>
@@ -162,7 +168,7 @@
 						</p:layoutUnit>
 					</p:layout>
 				</p:tab>
-				
+
 				<p:tab title="Delete">
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="delete-layout">
@@ -175,9 +181,10 @@
 									<tr>
 										<td><h:outputText value="Examination rules  " /> <p:selectOneMenu
 												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="All examination rules"
-													itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule" itemLabel="#{exRule.exRulesTitle}" itemValue="#{exRule.exRulesTitle}"/>
+												<f:selectItem itemLabel="All examination rules" itemValue="" />
+												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+													itemLabel="#{exRule.exRulesTitle}"
+													itemValue="#{exRule.exRulesTitle}" />
 											</p:selectOneMenu></td>
 									</tr>
 									<tr>
@@ -191,7 +198,7 @@
 								<p:dataTable id="modManuals" var="modManual"
 									value="#{DekanBean.modManualList}" style="max-width:1024px"
 									scrollable="true" scrollHeight="300" editable="true">
-											
+
 									<p:column headerText="Title" footerText="" style="width:25%">
 										<h:outputText value="#{modManual.modManTitle}" />
 									</p:column>
@@ -202,17 +209,16 @@
 									</p:column>
 
 									<p:column headerText="Examination rules" footerText=""
-										style="width:18%">										
-										<h:outputText value="#{modManual.exRulesTitle}" />											
+										style="width:18%">
+										<h:outputText value="#{modManual.exRulesTitle}" />
 									</p:column>
 
-									<p:column headerText="Deadline" footerText="" style="width:13%">											
+									<p:column headerText="Deadline" footerText="" style="width:13%">
 										<h:outputText value="#{modManual.deadline}" />
 									</p:column>
 
 									<p:column style="width:4%" footerText="">
-										<p:commandButton icon="ui-icon-trash"
-											oncomplete="dlg.show();"
+										<p:commandButton icon="ui-icon-trash" oncomplete="dlg.show();"
 											update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals,
 											:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals">
 											<f:setPropertyActionListener value="#{modManual}"
@@ -225,15 +231,15 @@
 									autoUpdate="true" for="edit-messages" />
 							</h:form>
 						</p:layoutUnit>
-						<p:confirmDialog widgetVar="dlg" id="deleteDialog"
-							header="Delete" message="Delete this ?" width="400"
-							modal="true" closable="false" severity="alert">
+						<p:confirmDialog widgetVar="dlg" id="deleteDialog" header="Delete"
+							message="Delete this ?" width="400" modal="true" closable="false"
+							severity="alert">
 							<h:panelGroup layout="block" style="text-align: right">
-							<p:commandButton value="Yes" action="#{DekanBean.deleteModManual}"
-								oncomplete="dlg.hide();"
-								update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals,
+								<p:commandButton value="Yes"
+									action="#{DekanBean.deleteModManual}" oncomplete="dlg.hide();"
+									update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals,
 								:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" />
-							<p:commandButton value="No" oncomplete="dlg.hide();" />
+								<p:commandButton value="No" oncomplete="dlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
 					</p:layout>
@@ -243,19 +249,19 @@
 			<!-- End TabView -->
 		</p:tab>
 
-		<p:tab title="Examination Rules">		
+		<p:tab title="Examination Rules">
 			<p:tabView id="tabview-exRules">
-			
-				
-				
+
+
+
 				<p:tab title="Create">
 					<!-- Begin of first tab // Start -->
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="exRules-create-layout">
 						<p:layoutUnit position="center">
 							<h:form id="exRules-create-frame">
-							<h2>Create examination rules</h2>
-								<table width="250" border="0" cellpadding="2">																	
+								<h2>Create examination rules</h2>
+								<table width="250" border="0" cellpadding="2">
 									<tr>
 										<!-- ExRules(String exRulesTitle) -->
 										<td><h:outputText value="examination rules title: " /> <h:inputText
@@ -268,12 +274,12 @@
 												update=":outer-tabview:tabview-exRules:exRules-create-frame"
 												action="#{DekanBean.resetField}" /> <p:commandButton
 												icon="ui-icon-plusthick"
-												actionListener="#{DekanBean.saveExRules}" value="create" 
+												actionListener="#{DekanBean.saveExRules}" value="create"
 												update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
 												:outer-tabview:tabview-modManual:dekan-frame,  
 												:outer-tabview:tabview-modManual:dekan-edit-frame,  
 												:outer-tabview:tabview-modManual:dekan-delete-frame"
-												action="#{DekanBean.actualizeExRulesList}"/></td>
+												action="#{DekanBean.actualizeExRulesList}" /></td>
 									</tr>
 								</table>
 								<p:messages id="dekan-messages" for="dekan-messages"
@@ -293,17 +299,18 @@
 								<table class="admin-delete-t" width="250" border="0"
 									cellpadding="2">
 									<tr>
-										<td><h:outputText value="Examination rules title" /> 
-											<p:selectOneMenu
+										<td><h:outputText value="Examination rules title" /> <p:selectOneMenu
 												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="All examination rules"
-													itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesSearchList}" var="exRuleSearch" itemLabel="#{exRuleSearch.exRulesTitle}" itemValue="#{exRuleSearch.exRulesTitle}"/>
+												<f:selectItem itemLabel="All examination rules" itemValue="" />
+												<f:selectItems value="#{DekanBean.exRulesSearchList}"
+													var="exRuleSearch" itemLabel="#{exRuleSearch.exRulesTitle}"
+													itemValue="#{exRuleSearch.exRulesTitle}" />
 											</p:selectOneMenu></td>
 									</tr>
 									<tr>
 										<td><p:commandButton
-												actionListener="#{DekanBean.actualizeExRulesList}" value="find"
+												actionListener="#{DekanBean.actualizeExRulesList}"
+												value="find"
 												update=":outer-tabview:tabview-exRules:exRules-delete-frame" /></td>
 									</tr>
 								</table>
@@ -311,7 +318,8 @@
 								<p:dataTable id="exRules" var="exRules"
 									value="#{DekanBean.exRulesList}" style="max-width:1024px"
 									scrollable="true" scrollHeight="250">
-									<p:column headerText="Examination rules title" footerText="" style="width:96%">
+									<p:column headerText="Examination rules title" footerText=""
+										style="width:96%">
 										<h:outputText value="#{exRules.exRulesTitle}" />
 									</p:column>
 									<p:column style="width:4%" footerText="">
@@ -327,23 +335,127 @@
 							</h:form>
 						</p:layoutUnit>
 						<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
-							header="Delete" message="Delete this ?" width="400"
-							modal="true" closable="false" severity="alert">
+							header="Delete" message="Delete this ?" width="400" modal="true"
+							closable="false" severity="alert">
 							<h:panelGroup layout="block" style="text-align: right">
-							<p:commandButton value="Yes" action="#{DekanBean.deleteExRules}"
-								oncomplete="deleteDlg.hide();"
-								update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
+								<p:commandButton value="Yes" action="#{DekanBean.deleteExRules}"
+									oncomplete="deleteDlg.hide();"
+									update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
 										:outer-tabview:tabview-modManual:dekan-frame,  
 										:outer-tabview:tabview-modManual:dekan-edit-frame,  
 										:outer-tabview:tabview-modManual:dekan-delete-frame" />
-							<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+								<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
 					</p:layout>
 				</p:tab>
 			</p:tabView>
 		</p:tab>
-		
+		<p:tab title="Zuweisung">
+			<p:tabView id="tabview-zuweisung">
+				<!-- Dialog to review access -->
+
+				<!-- TabView -->
+				<p:tab title="Give Access">
+
+					<p:layout style="min-width:400px;min-height:500px;"
+						id="changes-layout">
+
+						<p:layoutUnit id="changeAccess" position="center">
+
+							<table class="acces-table" width="250" border="0" cellpadding="2">
+								<tr>
+									<td><h:outputText value="User" /> <p:selectOneMenu
+											value="#{AccessBean.selectedUserAccept}">
+											<f:selectItem itemLabel="Select One User" itemValue="-1" />
+											<f:selectItems value="#{AccessBean.userList}" var="#{it}"
+												itemValue="#{it}" itemLabel="#{it}" />
+										</p:selectOneMenu></td>
+								</tr>
+
+								<tr>
+									<td><h:outputText value="Module" /> <p:selectOneMenu
+											value="#{AccessBean.selectedAccess}">
+											<f:selectItem itemLabel="Select One Module" itemValue="-1" />
+											<f:selectItems value="#{AccessBean.modTitleList}" var="#{it}"
+												itemValue="#{it}" itemLabel="#{it}" />
+										</p:selectOneMenu></td>
+								</tr>
+								<tr>
+									<td><p:commandButton
+											actionListener="#{AccessBean.acceptChanges}" value="accept" /></td>
+								</tr>
+							</table>
+							<p:messages id="messages-access" for="messages-access"
+								showDetail="true" autoUpdate="true" closable="true" />
+						</p:layoutUnit>
+
+					</p:layout>
+
+				</p:tab>
+				<p:tab title="Remove Access">
+
+					<p:layout style="min-width:400px;min-height:500px;"
+						id="list-layout">
+
+						<p:layoutUnit id="listAccess" position="center">
+
+							<table class="access-list-table" width="250" border="0"
+								cellpadding="2">
+								<tr>
+									<td><h:outputText value="User" /> <p:selectOneMenu
+											value="#{AccessBean.selectedUserFilter}">
+											<f:selectItem itemLabel="Select One User" itemValue="-1" />
+											<f:selectItems value="#{AccessBean.userList}" var="#{it}"
+												itemValue="#{it}" itemLabel="#{it}" />
+										</p:selectOneMenu></td>
+								</tr>
+								<tr>
+									<td><p:commandButton
+											actionListener="#{AccessBean.filterSelectionList}"
+											value="filter" update=":outer-tabview:tabview-zuweisung" /></td>
+								</tr>
+							</table>
+
+							<p:dataTable id="modAccessList" var="modacc"
+								value="#{AccessBean.modAccList}" style="max-width:1024px"
+								scrollable="true" scrollHeight="250">
+								<p:column headerText="Email" footerText="" style="width:47%">
+									<h:outputText value="#{modacc.email}" />
+								</p:column>
+								<p:column headerText="Module" footerText="" style="width:47%">
+									<h:outputText value="#{modacc.modTitle}" />
+								</p:column>
+								<p:column style="width:40px" footerText="">
+									<p:commandButton icon="ui-icon-trash"
+										oncomplete="deleteDlg.show();">
+										<f:setPropertyActionListener value="#{modacc}"
+											target="#{AccessBean.deleteMod}" />
+									</p:commandButton>
+
+								</p:column>
+							</p:dataTable>
+
+
+						</p:layoutUnit>
+						<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
+							header="Delete" message="Delete this ?" width="400" modal="true"
+							closable="false" severity="alert">
+
+							<h:panelGroup layout="block" style="text-align: right">
+								<p:commandButton value="Yes" action="#{AccessBean.deleteRow}"
+									oncomplete="deleteDlg.hide();"
+									update=":outer-tabview:tabview-zuweisung" />
+								<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+							</h:panelGroup>
+						</p:confirmDialog>
+
+					</p:layout>
+
+				</p:tab>
+
+			</p:tabView>
+		</p:tab>
 		<p:tab title="Logout">
 			<table width="350" border="0" cellpadding="2">
 				<tr>
