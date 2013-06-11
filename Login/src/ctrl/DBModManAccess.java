@@ -13,12 +13,14 @@ import data.ModuleModMan;
 
 public class DBModManAccess extends DBManager {
 
-	/**Loads the responsible mail-addresses for a specific Module Manual
+	/**
+	 * Loads the responsible mail-addresses for a specific Module Manual
 	 * 
 	 * @param modManTitle
 	 * @return
 	 */
-	public static LinkedList<String> loadModuleModManAccessList(String modManTitle) {
+	public static LinkedList<String> loadModuleModManAccessList(
+			String modManTitle) {
 		LinkedList<String> mailAdresses = new LinkedList<String>();
 		Connection con = null;
 		try {
@@ -141,41 +143,6 @@ public class DBModManAccess extends DBManager {
 		}
 	}
 
-	/**
-	 * loads a moduleModMan based on the specific modTitle and modManTitle
-	 * 
-	 * @param email
-	 * @param modManTitle
-	 * @return m
-	 */
-	public static ModuleModMan loadModuleModMan(String email, String modManTitle) {
-		ModuleModMan m = null;
-		Connection con = null;
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM module WHERE email = '" + email
-					+ "' AND modManTitle = '" + modManTitle + "'";
-
-			ResultSet rs = stmt.executeQuery(query);
-
-			if (rs.next()) {
-				String mail = rs.getString("email");
-				String title = rs.getString("modManTitle");
-
-				m = new ModuleModMan(mail, title);
-			}
-			closeQuietly(rs);
-			closeQuietly(stmt);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			closeQuietly(con);
-		}
-		return m;
-	}
-
 	public static List<String> loadModuleModManTitleAccess(String currentUser) {
 		LinkedList<String> modManTitleList = new LinkedList<String>();
 		Connection con = null;
@@ -213,7 +180,8 @@ public class DBModManAccess extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "DELETE FROM modManAccess WHERE email = '" + email+"'";
+			String update = "DELETE FROM modManAccess WHERE email = '" + email
+					+ "'";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {

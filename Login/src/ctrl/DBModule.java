@@ -132,11 +132,11 @@ public class DBModule extends DBManager {
 	 * @param modManTitle
 	 * @return
 	 */
-	public static List<Module> loadModulesByManTitle(String modManTitle) {
+	public static List<Module> loadModulesByManTitle(String exRule, String modManTitle) {
 		List<Module> modules = new LinkedList<Module>();
 		
-		List<ModuleModMan> moduleModMans = DBModuleModMan.loadByManTitle(modManTitle);
-		
+		List<ModuleModMan> moduleModMans = DBModuleModMan.loadByManTitle(modManTitle, exRule);
+
 		for(int i = 0; i < moduleModMans.size(); i++) {
 			modules.add(loadModule(moduleModMans.get(i).getModTitle()));
 		}
@@ -145,7 +145,7 @@ public class DBModule extends DBManager {
 	}
 	
 	public static void main(String[] args) {
-		List<Module> modules = loadModulesByManTitle("Medieninformatik");
+		List<Module> modules = loadModulesByManTitle("Medieninformatik", "PO2012");
 		System.out.println(modules.get(0).getModTitle());
 	}
 

@@ -190,7 +190,45 @@
 					</p:layoutUnit>
 				</p:layout>
 			</p:tab>
-			<p:tab title="notifications">
+			<p:tab title="Fach erstellen">
+				<table width="250" border="0" cellpadding="2">
+					<tr>
+						<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
+						<td><h:outputText value="Fach-Titel: " /> <h:inputText
+								value="#{ModulCreateBean.subTitle}" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Beschreibung:  " /> <h:inputText value="#{ModulCreateBean.description}"
+								styleClass="input_text" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="examination rules: " /> <p:selectOneMenu
+								style="width:220px" value="#{DekanBean.exRules}">
+								<f:selectItem itemLabel="examination rules" itemValue="" />
+								<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+									itemLabel="#{exRule.exRulesTitle}"
+									itemValue="#{exRule.exRulesTitle}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="deadline: " /> <p:calendar
+								value="#{DekanBean.deadline}" id="popupCal1" /></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="left"><p:commandButton
+								icon="ui-icon-trash" value="reset fields"
+								update=":outer-tabview:tabview-modManual:dekan-frame"
+								action="#{DekanBean.resetFields}" /> <p:commandButton
+								icon="ui-icon-plusthick"
+								actionListener="#{DekanBean.saveModManual}" value="create"
+								update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals, 
+												:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
+					</tr>
+				</table>
+				<p:messages id="message-log-create" for="message-log-create"
+					showDetail="true" autoUpdate="true" closable="true" />
+			</p:tab>
+			<p:tab title="Nachrichten">
 				<p:messages id="message-log-edit" for="message-log-edit"
 					showDetail="true" autoUpdate="true" closable="true" />
 				<p:layout
@@ -307,9 +345,11 @@
 								</p:layoutUnit>
 							</p:layout>
 						</p:panel>
-						<p:panel visible="#{ModulNotificationBean.isDeadline}" header="Deadline">
+						<p:panel visible="#{ModulNotificationBean.isDeadline}"
+							header="Deadline">
 							Bitte taetigen Sie all ihre Aenderungen/Eintragungen fuer das Modulhandbuch <strong>#{ModulNotificationBean.deadlineModMan}</strong> bis einschliesslich <strong>#{ModulNotificationBean.deadline}</strong>.
-							<br /><br />Freundliche Gruesse,
+							<br />
+							<br />Freundliche Gruesse,
 							<br />Der Dekan
 						</p:panel>
 					</p:layoutUnit>
