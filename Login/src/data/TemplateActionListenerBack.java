@@ -88,7 +88,7 @@ public class TemplateActionListenerBack implements ActionListener {
 			
 			bean.setModule(null);
 			
-			bean.setModuleList((DBModule.loadModulesByManTitle((bean.getModMan()))));
+			bean.setModuleList((DBModule.loadModulesByManTitle(bean.getExRules(), bean.getModMan())));
 			
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();

@@ -62,7 +62,7 @@ public class RedakteurActionListener implements ActionListener {
 		else if(bean.getModMan() == null) {
 			
 			bean.setModMan(itemValue);
-			bean.setModuleList((DBModule.loadModulesByManTitle((itemValue))));
+			bean.setModuleList((DBModule.loadModulesByManTitle(bean.getExRules(), itemValue)));
 			
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();

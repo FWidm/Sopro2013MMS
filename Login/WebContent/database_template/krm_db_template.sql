@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 06. Jun 2013 um 15:49
+-- Erstellungszeit: 11. Jun 2013 um 10:57
 -- Server Version: 5.0.51a-24+lenny5
 -- PHP-Version: 5.3.3-7+squeeze15
 
@@ -193,8 +193,10 @@ INSERT INTO `module` (`modTitle`, `description`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `moduleModMan` (
+  `exRulesTitle` varchar(30) collate utf8_unicode_ci NOT NULL,
   `modManTitle` varchar(50) collate utf8_unicode_ci NOT NULL,
   `modTitle` varchar(50) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`exRulesTitle`,`modManTitle`,`modTitle`),
   KEY `modManTitle` (`modManTitle`),
   KEY `modTitle` (`modTitle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -203,35 +205,35 @@ CREATE TABLE IF NOT EXISTS `moduleModMan` (
 -- Daten für Tabelle `moduleModMan`
 --
 
-INSERT INTO `moduleModMan` (`modManTitle`, `modTitle`) VALUES
-('Medieninformatik', 'Einführung in die Informatik'),
-('Medieninformatik', 'Algorithmen und Datenstrukturen'),
-('Medieninformatik', 'Konzepte der Programmierung'),
-('Medieninformatik', 'Informationssysteme'),
-('Medieninformatik', 'Softwareprojekt'),
-('Medieninformatik', 'Proseminar Informatik/Medieninformatik'),
-('Medieninformatik', 'Formale Grundlagen der Medieninformatik'),
-('Medieninformatik', 'Technische Grundlagen der Informatik'),
-('Medieninformatik', 'Grundlagen der Gestaltung'),
-('Medieninformatik', 'Mediale Informatik'),
-('Medieninformatik', 'Schwerpunktmodul Medieninformatik'),
-('Medieninformatik', 'Medienpsychologie / -pädagogik'),
-('Medieninformatik', 'Anwendungsmodul Medieninformatik'),
-('Medieninformatik', 'Seminar Medieninformatik'),
-('Medieninformatik', 'Bachelorarbeit'),
-('Medieninformatik', 'Lineare Algebra für Ingenieure und Informatiker'),
-('Medieninformatik', 'Analysis für Informatiker'),
-('Medieninformatik', 'Angewandte Mathematik'),
-('Medieninformatik', 'Additive Schlüsselqualifikationen (ASQ)'),
-('Informatik', 'Einführung in die Informatik'),
-('Informatik', 'Algorithmen und Datenstrukturen'),
-('Informatik', 'Konzepte der Programmierung'),
-('Informatik', 'Softwareprojekt'),
-('Informatik', 'Proseminar Informatik/Medieninformatik'),
-('Informatik', 'Formale Grundlagen der Medieninformatik'),
-('Informatik', 'Technische Grundlagen der Informatik'),
-('Psychologie', 'Medienpsychologie / -pädagogik'),
-('Mathematik', 'Angewandte Mathematik');
+INSERT INTO `moduleModMan` (`exRulesTitle`, `modManTitle`, `modTitle`) VALUES
+('PO2010', 'Informatik', 'Algorithmen und Datenstrukturen'),
+('PO2010', 'Informatik', 'Einführung in die Informatik'),
+('PO2010', 'Informatik', 'Formale Grundlagen der Medieninformatik'),
+('PO2010', 'Informatik', 'Konzepte der Programmierung'),
+('PO2010', 'Informatik', 'Proseminar Informatik/Medieninformatik'),
+('PO2010', 'Informatik', 'Softwareprojekt'),
+('PO2010', 'Informatik', 'Technische Grundlagen der Informatik'),
+('PO2010', 'Mathematik', 'Angewandte Mathematik'),
+('PO2012', 'Medieninformatik', 'Additive Schlüsselqualifikationen (ASQ)'),
+('PO2012', 'Medieninformatik', 'Algorithmen und Datenstrukturen'),
+('PO2012', 'Medieninformatik', 'Analysis für Informatiker'),
+('PO2012', 'Medieninformatik', 'Angewandte Mathematik'),
+('PO2012', 'Medieninformatik', 'Anwendungsmodul Medieninformatik'),
+('PO2012', 'Medieninformatik', 'Bachelorarbeit'),
+('PO2012', 'Medieninformatik', 'Einführung in die Informatik'),
+('PO2012', 'Medieninformatik', 'Formale Grundlagen der Medieninformatik'),
+('PO2012', 'Medieninformatik', 'Grundlagen der Gestaltung'),
+('PO2012', 'Medieninformatik', 'Informationssysteme'),
+('PO2012', 'Medieninformatik', 'Konzepte der Programmierung'),
+('PO2012', 'Medieninformatik', 'Lineare Algebra für Ingenieure und Informatiker'),
+('PO2012', 'Medieninformatik', 'Mediale Informatik'),
+('PO2012', 'Medieninformatik', 'Medienpsychologie / -pädagogik'),
+('PO2012', 'Medieninformatik', 'Proseminar Informatik/Medieninformatik'),
+('PO2012', 'Medieninformatik', 'Schwerpunktmodul Medieninformatik'),
+('PO2012', 'Medieninformatik', 'Seminar Medieninformatik'),
+('PO2012', 'Medieninformatik', 'Softwareprojekt'),
+('PO2012', 'Medieninformatik', 'Technische Grundlagen der Informatik'),
+('PO2012', 'Psychologie', 'Medienpsychologie / -pädagogik');
 
 -- --------------------------------------------------------
 
@@ -257,6 +259,13 @@ CREATE TABLE IF NOT EXISTS `notification` (
   KEY `exRulesTitle` (`exRulesTitle`,`modManTitle`,`modTitle`,`subTitle`),
   KEY `modManTitle` (`modManTitle`,`modTitle`,`subTitle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Daten für Tabelle `notification`
+--
+
+INSERT INTO `notification` (`recipientEmail`, `senderEmail`, `timeStamp`, `message`, `action`, `status`, `isRead`, `exRulesTitle`, `modManTitle`, `modTitle`, `subTitle`, `deadline`) VALUES
+('adam.admin@uni-ulm.de', 'daniel.dezernat@uni-ulm.de', '2013-06-06 13:55:25', '', '', '', 0, NULL, 'scheisse', NULL, NULL, '2013-06-06 13:55:25');
 
 -- --------------------------------------------------------
 
@@ -336,6 +345,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`email`, `password`, `name`, `firstname`, `role`) VALUES
+('a', 0x313030303a643766366534643566373566303265373a65346564626338346561316231336139, 'wer', 'michael', 'Administrator'),
 ('adam.admin@uni-ulm.de', 0x313030303a373063363863373836356537383738613a62306630326638316661363764316665, 'Admin', 'Adam', 'Administrator'),
 ('daniel.dezernat@uni-ulm.de', 0x313030303a333430313532653832396639383636653a31313333313533333165626334356230, 'Dezernat', 'Daniel', 'Dezernat'),
 ('dennis.dekan@uni-ulm.de', 0x313030303a396236343966383533386666303066333a33636131383038313636393634653763, 'Dekan', 'Dennis', 'Dekan'),
@@ -345,6 +355,7 @@ INSERT INTO `user` (`email`, `password`, `name`, `firstname`, `role`) VALUES
 ('max.modulverantwortlicher@uni-ulm.de', 0x313030303a323437316132633835396130333438393a31626331653335386365653031366137, 'modulvreantwortlicher', 'max', 'Modulverantwortlicher'),
 ('michael.modulverantwortlicher@uni-ulm.de', 0x313030303a323065326363336365623863626538343a65323230613663613131346666383032, 'modulvreantwortlicher', 'michael', 'Modulverantwortlicher'),
 ('mo.modulverantwortlicher@uni-ulm.de', 0x313030303a383737636165383864613237343338663a36633331373363623934313235346230, 'modulvreantwortlicher', 'mo', 'Modulverantwortlicher'),
+('padi.redakteur@uni-ulm.de', 0x313030303a656330623766626662393434363761333a31353337663762306466633464396639, 'redakteur', 'padi', 'Redakteur'),
 ('rabarbara.redakteur@uni-ulm.de', 0x313030303a353562353036316562343337333031373a63633762613665653762626632303738, 'redakteur', 'rabarbara', 'Redakteur'),
 ('richard.redakteur@uni-ulm.de', 0x313030303a633761363362646233656164356565383a35303037623232616535356163303036, 'redakteur', 'richard', 'Redakteur'),
 ('robin.redakteur@uni-ulm.de', 0x313030303a376633626330343736653261343539663a66313733373133303030336264393330, 'redakteur', 'robin', 'Redakteur'),
@@ -378,8 +389,8 @@ ALTER TABLE `modManual`
 -- Constraints der Tabelle `moduleModMan`
 --
 ALTER TABLE `moduleModMan`
-  ADD CONSTRAINT `moduleModMan_ibfk_2` FOREIGN KEY (`modTitle`) REFERENCES `module` (`modTitle`),
-  ADD CONSTRAINT `moduleModMan_ibfk_1` FOREIGN KEY (`modManTitle`) REFERENCES `modManual` (`modManTitle`);
+  ADD CONSTRAINT `moduleModMan_ibfk_1` FOREIGN KEY (`modManTitle`) REFERENCES `modManual` (`modManTitle`),
+  ADD CONSTRAINT `moduleModMan_ibfk_2` FOREIGN KEY (`modTitle`) REFERENCES `module` (`modTitle`);
 
 --
 -- Constraints der Tabelle `notification`

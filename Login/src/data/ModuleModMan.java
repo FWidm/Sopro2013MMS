@@ -1,16 +1,20 @@
 package data;
 
 public class ModuleModMan {
-	
+
 	private String modManTitle;
 	private String modTitle;
-	
+	private String exRulesTitle;
+
 	/**
+	 * 
+	 * @param exRulesTitle
 	 * @param modManTitle
 	 * @param modTitle
 	 */
-	public ModuleModMan(String modManTitle, String modTitle) {
+	public ModuleModMan(String exRulesTitle, String modManTitle, String modTitle) {
 		super();
+		this.exRulesTitle = exRulesTitle;
 		this.modManTitle = modManTitle;
 		this.modTitle = modTitle;
 	}
@@ -23,7 +27,8 @@ public class ModuleModMan {
 	}
 
 	/**
-	 * @param modManTitle the modManTitle to set
+	 * @param modManTitle
+	 *            the modManTitle to set
 	 */
 	public void setModManTitle(String modManTitle) {
 		this.modManTitle = modManTitle;
@@ -37,11 +42,26 @@ public class ModuleModMan {
 	}
 
 	/**
-	 * @param modTitle the modTitle to set
+	 * @param modTitle
+	 *            the modTitle to set
 	 */
 	public void setModTitle(String modTitle) {
 		this.modTitle = modTitle;
 	}
-	
-	
+
+	/**
+	 * @return the exRulesTitle
+	 */
+	public String getExRulesTitle() {
+		return exRulesTitle;
+	}
+
+	/**
+	 * @param exRulesTitle
+	 *            the exRulesTitle to set
+	 */
+	public void setExRulesTitle(String exRulesTitle) {
+		this.exRulesTitle = exRulesTitle;
+	}
+
 }
