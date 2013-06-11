@@ -23,9 +23,9 @@ import javax.faces.event.ComponentSystemEvent;
 import org.primefaces.event.RowEditEvent;
 
 //Changed to Sessionscope - if in doubt revert to RequestScoped
-@ManagedBean(name = "CreateBean")
+@ManagedBean(name = "AdminBean")
 @SessionScoped
-public class CreateBean {
+public class AdminBean {
 	private User loggedInUser;
 	private String firstname, name, email;
 	private boolean success = true;
@@ -85,13 +85,19 @@ public class CreateBean {
 	 * Method that is colled from the xhtml admin-index page that checks if parameters are nonempty and then saves the user if email is not already in the database
 	 */
 	public void saveUser(ActionEvent action) {
-		success = true;
+
 		if (firstname.isEmpty() || name.isEmpty() || email.isEmpty()
 				|| role == -1) {
-			success = false;
-			addErrorMessage("Empty Field error",
-					"Fields may not be empty - be sure to edit every field.");
+			addErrorMessage("Nicht komplett ausgefuellt",
+					"Felder duerfen nicht leer sein.");
 			System.out.println(success);
+			return;
+		}
+
+		
+		if(email.contains(" ") || !email.matches(".+@.+\\.[a-z]+")){
+			addErrorMessage("Email nicht valide",
+					"Die email darf keine leerzeichen enthalten und muss von der Form x@y.z sein");
 			return;
 		}
 
@@ -101,15 +107,14 @@ public class CreateBean {
 			System.out.println(tmp.toString());
 			DBUser.saveUser(tmp);
 			System.out.println(success);
-			addMessage("User Created", "User with the email: '" + email
-					+ "' and role: '" + stringRole + "' was created.");
+			addMessage("User erstellt!", "Benutzer mit der email: '" + email
+					+ "' und Rolle: '" + stringRole + "' wurde erstellt");
+			actualizeUserList(null);
+			System.out.println(userList.toString());
 			return;
 		}
-		success = false;
-		System.out.println("error - email already exists: " + email + " "
-				+ success);
-		addErrorMessage("Email exists", "Email '" + email
-				+ "' is already in the database - please doublecheck.");
+
+		addErrorMessage("Email existiert bereits :", "Email '" + email);
 	}
 
 	/**
@@ -147,7 +152,7 @@ public class CreateBean {
 	 * @param event
 	 */
 	public void onCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("User edit cancelled",
+		FacesMessage msg = new FacesMessage("Editieren abgebrochen",
 				((User) event.getObject()).getEmail());
 
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
@@ -191,7 +196,7 @@ public class CreateBean {
 		DBUser.deleteUser(email);
 		System.out.println(email);
 		System.out.println(">>" + lastRole);
-		actualizeUserList(lastRole);
+		actualizeUserList(null);
 	}
 
 	/**
@@ -322,7 +327,7 @@ public class CreateBean {
 	 *            the passLength to set
 	 */
 	public static void setPassLength(int passLength) {
-		CreateBean.passLength = passLength;
+		AdminBean.passLength = passLength;
 	}
 
 	public boolean isSuccess() {

@@ -24,7 +24,7 @@
 
 	<p:tabView id="tabview-admin">
 		<!-- TabView -->
-		<p:tab title="Create user">
+		<p:tab title="Benutzer erstellen">
 			<!--  Begin of first tab // Start -->
 			<p:layout style="min-width:800px;min-height:500px; max-height:500px;"
 				id="create-layout">
@@ -33,24 +33,24 @@
 						<table class="admin-create-t" width="250" border="0"
 							cellpadding="2">
 							<tr>
-								<td colspan="2"><h2>Create User</h2></td>
+								<td colspan="2"><h2>Benutzer erstellen</h2></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="name: " /> <h:inputText id="name"
-										value="#{CreateBean.name}" styleClass="input_text" /></td>
+								<td><h:outputText value="Nachname: " /> <h:inputText id="name"
+										value="#{AdminBean.name}" styleClass="input_text" /></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="firstname:  " /> <h:inputText
-										id="firstname" value="#{CreateBean.firstname}"
+								<td><h:outputText value="Vorname:  " /> <h:inputText
+										id="firstname" value="#{AdminBean.firstname}"
 										styleClass="input_text" /></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="email: " /> <h:inputText
-										id="email" value="#{CreateBean.email}" styleClass="input_text" /></td>
+								<td><h:outputText value="Email: " /> <h:inputText
+										id="email" value="#{AdminBean.email}" styleClass="input_text" /></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="role:  " /> <p:selectOneMenu
-										value="#{CreateBean.role}">
+								<td><h:outputText value="Rolle:  " /> <p:selectOneMenu
+										value="#{AdminBean.role}">
 										<f:selectItem itemLabel="Auswahl:" itemValue="-1" />
 										<f:selectItem itemLabel="Administrator" itemValue="1" />
 										<f:selectItem itemLabel="Modulverantwortlicher" itemValue="2" />
@@ -61,11 +61,12 @@
 							</tr>
 							<tr>
 								<td colspan="2" align="right"><p:commandButton
-										icon="ui-icon-trash" value="reset fields"
+										icon="ui-icon-trash" value="Felder zur&uuml;cksetzen"
 										update=":tabview-admin:create-frame"
-										action="#{CreateBean.resetForm}" /> <p:commandButton
+										action="#{AdminBean.resetForm}" /> <p:commandButton
 										icon="ui-icon-plusthick"
-										actionListener="#{CreateBean.saveUser}" value="create" /></td>
+										update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame"
+										actionListener="#{AdminBean.saveUser}" value="create" /></td>
 							</tr>
 						</table>
 						<p:messages id="create-messages" for="create-messages"
@@ -75,7 +76,7 @@
 			</p:layout>
 		</p:tab>
 		<!-- End first tab // Start Delete - http://primefaces.org/showcase/ui/datatableRowSelectionRadioCheckbox.jsf as alternative for the single selection now -->
-		<p:tab title="Delete user" id="tab-delete">
+		<p:tab title="Benutzer l&ouml;schen" id="tab-delete">
 			<p:layout
 				style="min-width:800px; min-height:500px; max-height:500px;"
 				id="delete-layout">
@@ -84,8 +85,8 @@
 						<table class="admin-delete-t" width="250" border="0"
 							cellpadding="2">
 							<tr>
-								<td><h:outputText value="User role  " /> <p:selectOneMenu
-										value="#{CreateBean.role}">
+								<td><h:outputText value="Benutzerrolle " /> <p:selectOneMenu
+										value="#{AdminBean.role}">
 										<f:selectItem itemLabel="Alle Rollen" itemValue="-1" />
 										<f:selectItem itemLabel="Administrator" itemValue="1" />
 										<f:selectItem itemLabel="Modulverantwortlicher" itemValue="2" />
@@ -96,14 +97,14 @@
 							</tr>
 							<tr>
 								<td><p:commandButton
-										actionListener="#{CreateBean.findUser}" value="find"
+										actionListener="#{AdminBean.findUser}" value="find"
 										update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame" /></td>
 							</tr>
 						</table>
 						<br />
 						<br />
 
-						<p:dataTable id="users" var="user" value="#{CreateBean.userList}"
+						<p:dataTable id="users" var="user" value="#{AdminBean.userList}"
 							style="max-width:1024px" scrollable="true" scrollHeight="250">
 							<p:column headerText="Name" footerText="" style="width:24%">
 								<h:outputText value="#{user.name}" />
@@ -122,7 +123,7 @@
 									oncomplete="deleteDlg.show();"
 									update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame:users">
 									<f:setPropertyActionListener value="#{user}"
-										target="#{CreateBean.selectedUser}" />
+										target="#{AdminBean.selectedUser}" />
 								</p:commandButton>
 
 							</p:column>
@@ -131,18 +132,18 @@
 
 				</p:layoutUnit>
 				<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
-					header="Delete this User?" message="Deleting this user will cause deletion of all notification from/to this user and acces rights." width="400" modal="true"
+					header="Diesen Benutzer l&ouml;schen?" message="L&ouml;schen des Benutzers entfernt gleichzeitig alle Notifikationen von und f&uuml;r ihn und seine Zugriffsrechte." width="400" modal="true"
 					closable="false" severity="alert">
 					<h:panelGroup layout="block" style="text-align: right">
-						<p:commandButton value="Yes" action="#{CreateBean.deleteRow}"
+						<p:commandButton value="L&ouml;schen" action="#{AdminBean.deleteRow}"
 							oncomplete="deleteDlg.hide();"
 							update=":tabview-admin:delete-frame:users" />
-						<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+						<p:commandButton value="Abbruch" oncomplete="deleteDlg.hide();" />
 					</h:panelGroup>
 				</p:confirmDialog>
 			</p:layout>
 		</p:tab>
-		<p:tab title="Edit user">
+		<p:tab title="Benutzer Editieren">
 			<p:layout
 				style="min-width:800px; min-height:500px; max-height:500px;"
 				id="edit-layout">
@@ -152,7 +153,7 @@
 						<table class="admin-edit-t" width="250" border="0" cellpadding="2">
 							<tr>
 								<td><h:outputText value="User role  " /> <p:selectOneMenu
-										value="#{CreateBean.role}">
+										value="#{AdminBean.role}">
 										<f:selectItem itemLabel="Alle Rollen" itemValue="-1" />
 										<f:selectItem itemLabel="Administrator" itemValue="1" />
 										<f:selectItem itemLabel="Modulverantwortlicher" itemValue="2" />
@@ -163,12 +164,12 @@
 							</tr>
 							<tr>
 								<td><p:commandButton
-										actionListener="#{CreateBean.findUser}" value="find"
+										actionListener="#{AdminBean.findUser}" value="find"
 										update=":tabview-admin:delete-frame,:tabview-admin:edit-frame:users" /></td>
 							</tr>
 						</table>
 						<br />
-						<p:dataTable id="users" var="user" value="#{CreateBean.userList}"
+						<p:dataTable id="users" var="user" value="#{AdminBean.userList}"
 							style="max-width:1024px" scrollable="true" scrollHeight="250"
 							editable="true">
 							<!--  if emails should be updated to - do something in the listener method specified below  -->
@@ -176,10 +177,10 @@
 									listener="#{ModuleExecutiveBean.testInit}"
 									update=":form:messages" /> -->
 
-							<p:ajax event="rowEdit" listener="#{CreateBean.onEdit}"
+							<p:ajax event="rowEdit" listener="#{AdminBean.onEdit}"
 								update=":tabview-admin:edit-frame:users,:tabview-admin:delete-frame" />
 
-							<p:ajax event="rowEditCancel" listener="#{CreateBean.onCancel}"
+							<p:ajax event="rowEditCancel" listener="#{AdminBean.onCancel}"
 								update=":tabview-admin:edit-frame:users,:tabview-admin:delete-frame" />
 
 							<p:column headerText="Name" footerText="" style="width:24%">

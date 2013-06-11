@@ -19,7 +19,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="server.CreateBean" project="Login" file="/Login/src/server/CreateBean.java" 
+  <class id="3" language="java" name="server.AdminBean" project="Login" file="/Login/src/server/AdminBean.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="783" width="233" x="2522" y="-576"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -121,7 +121,8 @@
   <package id="14" language="java" name="data" project="Login" file="/Login/src/data" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2843" y="-737"/>    
-    <display autosize="true" stereotype="true" accessors="true"/>  
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true"/>  
   </package>  
   <class id="15" language="java" name="ctrl.DBModAccess" project="Login" file="/Login/src/ctrl/DBModAccess.java" 
     binary="false" corner="BOTTOM_RIGHT">    

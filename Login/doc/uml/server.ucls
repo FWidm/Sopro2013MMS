@@ -10,7 +10,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="server.CreateBean" project="Login" file="/Login/src/server/CreateBean.java" 
+  <class id="2" language="java" name="server.AdminBean" project="Login" file="/Login/src/server/AdminBean.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="783" width="233" x="1365" y="-599"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -112,7 +112,8 @@
   <package id="13" language="java" name="server" project="Login" file="/Login/src/server" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="130" y="-568"/>    
-    <display autosize="true" stereotype="true" accessors="true"/>  
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true"/>  
   </package>  
   <class id="14" language="java" name="server.RedakteurNotificationBean" project="Login" 
     file="/Login/src/server/RedakteurNotificationBean.java" binary="false" corner="BOTTOM_RIGHT">    
