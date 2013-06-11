@@ -10,6 +10,7 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
+import server.DownloadBean;
 import server.TemplateBean;
 
 import ctrl.DBExRules;
@@ -188,7 +189,14 @@ public class TemplateActionListener implements ActionListener {
 			
 			bean.setModel(model);
 			
-			bean.handleSubject(DBSubject.loadSubjectMaxVersion(itemValue, bean.getModule()));
+			Subject sub = DBSubject.loadSubjectMaxVersion(itemValue, bean.getModule());
+			
+			//for PDFBox
+			DownloadBean download = findBean("DownloadBean");
+			download.setDownloadSub(sub);
+			
+			bean.handleSubject(sub);
+			
 		}
 	}
 	

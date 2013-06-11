@@ -68,7 +68,8 @@ public class TemplateBean {
 	 */
 	public void handleSubject(Subject sub) {
 		// TODO Paste your event handling here
-		fieldList = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(), sub.getSubTitle());
+		fieldList = DBField.loadFieldList(sub.getModTitle(), sub.getVersion(),
+				sub.getSubTitle());
 		title = sub.getSubTitle();
 		description = sub.getDescription();
 		ects = String.valueOf(sub.getEcts());
@@ -76,6 +77,7 @@ public class TemplateBean {
 		mainVisible = true;
 		ectsAimVisible = true;
 		addInfoVisible = true;
+
 		// Only Test and can be removed
 		System.out.println(sub.getSubTitle());
 	}

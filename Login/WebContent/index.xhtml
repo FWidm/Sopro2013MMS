@@ -80,8 +80,11 @@
 							<p:commandButton type="push" value="Drucken" title="Drucken"
 								icon="ui-icon-print">
 							</p:commandButton>
-							<p:commandButton type="push" value="Download" title="Download"
-								icon="ui-icon-disk">
+							<p:commandButton id="downloadLink" value="Download" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop)"
+								icon="ui-icon-disk"
+								actionListener="#{DownloadBean.prepareStream}">
+								<p:fileDownload value="#{DownloadBean.file}" />
 							</p:commandButton>
 						</div>
 					</p:layoutUnit>

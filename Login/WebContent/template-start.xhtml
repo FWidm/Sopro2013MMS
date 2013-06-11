@@ -10,8 +10,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
 	<title>Insert title here</title>
 
-	<link rel="stylesheet" href="./css/bootstrap.css" />
-	<link rel="stylesheet" href="./css/default.css" /> 
+	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
@@ -75,8 +74,11 @@
 							<p:commandButton type="push" value="Drucken" title="Drucken"
 								icon="ui-icon-print">
 							</p:commandButton>
-							<p:commandButton type="push" value="Download" title="Download"
-								icon="ui-icon-disk">
+							<p:commandButton id="downloadLink" value="Download" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop)"
+								icon="ui-icon-disk"
+								actionListener="#{DownloadBean.prepareStream}">
+								<p:fileDownload value="#{DownloadBean.file}" />
 							</p:commandButton>
 						</div>
 					</p:layoutUnit>
@@ -89,6 +91,15 @@
 		</p:tabView>
 		<!-- End TabView -->
 	</h:form>
+	<script type="text/javascript">
+		function start() {
+			statusDialog.show();
+		}
+
+		function stop() {
+			statusDialog.hide();
+		}
+	</script>
 </h:body>
 <!-- End body -->
 
