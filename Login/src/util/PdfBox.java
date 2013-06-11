@@ -93,7 +93,7 @@ public class PdfBox {
 	 */
 	private static String printPDF(Subject sub, List<Field> fields)
 			throws IOException {
-		File logo = new File("D:/logo_50_sw.jpg");
+		File logo = new File("./WebContent/Image/logo_50_sw.jpg");
 		PDDocument doc = null;
 		PDPage page = null;
 		int y = 0;
