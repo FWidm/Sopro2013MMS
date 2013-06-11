@@ -7,8 +7,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.ServletContext;
 
+import org.apache.pdfbox.PDFBox;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+
+import data.Subject;
+
+import util.PdfBox;
 
 @ManagedBean(name = "DownloadBean")
 @SessionScoped
@@ -30,8 +35,8 @@ public class DownloadBean {
 	 * prepares the stream to reopen with the needed content.
 	 * @param e
 	 */
-	public void prepareStream(ActionEvent e){
-		pathToFile="/pdf/ASQI_v1.pdf";
+	public void prepareStream(Subject sub){
+		pathToFile=PdfBox.processSubject(sub);
 		//split the path to remove the pdf prefix.
 		String filename=pathToFile.split("/pdf/")[1];
 		System.out.println(filename);
