@@ -349,7 +349,9 @@
 				</p:tab>
 			</p:tabView>
 		</p:tab>
+		
 		<p:tab title="Zuweisung">
+			<h:form id="access-form">
 			<p:tabView id="tabview-zuweisung">
 				<!-- Dialog to review access -->
 
@@ -381,7 +383,9 @@
 								</tr>
 								<tr>
 									<td><p:commandButton
-											actionListener="#{AccessBean.acceptChanges}" value="accept" /></td>
+											actionListener="#{AccessBean.acceptChanges}" value="accept" 
+											update=":outer-tabview:access-form:tabview-zuweisung:changes-layout, 
+											:outer-tabview:access-form:tabview-zuweisung:modAccessList"/></td>
 								</tr>
 							</table>
 							<p:messages id="messages-access" for="messages-access"
@@ -411,7 +415,8 @@
 								<tr>
 									<td><p:commandButton
 											actionListener="#{AccessBean.filterSelectionList}"
-											value="filter" update=":outer-tabview:tabview-zuweisung" /></td>
+											value="filter" update=":outer-tabview:access-form:tabview-zuweisung:changes-layout, 
+											:outer-tabview:access-form:tabview-zuweisung:modAccessList" /></td>
 								</tr>
 							</table>
 
@@ -443,7 +448,8 @@
 							<h:panelGroup layout="block" style="text-align: right">
 								<p:commandButton value="Yes" action="#{AccessBean.deleteRow}"
 									oncomplete="deleteDlg.hide();"
-									update=":outer-tabview:tabview-zuweisung" />
+									update=":outer-tabview:access-form:tabview-zuweisung:changes-layout, 
+											:outer-tabview:access-form:tabview-zuweisung:modAccessList" />
 								<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
@@ -453,6 +459,8 @@
 				</p:tab>
 
 			</p:tabView>
+			</h:form>
+			
 		</p:tab>
 		<p:tab title="Logout">
 			<table width="350" border="0" cellpadding="2">
