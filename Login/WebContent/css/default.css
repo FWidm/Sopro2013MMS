@@ -39,12 +39,12 @@ img {
 
 /*Login text input fields */
 input:-webkit-autofill {
-	background-color: white !important;
+/* 	background-color: white !important;
 	background-image: none;
 	color: rgb(0, 0, 0);
 	min-width: 200px;
 	border: 1px solid #a8a8a8;
-	padding-left: 3px;  
+	padding-left: 3px;   */
 }
 
 /*nav tabs header*/

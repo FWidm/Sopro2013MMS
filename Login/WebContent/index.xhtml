@@ -22,7 +22,10 @@
 <!-- body -->
 <h:body>
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/iui_19.png"/>
+		<p:graphicImage value="/Image/iui_19.png" />
+		<p:graphicImage
+			style="float: left !important; margin-left: 1.6em !important; margin-top: -0.7em !important"
+			value="/Image/med_inf.png" />
 	</div>
 	<h:form id="form">
 		<p:tabView id="tabview-login">
@@ -115,6 +118,70 @@
 					<h:outputText value="#{LoginBean.msg}" />
 				</h:form>
 			</p:tab>
+
+			<!-- START tab-help -->
+			<p:tab title="Hilfe">
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;"
+					id="welcome">
+					<p:layoutUnit position="center" resizable="true" size="215"
+						minSize="215" header="Willkommen auf der Hilfeseite"
+						collapsible="false">
+						<!-- moegliche Funktionen jeden Users -->
+						<h2>M&ouml;gliche Funktionen</h2>
+						<ul>
+							<li>Als nichtangemeldeter Benutzer ist es ihnen m&ouml;glich
+								das Modulhandbuch aufzurufen und runterzuladen.</li>
+							<li>Den Logintab nutzen
+								<ul>
+									<li>sich anmelden</li>
+									<li>ein neues Passwort anfordern</li>
+								</ul>
+							</li>
+						</ul>
+						<!-- Funktion Modulhandbuch -->
+						<ul>
+							<h4>Funktion Modulhandbuch</h4>
+							<li><strong>Modulhandbuch aufrufen </strong></li>
+							<p>Als Nutzer k&ouml;nnen sie auf den Start Tab und in dieser
+								Tab View in der linken Spalte selektieren Sie die PO</p>
+							<p>dann das Modulhandbuch und gehen Sie solange durch in der
+								Hierarchie bis Sie ihr gew&uuml;nschtes Fach haben.</p>
+							<p>Sie sehen nun ihr gew&uuml;nschtes Fach oder Modul.</p>
+							<li><strong> Modulhandbuch runterladen </strong></li>
+							<p>Gehen Sie hierbei vor wie in Modulhandbuch aufrufen.
+								Letztendlich w&auml;hlen Sie den Download Button in der
+								Oberfl&auml;che und Ihr gew&uuml;nschtes Handbuch wird geladen.</p>
+						</ul>
+
+						<!-- funktion Login -->
+						<ul>
+
+							<h4>Funktion Login</h4>
+
+							<li><strong> Anmeldung</strong></li>
+							<p>W&auml;hlen Sie den Tab Login. Geben Sie ihre Uni-Ulm
+								E-Mail ein und ihr zugeh&ouml;riges Passwort.</p>
+							<p>Sie werden eingeloggt, falls Ihre Daten
+								&uuml;bereinstimmen. Falls ihr Passwort nicht stimmt,
+								w&auml;hlen Sie</p>
+
+							<li><strong>Neues Passwort anfordern</strong></li>
+							<p>Ihr Login ist fehlgeschlagen. W&auml;hlen sie nun den
+								Button Passwort anfordern aus.</p>
+							<p>Ihr Passwort f&uuml;r den richtigen Uni-Ulm Account wird
+								zur&uuml;ckgesetzt und per Email an Sie gesendet</p>
+						</ul>
+
+
+
+
+					</p:layoutUnit>
+
+				</p:layout>
+			</p:tab>
+			<!-- END tab-help -->
+
 		</p:tabView>
 	</h:form>
 	<h:form>
