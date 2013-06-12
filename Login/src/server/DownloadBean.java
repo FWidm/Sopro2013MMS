@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -36,6 +37,7 @@ import data.Subject;
 public class DownloadBean {
 	private String pathToFile;
 	private StreamedContent file;
+	private String pdfPath;
 
 	// PDFBOX
 	public static int headX = 50;
@@ -44,7 +46,10 @@ public class DownloadBean {
 	private Subject downloadSub;
 
 	public DownloadBean() {
-
+		setPdfPath(((ServletContext) FacesContext.getCurrentInstance()
+				.getExternalContext().getContext()).getContextPath()
+				+ "/pdf/");
+		System.err.println("pdfPath: " + pdfPath);
 	}
 
 	/**
@@ -337,5 +342,20 @@ public class DownloadBean {
 	 */
 	public void setDownloadSub(Subject downloadSub) {
 		this.downloadSub = downloadSub;
+	}
+
+	/**
+	 * @return the pdfPath
+	 */
+	public String getPdfPath() {
+		return pdfPath;
+	}
+
+	/**
+	 * @param pdfPath
+	 *            the pdfPath to set
+	 */
+	public void setPdfPath(String pdfPath) {
+		this.pdfPath = pdfPath;
 	}
 }

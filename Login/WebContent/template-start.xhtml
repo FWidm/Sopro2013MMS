@@ -71,8 +71,9 @@
 
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
-							<p:commandButton type="push" value="Drucken" title="Drucken"
-								icon="ui-icon-print">
+							<p:commandButton
+								action="pdf/Medienpsychologiepdagogik_v1.pdf?faces-redirect=true"
+								ajax="false" value="Drucken">
 							</p:commandButton>
 							<p:commandButton id="downloadLink" value="Download" ajax="false"
 								onclick="PrimeFaces.monitorDownload(start, stop)"
