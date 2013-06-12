@@ -4,7 +4,7 @@
     <list default="true" id="416f1cba-50d2-4f3e-9d0b-1136fbe3ee2e" name="Default" comment="" />
     <ignored path="css.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/default.css" changelist="416f1cba-50d2-4f3e-9d0b-1136fbe3ee2e" time="1371065850644" ignored="false" />
+    <file path="/default.css" changelist="416f1cba-50d2-4f3e-9d0b-1136fbe3ee2e" time="1371067155246" ignored="false" />
     <file path="/a.dummy" changelist="416f1cba-50d2-4f3e-9d0b-1136fbe3ee2e" time="1369776363691" ignored="false" />
     <file path="/modulverantwortlicher-index.xhtml" changelist="416f1cba-50d2-4f3e-9d0b-1136fbe3ee2e" time="1369776966656" ignored="false" />
     <file path="/index.html" changelist="416f1cba-50d2-4f3e-9d0b-1136fbe3ee2e" time="1369777059345" ignored="false" />
@@ -31,7 +31,7 @@
       <file leaf-file-name="default.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/default.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="35" selection-start="115" selection-end="115" vertical-scroll-proportion="0.1367816">
+            <state line="14" column="31" selection-start="260" selection-end="260" vertical-scroll-proportion="0.23448277">
               <folding />
             </state>
           </provider>
@@ -40,7 +40,7 @@
       <file leaf-file-name="modulverantwortlicher-index.xhtml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../modulverantwortlicher-index.xhtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="65" selection-start="1252" selection-end="1252" vertical-scroll-proportion="0.0">
+            <state line="32" column="65" selection-start="1132" selection-end="1132" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -334,7 +334,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../modulverantwortlicher-index.xhtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="65" selection-start="1252" selection-end="1252" vertical-scroll-proportion="0.0">
+        <state line="32" column="65" selection-start="1132" selection-end="1132" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -348,7 +348,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/default.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="35" selection-start="115" selection-end="115" vertical-scroll-proportion="0.1367816">
+        <state line="14" column="31" selection-start="260" selection-end="260" vertical-scroll-proportion="0.23448277">
           <folding />
         </state>
       </provider>

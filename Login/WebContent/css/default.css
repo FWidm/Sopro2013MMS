@@ -10,6 +10,15 @@ img {
     margin-top: -0.7em !important;
 }
 
+/*Section drop down menu*/
+.ui-selectonemenu {
+    min-width: 300px !important;
+}
+
+/*selection drop down menu icon hover*/
+.ui-selectonemenu-trigger .ui-state-default .ui-corner-right .ui-state-hover {
+	max-width: 16px !important;
+}
 
 .ui-widget {
     font-size: 100%;
@@ -33,6 +42,9 @@ input:-webkit-autofill {
 	background-color: white !important;
 	background-image: none;
 	color: rgb(0, 0, 0);
+	min-width: 200px;
+	border: 1px solid #a8a8a8;
+	padding-left: 3px;  
 }
 
 /*nav tabs header*/
