@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 11. Jun 2013 um 10:57
+-- Erstellungszeit: 12. Jun 2013 um 10:55
 -- Server Version: 5.0.51a-24+lenny5
 -- PHP-Version: 5.3.3-7+squeeze15
 
@@ -260,13 +260,6 @@ CREATE TABLE IF NOT EXISTS `notification` (
   KEY `modManTitle` (`modManTitle`,`modTitle`,`subTitle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Daten für Tabelle `notification`
---
-
-INSERT INTO `notification` (`recipientEmail`, `senderEmail`, `timeStamp`, `message`, `action`, `status`, `isRead`, `exRulesTitle`, `modManTitle`, `modTitle`, `subTitle`, `deadline`) VALUES
-('adam.admin@uni-ulm.de', 'daniel.dezernat@uni-ulm.de', '2013-06-06 13:55:25', '', '', '', 0, NULL, 'scheisse', NULL, NULL, '2013-06-06 13:55:25');
-
 -- --------------------------------------------------------
 
 --
@@ -345,7 +338,6 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`email`, `password`, `name`, `firstname`, `role`) VALUES
-('a', 0x313030303a643766366534643566373566303265373a65346564626338346561316231336139, 'wer', 'michael', 'Administrator'),
 ('adam.admin@uni-ulm.de', 0x313030303a373063363863373836356537383738613a62306630326638316661363764316665, 'Admin', 'Adam', 'Administrator'),
 ('daniel.dezernat@uni-ulm.de', 0x313030303a333430313532653832396639383636653a31313333313533333165626334356230, 'Dezernat', 'Daniel', 'Dezernat'),
 ('dennis.dekan@uni-ulm.de', 0x313030303a396236343966383533386666303066333a33636131383038313636393634653763, 'Dekan', 'Dennis', 'Dekan'),
@@ -355,7 +347,6 @@ INSERT INTO `user` (`email`, `password`, `name`, `firstname`, `role`) VALUES
 ('max.modulverantwortlicher@uni-ulm.de', 0x313030303a323437316132633835396130333438393a31626331653335386365653031366137, 'modulvreantwortlicher', 'max', 'Modulverantwortlicher'),
 ('michael.modulverantwortlicher@uni-ulm.de', 0x313030303a323065326363336365623863626538343a65323230613663613131346666383032, 'modulvreantwortlicher', 'michael', 'Modulverantwortlicher'),
 ('mo.modulverantwortlicher@uni-ulm.de', 0x313030303a383737636165383864613237343338663a36633331373363623934313235346230, 'modulvreantwortlicher', 'mo', 'Modulverantwortlicher'),
-('padi.redakteur@uni-ulm.de', 0x313030303a656330623766626662393434363761333a31353337663762306466633464396639, 'redakteur', 'padi', 'Redakteur'),
 ('rabarbara.redakteur@uni-ulm.de', 0x313030303a353562353036316562343337333031373a63633762613665653762626632303738, 'redakteur', 'rabarbara', 'Redakteur'),
 ('richard.redakteur@uni-ulm.de', 0x313030303a633761363362646233656164356565383a35303037623232616535356163303036, 'redakteur', 'richard', 'Redakteur'),
 ('robin.redakteur@uni-ulm.de', 0x313030303a376633626330343736653261343539663a66313733373133303030336264393330, 'redakteur', 'robin', 'Redakteur'),

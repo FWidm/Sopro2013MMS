@@ -252,7 +252,7 @@ public class DBSubject extends DBManager {
 					+ "' AND modtitle='"
 					+ modTitle
 					+ "' AND ack=true"
-					+ " AND version = (SELECT max(version) FROM subject where subtitle='"
+				+ " AND version = (SELECT max(version) FROM subject where ack=true AND subtitle='"
 					+ subTitle + "' AND modtitle='" + modTitle + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -266,6 +266,7 @@ public class DBSubject extends DBManager {
 				boolean ack = rs.getBoolean("ack");
 
 				sub = new Subject(ver, subT, modT, desc, aim, ects, ack);
+				System.out.println(sub);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);

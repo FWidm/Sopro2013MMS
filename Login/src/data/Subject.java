@@ -201,4 +201,16 @@ public class Subject implements Editable, Serializable {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Subject [version=" + version + ", subTitle=" + subTitle
+				+ ", modTitle=" + modTitle + ", description=" + description
+				+ ", aim=" + aim + ", ects=" + ects + ", ack=" + ack + "]";
+	}
+
 }

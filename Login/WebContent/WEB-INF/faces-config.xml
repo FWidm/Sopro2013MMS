@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
       http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 	version="2.0">
-<!-- 
+
 	<lifecycle>
 		<phase-listener>server.AuthorizationListener</phase-listener>
 	</lifecycle>
--->
+
 	<!-- Empty for now. Your entries will go here. But even if you have no entries 
 		in faces-config.xml, you are required to have a valid faces-config.xml file 
 		with legal start and end tags. From JSF 2.0 tutorial at http://www.coreservlets.com/JSF-Tutorial/jsf2/ -->
