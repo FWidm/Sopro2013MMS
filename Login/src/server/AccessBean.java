@@ -21,14 +21,14 @@ import data.User;
 public class AccessBean {
 	//Display users in SelectOneMenus
 	private List<String> userList;
-	
+
 	private List<ModAccess> modAccList;
 	private List<String> modTitleList;
 
 	private String selectedUserAccept;
 	private String selectedUserFilter;
 	private String selectedAccess;
-	
+
 	private ModAccess deleteMod;
 	/**
 	 * preload all lists that are being used to display stuff
@@ -75,18 +75,19 @@ public class AccessBean {
 		}
 		if (!alreadySet) {
 			if (DBModAccess.saveModAccess(new ModAccess(selectedAccess,
-					selectedUserAccept)))
+					selectedUserAccept))){
+				filterSelectionList(null);
 				addMessage("messages-access", "Success", selectedUserAccept
 						+ " is now able to edit things in " + selectedAccess);
-			else 
+			}else 
 				addErrorMessage("messages-access", "Failed",
-					"Error with the database - try again.");
+						"Error with the database - try again.");
 		}
 		else 
 			addErrorMessage("messages-access", "Failed",
 					"The selected User is already able to edit the selected Module.");
 	}
-	
+
 	/**
 	 * Filters the List by only displaying the selectedUserFilter's module access rights
 	 * @param e
@@ -100,15 +101,16 @@ public class AccessBean {
 			System.out.println("filter-else use email:"+selectedUserFilter);
 			modAccList=DBModAccess.loadAccess(selectedUserFilter);
 		}
-			
+
 	}
-	
+
 	/**
 	 * deletes the row that got selected - is confirmed by a dialog
 	 */
 	public void deleteRow(){
 		System.out.println("delete \t "+deleteMod);
 		DBModAccess.deleteModAccess(deleteMod.getModTitle(), deleteMod.getEmail());
+		filterSelectionList(null);
 	}
 
 	/**
