@@ -23,48 +23,48 @@
 		<p:ajax event="tabChange" listener="#{DekanBean.onTabChange}"
 			update=":outer-tabview:tabview-exRules:exRules-create-frame" />
 
-		<p:tab title="Module manual">
+		<p:tab title="Modulhandbuch">
 			<p:tabView id="tabview-modManual">
 				<!-- TabView -->
-				<p:tab title="Create">
+				<p:tab title="Erstellen">
 					<!-- Begin of first tab // Start -->
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="dekan-layout">
 						<p:layoutUnit position="center">
 							<h:form id="dekan-frame">
-								<h2>Create module manual</h2>
+								<h2>Erstellen eines Modulhandbuchs</h2>
 								<table width="250" border="0" cellpadding="2">
 									<tr>
 										<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
-										<td><h:outputText value="module manual title: " /> <h:inputText
+										<td><h:outputText value="Titel: " /> <h:inputText
 												id="modManTitle" value="#{DekanBean.modManTitle}"
 												styleClass="input_text" /></td>
 									</tr>
 									<tr>
-										<td><h:outputText value="description:  " /> <h:inputText
+										<td><h:outputText value="Beschreibung:  " /> <h:inputText
 												id="description" value="#{DekanBean.description}"
 												styleClass="input_text" /></td>
 									</tr>
 									<tr>
-										<td><h:outputText value="examination rules: " /> <p:selectOneMenu
+										<td><h:outputText value="Pr&uuml;fungsordnung: " /> <p:selectOneMenu
 												style="width:220px" value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="examination rules" itemValue="" />
+												<f:selectItem itemLabel="Pr&uuml;fungsordnung" itemValue="" />
 												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
 													itemLabel="#{exRule.exRulesTitle}"
 													itemValue="#{exRule.exRulesTitle}" />
 											</p:selectOneMenu></td>
 									</tr>
 									<tr>
-										<td><h:outputText value="deadline: " /> <p:calendar
-												value="#{DekanBean.deadline}" id="popupCal1" /></td>
+										<td><h:outputText value="Stichtag: " /> <p:calendar
+												value="#{DekanBean.deadline}" locale="de" id="popupCal1" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" align="left"><p:commandButton
-												icon="ui-icon-trash" value="reset fields"
+												icon="ui-icon-trash" value="Felder l&ouml;schen"
 												update=":outer-tabview:tabview-modManual:dekan-frame"
 												action="#{DekanBean.resetFields}" /> <p:commandButton
 												icon="ui-icon-plusthick"
-												actionListener="#{DekanBean.saveModManual}" value="create"
+												actionListener="#{DekanBean.saveModManual}" value="Erstellen"
 												update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals, 
 												:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
 									</tr>
@@ -76,19 +76,19 @@
 					</p:layout>
 				</p:tab>
 
-				<p:tab title="Edit">
+				<p:tab title="Bearbeiten">
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="edit-layout">
 
 						<p:layoutUnit position="center">
 							<h:form id="dekan-edit-frame">
-								<h2>Edit module manual</h2>
+								<h2>Bearbeiten eines Modulhandbuchs</h2>
 								<table class="admin-edit-t" width="250" border="0"
 									cellpadding="2">
 									<tr>
-										<td><h:outputText value="Examination rules  " /> <p:selectOneMenu
+										<td><h:outputText value="Pr&uuml;fungsordnung" /> <p:selectOneMenu
 												style="width:220px" value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="All examination rules" itemValue="" />
+												<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen" itemValue="" />
 												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
 													itemLabel="#{exRule.exRulesTitle}"
 													itemValue="#{exRule.exRulesTitle}" />
@@ -97,7 +97,7 @@
 									<tr>
 										<td><p:commandButton
 												actionListener="#{DekanBean.actualizeModManualList}"
-												value="find"
+												value="Filtern"
 												update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
 									</tr>
 								</table>
@@ -114,11 +114,11 @@
 										update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals, 
 										:outer-tabview:tabview-modManual:dekan-delete-frame:modManuals" />
 
-									<p:column headerText="Title" footerText="" style="width:25%">
+									<p:column headerText="Titel" footerText="" style="width:25%">
 										<h:outputText value="#{modManual.modManTitle}" />
 									</p:column>
 
-									<p:column headerText="Description" footerText=""
+									<p:column headerText="Beschreibung" footerText=""
 										style="width:40%">
 										<p:cellEditor>
 											<f:facet name="output">
@@ -131,7 +131,7 @@
 										</p:cellEditor>
 									</p:column>
 
-									<p:column headerText="Examination rules" footerText=""
+									<p:column headerText="Pr&uuml;fungsordnung" footerText=""
 										style="width:18%">
 										<p:cellEditor>
 											<f:facet name="output">
@@ -147,7 +147,7 @@
 										</p:cellEditor>
 									</p:column>
 
-									<p:column headerText="Deadline" footerText="" style="width:13%">
+									<p:column headerText="Stichtag" footerText="" style="width:13%">
 										<p:cellEditor>
 											<f:facet name="output">
 												<h:outputText value="#{modManual.deadline}" />
@@ -169,19 +169,19 @@
 					</p:layout>
 				</p:tab>
 
-				<p:tab title="Delete">
+				<p:tab title="L&ouml;schen">
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="delete-layout">
 
 						<p:layoutUnit position="center">
 							<h:form id="dekan-delete-frame">
-								<h2>Delete module manual</h2>
+								<h2>L&ouml;schen eines Modulhandbuchs</h2>
 								<table class="admin-edit-t" width="250" border="0"
 									cellpadding="2">
 									<tr>
-										<td><h:outputText value="Examination rules  " /> <p:selectOneMenu
+										<td><h:outputText value="Pr&uuml;fungsordnung" /> <p:selectOneMenu
 												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="All examination rules" itemValue="" />
+												<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen" itemValue="" />
 												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
 													itemLabel="#{exRule.exRulesTitle}"
 													itemValue="#{exRule.exRulesTitle}" />
@@ -190,7 +190,7 @@
 									<tr>
 										<td><p:commandButton
 												actionListener="#{DekanBean.actualizeModManualList}"
-												value="find"
+												value="Filtern"
 												update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals" /></td>
 									</tr>
 								</table>
@@ -199,21 +199,21 @@
 									value="#{DekanBean.modManualList}" style="max-width:1024px"
 									scrollable="true" scrollHeight="300" editable="true">
 
-									<p:column headerText="Title" footerText="" style="width:25%">
+									<p:column headerText="Titel" footerText="" style="width:25%">
 										<h:outputText value="#{modManual.modManTitle}" />
 									</p:column>
 
-									<p:column headerText="Description" footerText=""
+									<p:column headerText="Beschreibung" footerText=""
 										style="width:40%">
 										<h:outputText value="#{modManual.description}" />
 									</p:column>
 
-									<p:column headerText="Examination rules" footerText=""
+									<p:column headerText="Pr&uuml;fungsordnung" footerText=""
 										style="width:18%">
 										<h:outputText value="#{modManual.exRulesTitle}" />
 									</p:column>
 
-									<p:column headerText="Deadline" footerText="" style="width:13%">
+									<p:column headerText="Stichtag" footerText="" style="width:13%">
 										<h:outputText value="#{modManual.deadline}" />
 									</p:column>
 
@@ -231,15 +231,15 @@
 									autoUpdate="true" for="edit-messages" />
 							</h:form>
 						</p:layoutUnit>
-						<p:confirmDialog widgetVar="dlg" id="deleteDialog" header="Delete"
-							message="Delete this ?" width="400" modal="true" closable="false"
+						<p:confirmDialog widgetVar="dlg" id="deleteDialog" header="L&ouml;schen"
+							message="Wirklich l&ouml;schen?" width="400" modal="true" closable="false"
 							severity="alert">
 							<h:panelGroup layout="block" style="text-align: right">
-								<p:commandButton value="Yes"
+								<p:commandButton value="Ja"
 									action="#{DekanBean.deleteModManual}" oncomplete="dlg.hide();"
 									update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals,
 								:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" />
-								<p:commandButton value="No" oncomplete="dlg.hide();" />
+								<p:commandButton value="Nein" oncomplete="dlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
 					</p:layout>
@@ -249,32 +249,30 @@
 			<!-- End TabView -->
 		</p:tab>
 
-		<p:tab title="Examination Rules">
+		<p:tab title="Pr&uuml;fungsordnung">
 			<p:tabView id="tabview-exRules">
 
-
-
-				<p:tab title="Create">
+				<p:tab title="Erstellen">
 					<!-- Begin of first tab // Start -->
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="exRules-create-layout">
 						<p:layoutUnit position="center">
 							<h:form id="exRules-create-frame">
-								<h2>Create examination rules</h2>
+								<h2>Erstellen einer Pr&uuml;fungsordnung</h2>
 								<table width="250" border="0" cellpadding="2">
 									<tr>
 										<!-- ExRules(String exRulesTitle) -->
-										<td><h:outputText value="examination rules title: " /> <h:inputText
+										<td><h:outputText value="Titel: " /> <h:inputText
 												id="exRules" value="#{DekanBean.exRules}"
 												styleClass="input_text" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" align="left"><p:commandButton
-												icon="ui-icon-trash" value="reset field"
+												icon="ui-icon-trash" value="Felder l&ouml;schen"
 												update=":outer-tabview:tabview-exRules:exRules-create-frame"
 												action="#{DekanBean.resetField}" /> <p:commandButton
 												icon="ui-icon-plusthick"
-												actionListener="#{DekanBean.saveExRules}" value="create"
+												actionListener="#{DekanBean.saveExRules}" value="Erstellen"
 												update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
 												:outer-tabview:tabview-modManual:dekan-frame,  
 												:outer-tabview:tabview-modManual:dekan-edit-frame,  
@@ -289,19 +287,19 @@
 					</p:layout>
 				</p:tab>
 
-				<p:tab title="Delete">
+				<p:tab title="L&ouml;schen">
 					<!-- Begin of first tab // Start -->
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="exRules-delete-layout">
 						<p:layoutUnit position="center">
 							<h:form id="exRules-delete-frame">
-								<h2>Delete examination rules</h2>
+								<h2>L&ouml;schen einer Pr&uuml;fungsordnung</h2>
 								<table class="admin-delete-t" width="250" border="0"
 									cellpadding="2">
 									<tr>
-										<td><h:outputText value="Examination rules title" /> <p:selectOneMenu
+										<td><h:outputText value="Titel" /> <p:selectOneMenu
 												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="All examination rules" itemValue="" />
+												<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen" itemValue="" />
 												<f:selectItems value="#{DekanBean.exRulesSearchList}"
 													var="exRuleSearch" itemLabel="#{exRuleSearch.exRulesTitle}"
 													itemValue="#{exRuleSearch.exRulesTitle}" />
@@ -310,7 +308,7 @@
 									<tr>
 										<td><p:commandButton
 												actionListener="#{DekanBean.actualizeExRulesList}"
-												value="find"
+												value="Filtern"
 												update=":outer-tabview:tabview-exRules:exRules-delete-frame" /></td>
 									</tr>
 								</table>
@@ -318,7 +316,7 @@
 								<p:dataTable id="exRules" var="exRules"
 									value="#{DekanBean.exRulesList}" style="max-width:1024px"
 									scrollable="true" scrollHeight="250">
-									<p:column headerText="Examination rules title" footerText=""
+									<p:column headerText="Titel" footerText=""
 										style="width:96%">
 										<h:outputText value="#{exRules.exRulesTitle}" />
 									</p:column>
@@ -335,16 +333,16 @@
 							</h:form>
 						</p:layoutUnit>
 						<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
-							header="Delete" message="Delete this ?" width="400" modal="true"
+							header="L&ouml;schen" message="Wirklich l&ouml;schen?" width="400" modal="true"
 							closable="false" severity="alert">
 							<h:panelGroup layout="block" style="text-align: right">
-								<p:commandButton value="Yes" action="#{DekanBean.deleteExRules}"
+								<p:commandButton value="Ja" action="#{DekanBean.deleteExRules}"
 									oncomplete="deleteDlg.hide();"
 									update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
 										:outer-tabview:tabview-modManual:dekan-frame,  
 										:outer-tabview:tabview-modManual:dekan-edit-frame,  
 										:outer-tabview:tabview-modManual:dekan-delete-frame" />
-								<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+								<p:commandButton value="Nein" oncomplete="deleteDlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
 					</p:layout>
@@ -356,7 +354,7 @@
 				<!-- Dialog to review access -->
 
 				<!-- TabView -->
-				<p:tab title="Give Access">
+				<p:tab title="Vergeben">
 
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="changes-layout">
@@ -393,7 +391,7 @@
 					</p:layout>
 
 				</p:tab>
-				<p:tab title="Remove Access">
+				<p:tab title="Entziehen">
 
 					<p:layout style="min-width:400px;min-height:500px;"
 						id="list-layout">
