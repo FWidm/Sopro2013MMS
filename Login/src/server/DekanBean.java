@@ -111,6 +111,7 @@ public class DekanBean {
 					+ exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
+			resetFields();
 
 			// *******************************************************************************************************************
 			// add notification code here
