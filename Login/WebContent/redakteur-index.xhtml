@@ -22,7 +22,7 @@
 	<h:form id="form">
 		<p:tabView id="tabview-redak" scrollable="true">
 			<!-- TabView -->
-			<p:tab title="Start" id="tabStart">
+			<p:tab title="&Uuml;bersicht" id="tabStart">
 
 				<!-- Begin of first tab // Start -->
 				<p:layout
@@ -86,7 +86,7 @@
 			</p:tab>
 			<!-- End first tab // Start -->
 
-			<p:tab title="Edit">
+			<p:tab title="Bearbeiten">
 				<!-- Begin of second tab // Edit -->
 				<p:messages id="message-log" for="message-log" showDetail="true"
 					autoUpdate="true" closable="true" />
@@ -190,7 +190,7 @@
 					</p:layoutUnit>
 				</p:layout>
 			</p:tab>
-			<p:tab title="Fach erstellen">
+			<p:tab title="Anlegen (Fach)">
 				<!-- Begin of first tab // Start -->
 				<p:messages id="message-log-create" for="message-log-create"
 					showDetail="true" autoUpdate="true" closable="true" />
@@ -293,7 +293,62 @@
 					</p:layoutUnit>
 				</p:layout>
 			</p:tab>
-			<p:tab title="Notification">
+			<p:tab title="Anlegen (Modul)">
+				<!-- Begin of first tab // Start -->
+				<p:messages id="message-log-create-mod" for="message-log-create-mod"
+					showDetail="true" autoUpdate="true" closable="true" />
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
+
+						<p:menu id="back-menu-create-mod"
+							model="#{CreateModRedBean.backModel}" />
+						<p:menu id="list-menu-create-mod" model="#{CreateModRedBean.model}" />
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel-create-mod" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel header="#{CreateModRedBean.title}" toggleable="true"
+								toggleSpeed="500" visible="true">
+								<!-- Kommentar fuer benutzer ueber zu waehlende PO/MOdMAn/Mod -->
+
+							</p:panel>
+							<p:panel header="Modul anlegen:" toggleable="false">
+								<strong>Modul:</strong>
+								<p:inputText value="#{CreateModRedBean.modTitle}"
+									readonly="#{!CreateModRedBean.editable or !CreateModRedBean.hasPermission}">
+									<p:ajax event="blur" />
+								</p:inputText>
+								<br />
+								<br />
+
+								<strong>Beschreibung:</strong>
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{!CreateModRedBean.editable or !CreateModRedBean.hasPermission}"
+									value="#{CreateModRedBean.description}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+								<br />
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton id="saveMod" type="push" value="Speichern"
+								disabled="#{!CreateModRedBean.editable or !CreateModRedBean.hasPermission}"
+								update=":form:tabview-redak:message-log-create-mod"
+								icon="ui-icon-disk" actionListener="#{CreateModRedBean.accept}">
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<p:tab title="Best&auml;tigungen">
 				<p:layout
 					style="min-width:800px; min-height:500px; max-height:500px;"
 					id="notify-layout">
@@ -416,7 +471,7 @@
 
 			<!-- Start Notification from Dezernat -->
 
-			<p:tab title="notifications from Dezernat">
+			<p:tab title="Nachrichten">
 				<p:messages id="message-log-edit-dez" for="message-log-edit-dez"
 					showDetail="true" autoUpdate="true" closable="true" />
 				<p:layout

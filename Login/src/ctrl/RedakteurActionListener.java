@@ -148,7 +148,7 @@ public class RedakteurActionListener implements ActionListener {
 
 			bean.setModel(model);
 
-			bean.handleModule(DBModule.loadModule(itemValue));
+			bean.handleModule(DBModule.loadModule(itemValue, bean.getModMan()));
 		} else {
 			MenuModel backModel = new DefaultMenuModel();
 			Submenu backSubmenu = new Submenu();

@@ -632,8 +632,8 @@ public class DBNotification extends DBManager {
 										subject.getVersion() - 1, sub, mod);
 								if (subBefore == null) {
 									subBefore = new Subject(0,
-											"Das Fach wurde neu angelegt.", "",
-											"", "", 0, false);
+											"Vorgängerversion nicht verfügbar.", "",
+											"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.", "", 0, false);
 								}
 								notif.add(new ModificationNotification(recEm,
 										senEm, timS, mess, act, stat, isRead,
@@ -646,7 +646,7 @@ public class DBNotification extends DBManager {
 									subject.getVersion() - 1, sub, mod);
 							if (subBefore == null) {
 								subBefore = new Subject(0,
-										"Das Fach wurde neu angelegt.", "", "",
+										"Vorgängerversion nicht verfügbar.", "", "Da das Fach neu angelegt wurde, ist keine Anzeige möglich.",
 										"", 0, false);
 							}
 							notif.add(new ModificationNotification(recEm,
@@ -713,8 +713,8 @@ public class DBNotification extends DBManager {
 								subject.getVersion() - 1, sub, mod);
 						if (subBefore == null) {
 							subBefore = new Subject(0,
-									"Das Fach wurde neu angelegt.", "", "", "",
-									0, false);
+									"Vorgängerversion nicht verfügbar.", "", "Da das Fach neu angelegt wurde, ist keine Anzeige möglich.", "",
+									0, true);
 						}
 						if (subject != null) {
 							notif.add(new ModificationNotification(recEm,

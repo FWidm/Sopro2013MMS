@@ -1,6 +1,7 @@
 package server;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,12 +22,16 @@ import ctrl.CreateSubRedActionListener;
 import data.ExRules;
 import data.Field;
 import data.ModManual;
+import data.Modification;
+import data.ModificationNotification;
 import data.Module;
 import data.Subject;
 import db.DBExRules;
 import db.DBField;
 import db.DBModManAccess;
+import db.DBNotification;
 import db.DBSubject;
+import db.DBUser;
 
 @ManagedBean(name = "CreateSubRedBean")
 @SessionScoped
@@ -215,7 +220,7 @@ public class CreateSubRedBean {
 					"Bitte tragen Sie einen Titel für Ihr Fach bzw. Zusatzfeld ein.");
 		} else {
 			Subject sub = new Subject(1, subTitle, module, description, aim,
-					Integer.valueOf(ects), true);
+					Integer.valueOf(ects), false);
 			try {
 				DBSubject.saveSubject(sub);
 			} catch (SQLException e1) {
@@ -232,9 +237,21 @@ public class CreateSubRedBean {
 					e.printStackTrace();
 				}
 			}
+			
+			List<String> dezernatList = DBUser
+					.loadAllUserEmailsByRole("Dezernat");
 
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+			for (int i = 0; i < dezernatList.size(); i++) {
+				ModificationNotification mn = new ModificationNotification(
+						dezernatList.get(i), currentUser, timestamp, "",
+						"edit", "queued", false, new Modification(sub, sub));
+				DBNotification.saveNotification(mn);
+			}
+			
 			addMessage(TO_FOR, "Erfolg: ",
-					"Das Fach wurde erfolgreich gespeichert.");
+					"Das Fach wurde erfolgreich gespeichert und zur Prüfung verschickt.");
 
 		}
 

@@ -315,8 +315,8 @@ public class DezernatNotificationBean {
 				ects2 = String.valueOf(sub2.getEcts());
 				aim2 = sub2.getAim();
 				mainVisible2 = true;
-				ectsAimVisible2 = true;
-				addInfoVisible2 = true;
+				ectsAimVisible2 = !sub2.getSubTitle().equals("Vorgängerversion nicht verfügbar.");
+				addInfoVisible2 = !sub2.getSubTitle().equals("Vorgängerversion nicht verfügbar.");
 			} else if (selectedEditableAfter instanceof Module
 					&& selectedEditableBefore instanceof Module) {
 				// After

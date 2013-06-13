@@ -21,7 +21,8 @@ public class DBModuleModMan extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "INSERT INTO moduleModMan VALUES('"
-					+ m.getModManTitle() + "', '" + m.getModTitle() + "')";
+					+ m.getExRulesTitle() + "', '" + m.getModManTitle()
+					+ "', '" + m.getModTitle() + "')";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {

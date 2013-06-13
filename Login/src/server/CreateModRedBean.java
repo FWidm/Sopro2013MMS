@@ -1,6 +1,5 @@
 package server;
 
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,16 +16,16 @@ import org.primefaces.model.MenuModel;
 
 import ctrl.CreateModRedActionListener;
 
-
 import data.ExRules;
 import data.Field;
 import data.ModManual;
 import data.Module;
+import data.ModuleModMan;
 import data.Subject;
 import db.DBExRules;
-import db.DBField;
 import db.DBModManAccess;
-import db.DBSubject;
+import db.DBModule;
+import db.DBModuleModMan;
 
 @ManagedBean(name = "CreateModRedBean")
 @SessionScoped
@@ -54,7 +53,7 @@ public class CreateModRedBean {
 	private List<String> userRights;
 	private boolean hasPermission;
 
-	private String subTitle, ects, aim, description;
+	private String modTitle, ects, aim, description;
 	private List<Field> fieldList;
 	private boolean emptyFieldList;
 
@@ -117,14 +116,8 @@ public class CreateModRedBean {
 	 */
 	public void handleModule(Module mod) {
 		// TODO Paste your event handling here
-		title = mod.getModTitle();
-
-		// set editable
-		editable = true;
-
-		// Only Test and can be removed
-		System.out.println(mod.getModTitle());
-		System.out.println(mod.getDescription());
+		// should not happen
+		System.err.println("should not happen: handleSubject");
 	}
 
 	/**
@@ -138,7 +131,7 @@ public class CreateModRedBean {
 		title = modMan.getModManTitle();
 
 		// set editable
-		editable = false;
+		editable = true;
 		// check Access
 		boolean found = false;
 		for (int i = 0; i < userRights.size(); i++) {
@@ -200,41 +193,20 @@ public class CreateModRedBean {
 	}
 
 	public void accept() {
-		boolean empty = false;
-		for (int i = 0; i < fieldList.size(); i++) {
-			if (fieldList.get(i).getFieldTitle().equals("")
-					|| fieldList.get(i).getFieldTitle() == null) {
-				empty = true;
-				break;
-			}
-		}
-		if (DBSubject.loadSubject(subTitle, module).size() != 0) {
+
+		if (DBModule.loadModule(modTitle, modMan) != null) {
 			addErrorMessage(TO_FOR, "Fehler: ", "Das Fach existiert bereits.");
-		} else if (subTitle.equals("") || subTitle == null || empty) {
+		} else if (modTitle.equals("") || modTitle == null) {
 			addErrorMessage(TO_FOR, "Fehler: ",
-					"Bitte tragen Sie einen Titel für Ihr Fach bzw. Zusatzfeld ein.");
+					"Bitte tragen Sie einen Titel für Ihr Modul ein.");
 		} else {
-			Subject sub = new Subject(1, subTitle, module, description, aim,
-					Integer.valueOf(ects), true);
-			try {
-				DBSubject.saveSubject(sub);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			for (int i = 0; i < fieldList.size(); i++) {
-				fieldList.get(i).setSubjectmodTitle(module);
-				fieldList.get(i).setSubjectsubTitle(subTitle);
-				try {
-					DBField.saveField(fieldList.get(i));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			Module mod = new Module(modTitle, description);
+			DBModule.saveModule(mod);
+			DBModuleModMan.saveModuleModMan(new ModuleModMan(exRules, modMan,
+					modTitle));
 
 			addMessage(TO_FOR, "Erfolg: ",
-					"Das Fach wurde erfolgreich gespeichert.");
+					"Das Modul wurde erfolgreich gespeichert.");
 
 		}
 
@@ -449,18 +421,18 @@ public class CreateModRedBean {
 	}
 
 	/**
-	 * @return the subTitle
+	 * @return the modTitle
 	 */
-	public String getSubTitle() {
-		return subTitle;
+	public String getModTitle() {
+		return modTitle;
 	}
 
 	/**
-	 * @param subTitle
-	 *            the subTitle to set
+	 * @param modTitle
+	 *            the modTitle to set
 	 */
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
+	public void setModTitle(String modTitle) {
+		this.modTitle = modTitle;
 	}
 
 	/**
