@@ -111,6 +111,7 @@ public class DekanBean {
 					+ exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
+			resetFields();
 
 			// *******************************************************************************************************************
 			// add notification code here
@@ -158,27 +159,25 @@ public class DekanBean {
 		System.out.println("**** " + exRules);
 		if (exRules.equals("") || exRules == null) {
 			success = false;
-			addErrorMessage("Empty Field error: ", "Field may not be empty.");
+			addErrorMessage("Fehler - leeres Feld: ", "Bitte f\u00FCllen Sie alle Felder aus.");
 			System.out.println(success);
 			return;
 		}
 
 		if (DBExRules.loadExRules(exRules) == null) {
 			DBExRules.saveExRule(new ExRules(exRules));
+			addMessage("Pr\u00FCfungsordnung wurde erstellt: ", exRules);
 			exRules = null;
 			actualizeExRulesList();
 			actualizeExRulesSearchList();
 			System.out.println(success);
-			addMessage("Examination rules created: ", exRules);
 			return;
 		}
-
+		
 		success = false;
-		System.out.println("error - exRules already exists: " + exRules + " "
-				+ success);
-		addErrorMessage("Examination rules title already exists: ", "'"
+		addErrorMessage("Fehler - Pr\u00FCfungsordnung existiert bereits: ", "'"
 				+ exRules
-				+ "' is already in the database - please doublecheck.");
+				+ "' ist bereits in der Datenbank gespeichert.");
 	}
 
 	/**
