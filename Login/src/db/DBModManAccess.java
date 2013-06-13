@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import data.ModAccess;
 import data.ModManAccess;
 
 public class DBModManAccess extends DBManager {
