@@ -16,13 +16,14 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.TabChangeEvent;
 
-import ctrl.DBExRules;
-import ctrl.DBModManual;
-import ctrl.DBNotification;
-import ctrl.DBUser;
+
 import data.DeadlineNotification;
 import data.ExRules;
 import data.ModManual;
+import db.DBExRules;
+import db.DBModManual;
+import db.DBNotification;
+import db.DBUser;
 
 @ManagedBean(name = "DekanBean")
 @SessionScoped

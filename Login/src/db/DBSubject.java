@@ -1,4 +1,4 @@
-package ctrl;
+package db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -252,7 +252,7 @@ public class DBSubject extends DBManager {
 					+ "' AND modtitle='"
 					+ modTitle
 					+ "' AND ack=true"
-				+ " AND version = (SELECT max(version) FROM subject where ack=true AND subtitle='"
+					+ " AND version = (SELECT max(version) FROM subject where ack=true AND subtitle='"
 					+ subTitle + "' AND modtitle='" + modTitle + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -347,7 +347,7 @@ public class DBSubject extends DBManager {
 					+ "' AND modtitle='"
 					+ modTitle
 					+ "'"
-					+ " AND version = (SELECT max(version) FROM subject where subtitle='"
+					+ " AND version = (SELECT max(version) FROM subject where ack=false AND subtitle='"
 					+ subTitle + "' AND modtitle='" + modTitle + "')";
 			ResultSet rs = stmt.executeQuery(query);
 

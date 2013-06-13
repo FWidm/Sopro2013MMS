@@ -1,4 +1,4 @@
-package data;
+package ctrl;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -10,21 +10,22 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
-import server.RedakteurBean;
+import db.DBExRules;
+import db.DBModManual;
+import db.DBModule;
 
-import ctrl.DBExRules;
-import ctrl.DBModManual;
-import ctrl.DBModule;
+import server.TemplateBean;
 
-public class RedakteurActionListenerBack implements ActionListener {
+
+public class TemplateActionListenerBack implements ActionListener {
 	
 	public void refreshMenu(String itemValue) {
 		
-		RedakteurActionListener listener = new RedakteurActionListener();
+		TemplateActionListener listener = new TemplateActionListener();
 		
-		RedakteurBean bean = findBean("RedakteurBean");
+		TemplateBean bean = findBean("TemplateBean");
 		
-		if(itemValue.equals(RedakteurBean.PRUEFORDNUNG)) {
+		if(itemValue.equals(TemplateBean.PRUEFORDNUNG)) {
 			
 			bean.setExRules(null);
 			bean.setModMan(null);
@@ -34,7 +35,7 @@ public class RedakteurActionListenerBack implements ActionListener {
 			
 			MenuModel model = new DefaultMenuModel();
 			Submenu submenu = new Submenu();
-			submenu.setLabel(RedakteurBean.PRUEFORDNUNG);
+			submenu.setLabel(TemplateBean.PRUEFORDNUNG);
 			model.addSubmenu(submenu);
 			
 			bean.setExRulesList(DBExRules.loadAllExRules());
@@ -43,13 +44,13 @@ public class RedakteurActionListenerBack implements ActionListener {
 				MenuItem m = new MenuItem();
 				m.setValue(bean.getExRulesList().get(i).getExRulesTitle());
 				m.setAjax(true);
-				m.setUpdate(RedakteurBean.UPDATE_AJAX);
+				m.setUpdate(TemplateBean.UPDATE_AJAX);
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
 			}
 			bean.setModel(model);
 		}
-		else if(itemValue.equals(RedakteurBean.MODMANUAL)) {
+		else if(itemValue.equals(TemplateBean.MODMANUAL)) {
 			
 			bean.setModMan(null);
 			bean.setModule(null);
@@ -61,8 +62,8 @@ public class RedakteurActionListenerBack implements ActionListener {
 			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
-			exRules.setUpdate(RedakteurBean.UPDATE_AJAX);
-			exRules.setValue(RedakteurBean.PRUEFORDNUNG);
+			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
+			exRules.setValue(TemplateBean.PRUEFORDNUNG);
 			exRules.addActionListener(this);
 			backSubmenu.getChildren().add(exRules);
 			backModel.addSubmenu(backSubmenu);
@@ -70,13 +71,13 @@ public class RedakteurActionListenerBack implements ActionListener {
 			
 			MenuModel model = new DefaultMenuModel();
 			Submenu submenu = new Submenu();
-			submenu.setLabel(RedakteurBean.MODMANUAL);
+			submenu.setLabel(TemplateBean.MODMANUAL);
 			model.addSubmenu(submenu);
 			
 			for(int i = 0; i < bean.getModManList().size(); i++) {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
-				m.setUpdate(RedakteurBean.UPDATE_AJAX);
+				m.setUpdate(TemplateBean.UPDATE_AJAX);
 				m.setValue(bean.getModManList().get(i).getModManTitle());
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);
@@ -84,7 +85,7 @@ public class RedakteurActionListenerBack implements ActionListener {
 			
 			bean.setModel(model);
 		}
-		else if(itemValue.equals(RedakteurBean.MODULE)) {
+		else if(itemValue.equals(TemplateBean.MODULE)) {
 			
 			bean.setModule(null);
 			
@@ -95,14 +96,14 @@ public class RedakteurActionListenerBack implements ActionListener {
 			backSubmenu.setLabel("Zur\u00FCck zu:");
 			MenuItem exRules = new MenuItem();
 			exRules.setAjax(true);
-			exRules.setUpdate(RedakteurBean.UPDATE_AJAX);
-			exRules.setValue(RedakteurBean.PRUEFORDNUNG);
+			exRules.setUpdate(TemplateBean.UPDATE_AJAX);
+			exRules.setValue(TemplateBean.PRUEFORDNUNG);
 			exRules.addActionListener(this);
 			backSubmenu.getChildren().add(exRules);
 			MenuItem modMan = new MenuItem();
 			modMan.setAjax(true);
-			modMan.setUpdate(RedakteurBean.UPDATE_AJAX);
-			modMan.setValue(RedakteurBean.MODMANUAL);
+			modMan.setUpdate(TemplateBean.UPDATE_AJAX);
+			modMan.setValue(TemplateBean.MODMANUAL);
 			modMan.addActionListener(this);
 			backSubmenu.getChildren().add(modMan);
 			backModel.addSubmenu(backSubmenu);
@@ -110,13 +111,13 @@ public class RedakteurActionListenerBack implements ActionListener {
 			
 			MenuModel model = new DefaultMenuModel();
 			Submenu submenu = new Submenu();
-			submenu.setLabel(RedakteurBean.MODULE);
+			submenu.setLabel(TemplateBean.MODULE);
 			model.addSubmenu(submenu);
 			
 			for(int i = 0; i < bean.getModuleList().size(); i++) {
 				MenuItem m = new MenuItem();
 				m.setAjax(true);
-				m.setUpdate(RedakteurBean.UPDATE_AJAX);
+				m.setUpdate(TemplateBean.UPDATE_AJAX);
 				m.setValue(bean.getModuleList().get(i).getModTitle());
 				m.addActionListener(listener);
 				submenu.getChildren().add(m);

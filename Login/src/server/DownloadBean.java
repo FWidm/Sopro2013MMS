@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -27,10 +26,11 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-import ctrl.DBField;
+
 
 import data.Field;
 import data.Subject;
+import db.DBField;
 
 @ManagedBean(name = "DownloadBean")
 @SessionScoped

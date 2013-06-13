@@ -190,6 +190,109 @@
 					</p:layoutUnit>
 				</p:layout>
 			</p:tab>
+			<p:tab title="Fach erstellen">
+				<!-- Begin of first tab // Start -->
+				<p:messages id="message-log-create" for="message-log-create"
+					showDetail="true" autoUpdate="true" closable="true" />
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
+
+						<p:menu id="back-menu-create"
+							model="#{CreateSubRedBean.backModel}" />
+						<p:menu id="list-menu-create" model="#{CreateSubRedBean.model}" />
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel-create" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel header="#{CreateSubRedBean.title}" toggleable="true"
+								toggleSpeed="500" visible="true">
+								<!-- Kommentar fuer benutzer ueber zu waehlende PO/MOdMAn/Mod -->
+
+							</p:panel>
+							<p:panel header="Fach anlegen:" toggleable="false">
+								<strong>Fach:</strong>
+								<p:inputText value="#{CreateSubRedBean.subTitle}"
+									readonly="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}">
+									<p:ajax event="blur" />
+								</p:inputText>
+								<br />
+								<br />
+
+								<strong>Beschreibung:</strong>
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+									value="#{CreateSubRedBean.description}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+								<br />
+
+								<strong>Lernziele:</strong>
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+									value="#{CreateSubRedBean.aim}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+								<br />
+
+								<strong>Leistungspunkte:</strong>
+								<p:inputText rows="1" cols="200"
+									readonly="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+									value="#{CreateSubRedBean.ects}">
+									<p:ajax event="blur" />
+								</p:inputText>
+								<br />
+								<p:panel visible="#{CreateSubRedBean.emptyFieldList}">
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+										update=":form:tabview-redak:scrollPanel-create"
+										actionListener="#{CreateSubRedBean.addField(0)}" />
+								</p:panel>
+								<ui:repeat var="iterator" value="#{CreateSubRedBean.fieldList}"
+									varStatus="status">
+									<strong>Titel: </strong>
+									<p:inputText
+										readonly="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+										value="#{iterator.fieldTitle}">
+										<p:ajax event="blur" />
+									</p:inputText>
+									<br />
+									<strong>Beschreibung: </strong>
+									<p:inputTextarea rows="1" cols="200"
+										readonly="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+										value="#{iterator.description}">
+										<p:ajax event="blur" />
+									</p:inputTextarea>
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+										update=":form:tabview-redak:scrollPanel-create"
+										actionListener="#{CreateSubRedBean.addField(status.index)}" />
+									<p:commandButton icon="ui-icon-minusthick"
+										disabled="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+										update=":form:tabview-redak:scrollPanel-create"
+										actionListener="#{CreateSubRedBean.removeField(status.index)}" />
+									<br />
+									<br />
+								</ui:repeat>
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton id="saveSub" type="push" value="Speichern"
+								disabled="#{!CreateSubRedBean.editable or !CreateSubRedBean.hasPermission}"
+								update=":form:tabview-redak:message-log-create"
+								icon="ui-icon-disk" actionListener="#{CreateSubRedBean.accept}">
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
 			<p:tab title="Notification">
 				<p:layout
 					style="min-width:800px; min-height:500px; max-height:500px;"

@@ -17,7 +17,7 @@
 <h:body>
 	<!-- body -->
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/iui_19.png"/>
+		<p:graphicImage value="/Image/iui_19.png" />
 	</div>
 	<h:form id="form">
 		<p:growl id="growl" showDetail="true" />
@@ -193,42 +193,107 @@
 				</p:layout>
 			</p:tab>
 			<p:tab title="Fach erstellen">
-				<table width="250" border="0" cellpadding="2">
-					<tr>
-						<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
-						<td><h:outputText value="Fach-Titel: " /> <h:inputText
-								value="#{ModulCreateBean.subTitle}" /></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Beschreibung:  " /> <h:inputText value="#{ModulCreateBean.description}"
-								styleClass="input_text" /></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="examination rules: " /> <p:selectOneMenu
-								style="width:220px" value="#{DekanBean.exRules}">
-								<f:selectItem itemLabel="examination rules" itemValue="" />
-								<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
-									itemLabel="#{exRule.exRulesTitle}"
-									itemValue="#{exRule.exRulesTitle}" />
-							</p:selectOneMenu></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="deadline: " /> <p:calendar
-								value="#{DekanBean.deadline}" id="popupCal1" /></td>
-					</tr>
-					<tr>
-						<td colspan="2" align="left"><p:commandButton
-								icon="ui-icon-trash" value="reset fields"
-								update=":outer-tabview:tabview-modManual:dekan-frame"
-								action="#{DekanBean.resetFields}" /> <p:commandButton
-								icon="ui-icon-plusthick"
-								actionListener="#{DekanBean.saveModManual}" value="create"
-								update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals, 
-												:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
-					</tr>
-				</table>
+				<!-- Begin of first tab // Start -->
 				<p:messages id="message-log-create" for="message-log-create"
 					showDetail="true" autoUpdate="true" closable="true" />
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
+
+						<p:menu id="back-menu-create"
+							model="#{CreateSubModBean.backModel}" />
+						<p:menu id="list-menu-create" model="#{CreateSubModBean.model}" />
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel-create" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel header="#{CreateSubModBean.title}" toggleable="true"
+								toggleSpeed="500" visible="true">
+								<!-- Kommentar fuer benutzer ueber zu waehlende PO/MOdMAn/Mod -->
+
+							</p:panel>
+							<p:panel header="Fach anlegen:" toggleable="false">
+								<strong>Fach:</strong>
+								<p:inputText value="#{CreateSubModBean.subTitle}"
+									readonly="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}">
+									<p:ajax event="blur" />
+								</p:inputText>
+								<br />
+								<br />
+
+								<strong>Beschreibung:</strong>
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+									value="#{CreateSubModBean.description}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+								<br />
+
+								<strong>Lernziele:</strong>
+								<p:inputTextarea rows="1" cols="200"
+									readonly="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+									value="#{CreateSubModBean.aim}">
+									<p:ajax event="blur" />
+								</p:inputTextarea>
+								<br />
+
+								<strong>Leistungspunkte:</strong>
+								<p:inputText rows="1" cols="200"
+									readonly="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+									value="#{CreateSubModBean.ects}">
+									<p:ajax event="blur" />
+								</p:inputText>
+								<br />
+								<p:panel visible="#{CreateSubModBean.emptyFieldList}">
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+										update=":form:tabview-modEx:scrollPanel-create"
+										actionListener="#{CreateSubModBean.addField(0)}" />
+								</p:panel>
+								<ui:repeat var="iterator" value="#{CreateSubModBean.fieldList}"
+									varStatus="status">
+									<strong>Titel: </strong>
+									<p:inputText
+										readonly="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+										value="#{iterator.fieldTitle}">
+										<p:ajax event="blur" />
+									</p:inputText>
+									<br />
+									<strong>Beschreibung: </strong>
+									<p:inputTextarea rows="1" cols="200"
+										readonly="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+										value="#{iterator.description}">
+										<p:ajax event="blur" />
+									</p:inputTextarea>
+									<p:commandButton type="push" icon="ui-icon-plusthick"
+										disabled="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+										update=":form:tabview-modEx:scrollPanel-create"
+										actionListener="#{CreateSubModBean.addField(status.index)}" />
+									<p:commandButton icon="ui-icon-minusthick"
+										disabled="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+										update=":form:tabview-modEx:scrollPanel-create"
+										actionListener="#{CreateSubModBean.removeField(status.index)}" />
+									<br />
+									<br />
+								</ui:repeat>
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton id="saveSub" type="push" value="Speichern"
+								disabled="#{!CreateSubModBean.editable or !CreateSubModBean.hasPermission}"
+								update=":form:tabview-modEx:message-log-create"
+								icon="ui-icon-disk" actionListener="#{CreateSubModBean.accept}">
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
 			</p:tab>
 			<p:tab title="Nachrichten">
 				<p:messages id="message-log-edit" for="message-log-edit"

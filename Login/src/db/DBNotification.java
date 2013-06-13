@@ -1,4 +1,4 @@
-package ctrl;
+package db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -628,21 +628,30 @@ public class DBNotification extends DBManager {
 							if (!isIn) {
 								Subject subject = DBSubject
 										.loadSubjectMaxVersionModNotif(sub, mod);
+								Subject subBefore = DBSubject.loadSubject(
+										subject.getVersion() - 1, sub, mod);
+								if (subBefore == null) {
+									subBefore = new Subject(0,
+											"Das Fach wurde neu angelegt.", "",
+											"", "", 0, false);
+								}
 								notif.add(new ModificationNotification(recEm,
 										senEm, timS, mess, act, stat, isRead,
-										new Modification(DBSubject.loadSubject(
-												subject.getVersion() - 1, sub,
-												mod), subject)));
+										new Modification(subBefore, subject)));
 							}
 						} else {
 							Subject subject = DBSubject
 									.loadSubjectMaxVersionModNotif(sub, mod);
+							Subject subBefore = DBSubject.loadSubject(
+									subject.getVersion() - 1, sub, mod);
+							if (subBefore == null) {
+								subBefore = new Subject(0,
+										"Das Fach wurde neu angelegt.", "", "",
+										"", 0, false);
+							}
 							notif.add(new ModificationNotification(recEm,
 									senEm, timS, mess, act, stat, isRead,
-									new Modification(
-											DBSubject.loadSubject(
-													subject.getVersion() - 1,
-													sub, mod), subject)));
+									new Modification(subBefore, subject)));
 						}
 					}
 					// TODO add version for Module or not ;)
@@ -700,13 +709,17 @@ public class DBNotification extends DBManager {
 					if (sub != null) {
 						Subject subject = DBSubject
 								.loadSubjectMaxVersionForRedakNotif(sub, mod);
+						Subject subBefore = DBSubject.loadSubject(
+								subject.getVersion() - 1, sub, mod);
+						if (subBefore == null) {
+							subBefore = new Subject(0,
+									"Das Fach wurde neu angelegt.", "", "", "",
+									0, false);
+						}
 						if (subject != null) {
 							notif.add(new ModificationNotification(recEm,
 									senEm, timS, mess, act, stat, isRead,
-									new Modification(
-											DBSubject.loadSubject(
-													subject.getVersion() - 1,
-													sub, mod), subject)));
+									new Modification(subBefore, subject)));
 						}
 					}
 					// TODO add version for Module or not ;)
@@ -778,9 +791,9 @@ public class DBNotification extends DBManager {
 
 	}
 
-
 	/**
 	 * DELETE all notifications from one user with specified email
+	 * 
 	 * @param email
 	 */
 	public static void deleteNotificationFromUser(String email) {
@@ -789,8 +802,7 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "DELETE FROM notification WHERE recipientEmail = '"
-					+ email + "' OR " + "senderEmail = '"
-					+ email+"';";
+					+ email + "' OR " + "senderEmail = '" + email + "';";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {

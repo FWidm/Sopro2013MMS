@@ -9,12 +9,13 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import ctrl.DBModAccess;
-import ctrl.DBModule;
-import ctrl.DBUser;
+
 
 import data.ModAccess;
 import data.User;
+import db.DBModAccess;
+import db.DBModule;
+import db.DBUser;
 
 @ManagedBean(name = "AccessBean")
 @SessionScoped

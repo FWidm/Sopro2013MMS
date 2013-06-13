@@ -1,4 +1,4 @@
-package data;
+package ctrl;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -10,13 +10,15 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
+import data.Subject;
+import db.DBExRules;
+import db.DBModManual;
+import db.DBModule;
+import db.DBSubject;
+
 import server.DownloadBean;
 import server.RedakteurBean;
 
-import ctrl.DBExRules;
-import ctrl.DBModManual;
-import ctrl.DBModule;
-import ctrl.DBSubject;
 
 public class RedakteurActionListener implements ActionListener {
 

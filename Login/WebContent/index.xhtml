@@ -33,41 +33,40 @@
 			<p:tab title="Start" id="tabStart">
 				<!-- Begin of first tab // Start -->
 				<p:layout
-					style="min-width:800px; min-height:600px; max-height:600px;"
-					id="gblLayout">
+					style="min-width:800px; min-height:600px; max-height:600px;">
 					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
 					<p:layoutUnit position="west" resizable="true" size="215"
 						minSize="215" header="Modulelist" collapsible="true">
 
-						<p:menu id="back-menu" model="#{TemplateBean.backModel}" />
-						<p:menu id="list-menu" model="#{TemplateBean.model}" />
+						<p:menu id="back-menu-start" model="#{StartBean.backModel}" />
+						<p:menu id="list-menu-start" model="#{StartBean.model}" />
 
 					</p:layoutUnit>
 
-					<p:layoutUnit position="center" id="content" header="Modulemanual">
-						<p:scrollPanel id="scrollPanel" mode="native"
+					<p:layoutUnit position="center" header="Modulemanual">
+						<p:scrollPanel id="scrollPanel-start" mode="native"
 							style="min-width:400px; min-height:470px;">
-							<p:panel id="pnlTitle" header="#{TemplateBean.title}"
+							<p:panel header="#{StartBean.title}"
 								toggleable="true" toggleSpeed="500"
-								visible="#{TemplateBean.mainVisible}">
+								visible="#{StartBean.mainVisible}">
 	
-								#{TemplateBean.description}
+								#{StartBean.description}
 							
 							</p:panel>
-							<p:panel id="pnlEcts" header="Leistungspunkte und Lernziele"
+							<p:panel header="Leistungspunkte und Lernziele"
 								toggleable="true" toggleSpeed="500"
-								visible="#{TemplateBean.ectsAimVisible}">
+								visible="#{StartBean.ectsAimVisible}">
 
-								<strong>leistungspunkte:</strong> #{TemplateBean.ects}<br />
+								<strong>leistungspunkte:</strong> #{StartBean.ects}<br />
 								<br />
-								<strong>Lernziele:</strong> #{TemplateBean.aim}
+								<strong>Lernziele:</strong> #{StartBean.aim}
 	
 							</p:panel>
-							<p:panel id="pnlDescription" header="Zusaetzliche Informationen"
+							<p:panel header="Zusaetzliche Informationen"
 								toggleable="true" toggleSpeed="500"
-								visible="#{TemplateBean.addInfoVisible}">
+								visible="#{StartBean.addInfoVisible}">
 
-								<ui:repeat var="iterator" value="#{TemplateBean.fieldList}">
+								<ui:repeat var="iterator" value="#{StartBean.fieldList}">
 									<strong>Titel: </strong>#{iterator.fieldTitle}<br />
 									<strong>Beschreibung: </strong>#{iterator.description}<br />
 									<br />

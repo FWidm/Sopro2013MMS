@@ -7,14 +7,17 @@ import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
-import ctrl.DBExRules;
-import ctrl.DBField;
+
+import ctrl.TemplateActionListener;
+
+
 import data.ExRules;
 import data.Field;
 import data.ModManual;
 import data.Module;
 import data.Subject;
-import data.TemplateActionListener;
+import db.DBExRules;
+import db.DBField;
 
 @ManagedBean(name = "TemplateBean")
 @SessionScoped

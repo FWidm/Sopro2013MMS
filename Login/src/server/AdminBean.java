@@ -6,10 +6,10 @@ package server;
 import java.util.LinkedList;
 import java.util.List;
 import data.User;
-import ctrl.DBModAccess;
-import ctrl.DBModManAccess;
-import ctrl.DBNotification;
-import ctrl.DBUser;
+import db.DBModAccess;
+import db.DBModManAccess;
+import db.DBNotification;
+import db.DBUser;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.ConfigurableNavigationHandler;
@@ -21,6 +21,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.primefaces.event.RowEditEvent;
+
 
 //Changed to Sessionscope - if in doubt revert to RequestScoped
 @ManagedBean(name = "AdminBean")

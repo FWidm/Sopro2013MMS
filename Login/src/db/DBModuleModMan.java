@@ -1,4 +1,4 @@
-package ctrl;
+package db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,83 +7,59 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import data.Module;
 import data.ModuleModMan;
 
-public class DBModule extends DBManager {
-	
+public class DBModuleModMan extends DBManager {
 	/**
-	 * Save a module to the database
+	 * Save a moduleModMan to the database
+	 * 
 	 * @param u
 	 */
-	public static void saveModule(Module m) {
-		Connection con = null;		
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "INSERT INTO module VALUES('" + m.getModTitle() + "', '" + m.getDescription() + "')";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen module - Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Delete an module based on it's unique ModTitle
-	 * @param email
-	 */
-	public static void deleteModule(String modTitle) {
-		Connection con = null;		
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "DELETE FROM module WHERE modTitle = '" + modTitle + "'";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT module fehlgeschlagen - "
-						+ "Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * Update a specific Module (identified by the ModTitle) with the data from the module object.
-	 * @param Module
-	 * @param modTitle
-	 */
-	public static void updateModule(Module newMod, String modTitle) {
+	public static void saveModuleModMan(ModuleModMan m) {
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE module SET modTitle = '" + newMod.getModTitle() + "', description = '" + newMod.getDescription() + "' " + "WHERE modTitle = '" + modTitle + "'";
+			String update = "INSERT INTO moduleModMan VALUES('"
+					+ m.getModManTitle() + "', '" + m.getModTitle() + "')";
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {
 				con.commit();
 			} catch (SQLException exc) {
 				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT module fehlgeschlagen - "
+				System.out
+						.println("COMMIT fehlgeschlagen moduleModMan - Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Delete an moduleModMan based on it's unique ModTitle and modManTitle
+	 * 
+	 * @param modManTitle
+	 * @param modTitle
+	 */
+	public static void deleteModuleModMan(String modManTitle, String modTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "DELETE FROM moduleModMan WHERE modManTitle = '"
+					+ modManTitle + "' AND modTitle = '" + modTitle + "'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT moduleModMan fehlgeschlagen - "
 						+ "Rollback durchgefuehrt");
 			} finally {
 				closeQuietly(stmt);
@@ -94,27 +70,69 @@ public class DBModule extends DBManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * loads a module based on the specific modTitle
+	 * Update a specific ModuleModMan (identified by the ModTitle and
+	 * ModManTitle) with the data from the moduleModMan object.
+	 * 
+	 * @param Module
+	 * @param modManTitle
+	 * @param modTitle
+	 */
+	public static void updateModuleModMan(ModuleModMan m, String modManTitle,
+			String modTitle) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE moduleModMan SET modManTitle = '"
+					+ m.getModManTitle() + "', modTitle = '" + m.getModTitle()
+					+ "' " + "WHERE modManTitle = '" + modManTitle
+					+ "' AND modTitle = '" + modTitle + "'";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT moduleModMan fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * loads a moduleModMan based on the specific modTitle and modManTitle
+	 * 
+	 * @param modManTitle
 	 * @param modTitle
 	 * @return m
 	 */
-	public static Module loadModule(String modTitle) {
-		Module m = null;
+	public static ModuleModMan loadModuleModMan(String exRulesTitle,
+			String modManTitle, String modTitle) {
+		ModuleModMan m = null;
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM module WHERE modTitle = '" + modTitle + "'";
-			
-			ResultSet rs = stmt.executeQuery(query);			
-			
-			if(rs.next()) {
+			String query = "SELECT * FROM moduleModMan WHERE modManTitle = '"
+					+ modManTitle + "' AND modTitle = '" + modTitle
+					+ "' AND exRulesTitle = '" + exRulesTitle + "'";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				String manTitle = rs.getString("modManTitle");
 				String title = rs.getString("modTitle");
-				String description = rs.getString("description");
-				
-				m = new Module(title, description);
+				String exTitle = rs.getString("exRulesTitle");
+
+				m = new ModuleModMan(exTitle, manTitle, title);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -126,42 +144,25 @@ public class DBModule extends DBManager {
 		}
 		return m;
 	}
-	
-	/**
-	 * loads a Module via the given ModManTitle
-	 * @param modManTitle
-	 * @return
-	 */
-	public static List<Module> loadModulesByManTitle(String exRule, String modManTitle) {
-		List<Module> modules = new LinkedList<Module>();
-		
-		List<ModuleModMan> moduleModMans = DBModuleModMan.loadByManTitle(modManTitle, exRule);
 
-		for(int i = 0; i < moduleModMans.size(); i++) {
-			modules.add(loadModule(moduleModMans.get(i).getModTitle()));
-		}
-		
-		return modules;
-	}
-	
-	public static void main(String[] args) {
-		List<Module> modules = loadModulesByManTitle("Medieninformatik", "PO2012");
-		System.out.println(modules.get(0).getModTitle());
-	}
-
-	public static List<String> loadAllModuleTitles() {
-		List<String> m=new LinkedList<String>();
+	public static List<ModuleModMan> loadByManTitle(String modManTitle,
+			String exRule) {
+		List<ModuleModMan> m = new LinkedList<ModuleModMan>();
 		Connection con = null;
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM module";
+			String query = "SELECT * FROM moduleModMan WHERE modManTitle = '"
+					+ modManTitle + "' AND exRulesTitle = '" + exRule + "'";
 
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
+				String manTitle = rs.getString("modManTitle");
 				String title = rs.getString("modTitle");
-				m.add(title);
+				String exTitle = rs.getString("exRulesTitle");
+
+				m.add(new ModuleModMan(exTitle, manTitle, title));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);

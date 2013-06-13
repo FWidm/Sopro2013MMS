@@ -1,4 +1,4 @@
-package ctrl;
+package db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import data.ModManAccess;
-import data.ModManual;
-import data.ModuleModMan;
 
 public class DBModManAccess extends DBManager {
 

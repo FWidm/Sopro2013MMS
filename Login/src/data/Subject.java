@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class Subject implements Editable, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3734907810783992733L;
 	private int version;
 	private String subTitle, modTitle, description, aim;
 	private int ects;

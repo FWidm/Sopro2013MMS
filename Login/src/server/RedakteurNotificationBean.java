@@ -16,6 +16,9 @@ import data.ModManual;
 import data.ModificationNotification;
 import data.Module;
 import data.Subject;
+import db.DBField;
+import db.DBNotification;
+import db.DBSubject;
 
 import java.util.List;
 
@@ -23,9 +26,7 @@ import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
-import ctrl.DBField;
-import ctrl.DBNotification;
-import ctrl.DBSubject;
+
 
 @ManagedBean(name = "RedakteurNotificationBean")
 @SessionScoped

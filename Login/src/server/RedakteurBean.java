@@ -16,13 +16,10 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
-import ctrl.DBExRules;
-import ctrl.DBField;
-import ctrl.DBModManAccess;
-import ctrl.DBModule;
-import ctrl.DBNotification;
-import ctrl.DBSubject;
-import ctrl.DBUser;
+import ctrl.RedakteurActionListener;
+
+
+
 import data.Editable;
 import data.ExRules;
 import data.Field;
@@ -30,8 +27,14 @@ import data.ModManual;
 import data.Modification;
 import data.ModificationNotification;
 import data.Module;
-import data.RedakteurActionListener;
 import data.Subject;
+import db.DBExRules;
+import db.DBField;
+import db.DBModManAccess;
+import db.DBModule;
+import db.DBNotification;
+import db.DBSubject;
+import db.DBUser;
 
 @ManagedBean(name = "RedakteurBean")
 @SessionScoped

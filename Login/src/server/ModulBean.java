@@ -16,15 +16,10 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
-import ctrl.DBExRules;
-import ctrl.DBField;
-import ctrl.DBModAccess;
-import ctrl.DBModManAccess;
-import ctrl.DBModule;
-import ctrl.DBNotification;
-import ctrl.DBSubject;
-import ctrl.DBUser;
-import data.ModulActionListener;
+import ctrl.ModulActionListener;
+
+
+
 import data.Editable;
 import data.ExRules;
 import data.Field;
@@ -33,6 +28,14 @@ import data.Modification;
 import data.ModificationNotification;
 import data.Module;
 import data.Subject;
+import db.DBExRules;
+import db.DBField;
+import db.DBModAccess;
+import db.DBModManAccess;
+import db.DBModule;
+import db.DBNotification;
+import db.DBSubject;
+import db.DBUser;
 
 @ManagedBean(name = "ModulBean")
 @SessionScoped
@@ -73,7 +76,7 @@ public class ModulBean {
 				.getExternalContext().getSession(false);
 		currentUser = (String) session.getAttribute("email");
 
-		// inizialize Rights
+		// Initialize Rights
 		userRights = DBModAccess.loadAccessModTitles(currentUser);
 		hasPermission = true;
 		// continue with normal init
