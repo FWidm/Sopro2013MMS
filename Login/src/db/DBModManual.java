@@ -206,6 +206,31 @@ public class DBModManual extends DBManager{
 		return m;
 	}
 	
+	public static List<String> loadAllModManTitles() {
+		List<String> m = new LinkedList<String>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM modManual";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String title = rs.getString("modManTitle");
+				m.add(title);
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return m;
+	}
+	
 	public static void main(String[] args) {
 		List<ModManual> modMans = loadModManuals("PO2012");
 		System.out.println(modMans.get(0).getExRulesTitle());

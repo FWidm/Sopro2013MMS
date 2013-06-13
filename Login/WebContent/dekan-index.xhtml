@@ -15,460 +15,484 @@
 <!-- body -->
 <h:body>
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/iui_19.png"/>
+		<p:graphicImage value="/Image/iui_19.png" />
 	</div>
-	<p:tabView id="outer-tabview">
-		<p:ajax event="tabChange" listener="#{DekanBean.onTabChange}"
-			update=":outer-tabview:tabview-exRules:exRules-create-frame" />
+	<p:tabView id="tabview">
 
+		<!-- *****************************************************************************************************  -->
 		<p:tab title="Modulhandbuch">
-					
-			<p:tabView id="tabview-modManual">
-				<!-- TabView -->
+			<p:accordionPanel id="mm-accPanel">
 				<p:tab title="Erstellen">
-					<!-- Begin of first tab // Start -->
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="dekan-layout">
-						<p:layoutUnit position="center">
-							<h:form id="dekan-frame">
-								<h2>Erstellen eines Modulhandbuchs</h2>
-								<table width="250" border="0" cellpadding="2">
-									<tr>
-										<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
-										<td><h:outputText value="Titel: " /> <h:inputText
-												id="modManTitle" value="#{DekanBean.modManTitle}"
-												styleClass="input_text" /></td>
-									</tr>
-									<tr>
-										<td><h:outputText value="Beschreibung:  " /> <h:inputText
-												id="description" value="#{DekanBean.description}"
-												styleClass="input_text" /></td>
-									</tr>
-									<tr>
-										<td><h:outputText value="Pr&uuml;fungsordnung: " /> <p:selectOneMenu
-												style="width:220px" value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="Pr&uuml;fungsordnung" itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
-													itemLabel="#{exRule.exRulesTitle}"
-													itemValue="#{exRule.exRulesTitle}" />
-											</p:selectOneMenu></td>
-									</tr>
-									<tr>
-										<td><h:outputText value="Stichtag: " /> <p:calendar
-												value="#{DekanBean.deadline}" locale="de" id="popupCal1" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" align="left"><p:commandButton
-												icon="ui-icon-trash" value="Felder l&ouml;schen"
-												update=":outer-tabview:tabview-modManual:dekan-frame"
-												action="#{DekanBean.resetFields}" /> <p:commandButton
-												icon="ui-icon-plusthick"
-												actionListener="#{DekanBean.saveModManual}" value="Erstellen"
-												update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals, 
-												:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
-									</tr>
-								</table>
-								<p:messages id="dekan-messages" for="dekan-messages"
-									showDetail="true" autoUpdate="true" closable="true" />
-							</h:form>
-						</p:layoutUnit>
-					</p:layout>
+					<h:form id="mm-create">
+						<h3>Erstellen eines Modulhandbuchs</h3>
+						<table width="270" border="0" cellpadding="2">
+							<tr>
+								<!-- ModManual(String modManTitle, String description, String exRulesTitle, Date deadline) -->
+								<td><h:outputText value="Titel: " /></td>
+								<td><h:inputText id="modManTitle"
+										value="#{DekanBean.modManTitle}" styleClass="input_text" /></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="Beschreibung:  " /></td>
+								<td><h:inputText id="description"
+										value="#{DekanBean.description}" styleClass="input_text" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="left"><h:outputText
+										value="Pr&uuml;fungsordnung: " /> <p:selectOneMenu
+										style="min-width:130px" value="#{DekanBean.exRules}">
+										<f:selectItem itemLabel="W&auml;hle eine Pr&uuml;fungsordnung" itemValue="" />
+										<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+											itemLabel="#{exRule.exRulesTitle}"
+											itemValue="#{exRule.exRulesTitle}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="Stichtag: " /></td>
+								<td><p:calendar value="#{DekanBean.deadline}" locale="de"
+										id="popupCal1" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="left"><p:commandButton
+										icon="ui-icon-trash" value="Felder l&ouml;schen"
+										update=":tabview" action="#{DekanBean.resetFields}" /> <p:commandButton
+										icon="ui-icon-plusthick"
+										actionListener="#{DekanBean.saveModManual}" value="Erstellen"
+										update=":tabview" /></td>
+							</tr>
+						</table>
+						<p:messages id="dekan-messages" for="dekan-messages"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</h:form>
 				</p:tab>
-
 				<p:tab title="Bearbeiten">
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="edit-layout">
+					<h:form id="mm-edit">
+						<h3>Bearbeiten eines Modulhandbuchs</h3>
+						<table class="admin-edit-t" width="250" border="0" cellpadding="2">
+							<tr>
+								<td><h:outputText value="Pr&uuml;fungsordnung" /> <p:selectOneMenu
+										style="width:220px" value="#{DekanBean.exRules}">
+										<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen"
+											itemValue="" />
+										<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+											itemLabel="#{exRule.exRulesTitle}"
+											itemValue="#{exRule.exRulesTitle}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{DekanBean.actualizeModManualList}"
+										value="Filtern"
+										update=":tabview:mm-accPanel:mm-edit:modManuals" /></td>
+							</tr>
+						</table>
+						<br />
+						<p:dataTable id="modManuals" var="modManual"
+							value="#{DekanBean.modManualList}" scrollable="true"
+							editable="true">
 
-						<p:layoutUnit position="center">
-							<h:form id="dekan-edit-frame">
-								<h2>Bearbeiten eines Modulhandbuchs</h2>
-								<table class="admin-edit-t" width="250" border="0"
-									cellpadding="2">
-									<tr>
-										<td><h:outputText value="Pr&uuml;fungsordnung" /> <p:selectOneMenu
-												style="width:220px" value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen" itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
-													itemLabel="#{exRule.exRulesTitle}"
-													itemValue="#{exRule.exRulesTitle}" />
-											</p:selectOneMenu></td>
-									</tr>
-									<tr>
-										<td><p:commandButton
-												actionListener="#{DekanBean.actualizeModManualList}"
-												value="Filtern"
-												update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" /></td>
-									</tr>
-								</table>
-								<br />
-								<p:dataTable id="modManuals" var="modManual"
-									value="#{DekanBean.modManualList}" style="max-width:1024px"
-									scrollable="true" scrollHeight="300" editable="true">
+							<p:ajax event="rowEdit" listener="#{DekanBean.onEdit}"
+								update=":tabview:mm-accPanel:mm-edit:modManuals" />
 
-									<p:ajax event="rowEdit" listener="#{DekanBean.onEdit}"
-										update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals, 
-										:outer-tabview:tabview-modManual:dekan-delete-frame:modManuals" />
+							<p:ajax event="rowEditCancel" listener="#{DekanBean.onCancel}"
+								update=":tabview:mm-accPanel:mm-edit:modManuals" />
 
-									<p:ajax event="rowEditCancel" listener="#{DekanBean.onCancel}"
-										update=":outer-tabview:tabview-modManual:dekan-edit-frame:modManuals, 
-										:outer-tabview:tabview-modManual:dekan-delete-frame:modManuals" />
+							<p:column headerText="Titel" footerText="" style="width:25%">
+								<h:outputText value="#{modManual.modManTitle}" />
+							</p:column>
 
-									<p:column headerText="Titel" footerText="" style="width:25%">
-										<h:outputText value="#{modManual.modManTitle}" />
-									</p:column>
-
-									<p:column headerText="Beschreibung" footerText=""
-										style="width:40%">
-										<p:cellEditor>
-											<f:facet name="output">
-												<h:outputText value="#{modManual.description}" />
-											</f:facet>
-											<f:facet name="input">
-												<p:inputText value="#{modManual.description}"
-													style="width:100%" />
-											</f:facet>
-										</p:cellEditor>
-									</p:column>
-
-									<p:column headerText="Pr&uuml;fungsordnung" footerText=""
-										style="width:18%">
-										<p:cellEditor>
-											<f:facet name="output">
-												<h:outputText value="#{modManual.exRulesTitle}" />
-											</f:facet>
-											<f:facet name="input">
-												<h:selectOneMenu value="#{modManual.exRulesTitle}">
-													<f:selectItems value="#{DekanBean.exRulesList}"
-														var="exRule" itemLabel="#{exRule.exRulesTitle}"
-														itemValue="#{exRule.exRulesTitle}" />
-												</h:selectOneMenu>
-											</f:facet>
-										</p:cellEditor>
-									</p:column>
-
-									<p:column headerText="Stichtag" footerText="" style="width:13%">
-										<p:cellEditor>
-											<f:facet name="output">
-												<h:outputText value="#{modManual.deadline}" />
-											</f:facet>
-											<f:facet name="input">
-												<p:calendar value="#{modManual.deadline}" id="popupCal2" />
-											</f:facet>
-										</p:cellEditor>
-									</p:column>
-
-									<p:column style="width:4%">
-										<p:rowEditor />
-									</p:column>
-								</p:dataTable>
-								<p:messages id="edit-messages" showDetail="true"
-									autoUpdate="true" for="edit-messages" />
-							</h:form>
-						</p:layoutUnit>
-					</p:layout>
-				</p:tab>
-
-				<p:tab title="L&ouml;schen">
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="delete-layout">
-
-						<p:layoutUnit position="center">
-							<h:form id="dekan-delete-frame">
-								<h2>L&ouml;schen eines Modulhandbuchs</h2>
-								<table class="admin-edit-t" width="250" border="0"
-									cellpadding="2">
-									<tr>
-										<td><h:outputText value="Pr&uuml;fungsordnung" /> <p:selectOneMenu
-												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen" itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
-													itemLabel="#{exRule.exRulesTitle}"
-													itemValue="#{exRule.exRulesTitle}" />
-											</p:selectOneMenu></td>
-									</tr>
-									<tr>
-										<td><p:commandButton
-												actionListener="#{DekanBean.actualizeModManualList}"
-												value="Filtern"
-												update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals" /></td>
-									</tr>
-								</table>
-								<br />
-								<p:dataTable id="modManuals" var="modManual"
-									value="#{DekanBean.modManualList}" style="max-width:1024px"
-									scrollable="true" scrollHeight="300" editable="true">
-
-									<p:column headerText="Titel" footerText="" style="width:25%">
-										<h:outputText value="#{modManual.modManTitle}" />
-									</p:column>
-
-									<p:column headerText="Beschreibung" footerText=""
-										style="width:40%">
+							<p:column headerText="Beschreibung" footerText=""
+								style="width:40%">
+								<p:cellEditor>
+									<f:facet name="output">
 										<h:outputText value="#{modManual.description}" />
-									</p:column>
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{modManual.description}"
+											style="width:100%" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-									<p:column headerText="Pr&uuml;fungsordnung" footerText=""
-										style="width:18%">
+							<p:column headerText="Pr&uuml;fungsordnung" footerText=""
+								style="width:18%">
+								<p:cellEditor>
+									<f:facet name="output">
 										<h:outputText value="#{modManual.exRulesTitle}" />
-									</p:column>
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu value="#{modManual.exRulesTitle}">
+											<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+												itemLabel="#{exRule.exRulesTitle}"
+												itemValue="#{exRule.exRulesTitle}" />
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-									<p:column headerText="Stichtag" footerText="" style="width:13%">
+							<p:column headerText="Stichtag" footerText="" style="width:13%">
+								<p:cellEditor>
+									<f:facet name="output">
 										<h:outputText value="#{modManual.deadline}" />
-									</p:column>
+									</f:facet>
+									<f:facet name="input">
+										<p:calendar value="#{modManual.deadline}" id="popupCal2" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-									<p:column style="width:4%" footerText="">
-										<p:commandButton icon="ui-icon-trash" oncomplete="dlg.show();"
-											update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals,
-											:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals">
-											<f:setPropertyActionListener value="#{modManual}"
-												target="#{DekanBean.currentMM}" />
-										</p:commandButton>
+							<p:column style="width:4%">
+								<p:rowEditor />
+							</p:column>
+						</p:dataTable>
+						<p:messages id="edit-messages" showDetail="true" autoUpdate="true"
+							for="edit-messages" />
+					</h:form>
+				</p:tab>
+				<p:tab title="L&ouml;schen">
+					<h:form id="mm-delete">
+						<h3>L&ouml;schen eines Modulhandbuchs</h3>
+						<table class="admin-edit-t" width="250" border="0" cellpadding="2">
+							<tr>
+								<td><h:outputText value="Pr&uuml;fungsordnung" /> <p:selectOneMenu
+										value="#{DekanBean.exRules}">
+										<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen"
+											itemValue="" />
+										<f:selectItems value="#{DekanBean.exRulesList}" var="exRule"
+											itemLabel="#{exRule.exRulesTitle}"
+											itemValue="#{exRule.exRulesTitle}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{DekanBean.actualizeModManualList}"
+										value="Filtern"
+										update=":tabview:mm-accPanel:mm-delete:modManuals" /></td>
+							</tr>
+						</table>
+						<br />
+						<p:dataTable id="modManuals" var="modManual"
+							value="#{DekanBean.modManualList}" scrollable="true"
+							editable="true">
 
-									</p:column>
-								</p:dataTable>
-								<p:messages id="edit-messages" showDetail="true"
-									autoUpdate="true" for="edit-messages" />
-							</h:form>
-						</p:layoutUnit>
-						<p:confirmDialog widgetVar="dlg" id="deleteDialog" header="L&ouml;schen"
-							message="Wirklich l&ouml;schen?" width="400" modal="true" closable="false"
-							severity="alert">
+							<p:column headerText="Titel" footerText="" style="width:25%">
+								<h:outputText value="#{modManual.modManTitle}" />
+							</p:column>
+
+							<p:column headerText="Beschreibung" footerText=""
+								style="width:40%">
+								<h:outputText value="#{modManual.description}" />
+							</p:column>
+
+							<p:column headerText="Pr&uuml;fungsordnung" footerText=""
+								style="width:18%">
+								<h:outputText value="#{modManual.exRulesTitle}" />
+							</p:column>
+
+							<p:column headerText="Stichtag" footerText="" style="width:13%">
+								<h:outputText value="#{modManual.deadline}" />
+							</p:column>
+
+							<p:column style="width:4%" footerText="">
+								<p:commandButton icon="ui-icon-trash" oncomplete="dlg.show();"
+									update=":tabview:mm-accPanel:mm-edit:modManuals,
+											:tabview:mm-accPanel:mm-delete:modManuals">
+									<f:setPropertyActionListener value="#{modManual}"
+										target="#{DekanBean.currentMM}" />
+								</p:commandButton>
+
+							</p:column>
+						</p:dataTable>
+						<p:messages id="edit-messages" showDetail="true" autoUpdate="true"
+							for="edit-messages" />
+						<p:confirmDialog widgetVar="dlg" id="deleteDialog"
+							header="L&ouml;schen" message="Wirklich l&ouml;schen?"
+							width="400" modal="true" closable="false" severity="alert">
 							<h:panelGroup layout="block" style="text-align: right">
 								<p:commandButton value="Ja"
 									action="#{DekanBean.deleteModManual}" oncomplete="dlg.hide();"
-									update=":outer-tabview:tabview-modManual:dekan-delete-frame:modManuals,
-								:outer-tabview:tabview-modManual:dekan-edit-frame:modManuals" />
+									update=":tabview:mm-accPanel:mm-edit:modManuals,
+											:tabview:mm-accPanel:mm-delete:modManuals" />
 								<p:commandButton value="Nein" oncomplete="dlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
-					</p:layout>
+					</h:form>
 				</p:tab>
-
-			</p:tabView>
-			<!-- End TabView -->
+			</p:accordionPanel>
 		</p:tab>
 
+		<!-- *****************************************************************************************************  -->
 		<p:tab title="Pr&uuml;fungsordnung">
-			<p:tabView id="tabview-exRules">
-
+			<p:accordionPanel id="ex-accPanel">
 				<p:tab title="Erstellen">
-					<!-- Begin of first tab // Start -->
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="exRules-create-layout">
-						<p:layoutUnit position="center">
-							<h:form id="exRules-create-frame">
-								<h2>Erstellen einer Pr&uuml;fungsordnung</h2>
-								<table width="250" border="0" cellpadding="2">
-									<tr>
-										<!-- ExRules(String exRulesTitle) -->
-										<td><h:outputText value="Titel: " /> <h:inputText
-												id="exRules" value="#{DekanBean.exRules}"
-												styleClass="input_text" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" align="left"><p:commandButton
-												icon="ui-icon-trash" value="Felder l&ouml;schen"
-												update=":outer-tabview:tabview-exRules:exRules-create-frame"
-												action="#{DekanBean.resetField}" /> <p:commandButton
-												icon="ui-icon-plusthick"
-												actionListener="#{DekanBean.saveExRules}" value="Erstellen"
-												update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
-												:outer-tabview:tabview-modManual:dekan-frame,  
-												:outer-tabview:tabview-modManual:dekan-edit-frame,  
-												:outer-tabview:tabview-modManual:dekan-delete-frame"
-												action="#{DekanBean.actualizeExRulesList}" /></td>
-									</tr>
-								</table>
-								<p:messages id="dekan-messages" for="dekan-messages"
-									showDetail="true" autoUpdate="true" closable="true" />
-							</h:form>
-						</p:layoutUnit>
-					</p:layout>
+					<h:form id="ex-create">
+						<h3>Erstellen einer Pr&uuml;fungsordnung</h3>
+						<table width="250" border="0" cellpadding="2">
+							<tr>
+								<!-- ExRules(String exRulesTitle) -->
+								<td><h:outputText value="Titel: " /> <h:inputText
+										id="exRules" value="#{DekanBean.exRules}"
+										styleClass="input_text" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="left"><p:commandButton
+										icon="ui-icon-trash" value="Feld l&ouml;schen"
+										update=":tabview:ex-accPanel:ex-create"
+										action="#{DekanBean.resetField}" /> <p:commandButton
+										icon="ui-icon-plusthick"
+										actionListener="#{DekanBean.saveExRules}" value="Erstellen"
+										update=":tabview:mm-accPanel,
+											:tabview:ex-accPanel:ex-delete,
+											:tabview:ex-accPanel:ex-create"
+										action="#{DekanBean.actualizeExRulesList}" /></td>
+							</tr>
+						</table>
+						<p:messages id="dekan-messages" for="dekan-messages"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</h:form>
 				</p:tab>
-
 				<p:tab title="L&ouml;schen">
-					<!-- Begin of first tab // Start -->
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="exRules-delete-layout">
-						<p:layoutUnit position="center">
-							<h:form id="exRules-delete-frame">
-								<h2>L&ouml;schen einer Pr&uuml;fungsordnung</h2>
-								<table class="admin-delete-t" width="250" border="0"
-									cellpadding="2">
-									<tr>
-										<td><h:outputText value="Titel" /> <p:selectOneMenu
-												value="#{DekanBean.exRules}">
-												<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen" itemValue="" />
-												<f:selectItems value="#{DekanBean.exRulesSearchList}"
-													var="exRuleSearch" itemLabel="#{exRuleSearch.exRulesTitle}"
-													itemValue="#{exRuleSearch.exRulesTitle}" />
-											</p:selectOneMenu></td>
-									</tr>
-									<tr>
-										<td><p:commandButton
-												actionListener="#{DekanBean.actualizeExRulesList}"
-												value="Filtern"
-												update=":outer-tabview:tabview-exRules:exRules-delete-frame" /></td>
-									</tr>
-								</table>
-								<br />
-								<p:dataTable id="exRules" var="exRules"
-									value="#{DekanBean.exRulesList}" style="max-width:1024px"
-									scrollable="true" scrollHeight="250">
-									<p:column headerText="Titel" footerText=""
-										style="width:96%">
-										<h:outputText value="#{exRules.exRulesTitle}" />
-									</p:column>
-									<p:column style="width:4%" footerText="">
-										<p:commandButton icon="ui-icon-trash"
-											oncomplete="deleteDlg.show();"
-											update=":outer-tabview:tabview-exRules:exRules-delete-frame">
-											<f:setPropertyActionListener value="#{exRules}"
-												target="#{DekanBean.currentER}" />
-										</p:commandButton>
-
-									</p:column>
-								</p:dataTable>
-							</h:form>
-						</p:layoutUnit>
+					<h:form id="ex-delete">
+						<h3>L&ouml;schen einer Pr&uuml;fungsordnung</h3>
+						<table class="admin-delete-t" width="250" border="0"
+							cellpadding="2">
+							<tr>
+								<td><h:outputText value="Titel" /> <p:selectOneMenu
+										value="#{DekanBean.exRules}">
+										<f:selectItem itemLabel="Alle Pr&uuml;fungsordnungen"
+											itemValue="" />
+										<f:selectItems value="#{DekanBean.exRulesSearchList}"
+											var="exRuleSearch" itemLabel="#{exRuleSearch.exRulesTitle}"
+											itemValue="#{exRuleSearch.exRulesTitle}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{DekanBean.actualizeExRulesList}"
+										value="Filtern" update=":tabview:ex-accPanel:ex-delete" /></td>
+							</tr>
+						</table>
+						<br />
+						<p:dataTable id="exRules" var="exRules"
+							value="#{DekanBean.exRulesList}" scrollable="true">
+							<p:column headerText="Titel" footerText="" style="width:96%">
+								<h:outputText value="#{exRules.exRulesTitle}" />
+							</p:column>
+							<p:column style="width:4%" footerText="">
+								<p:commandButton icon="ui-icon-trash"
+									oncomplete="deleteDlg.show();"
+									update=":tabview:ex-accPanel:ex-delete">
+									<f:setPropertyActionListener value="#{exRules}"
+										target="#{DekanBean.currentER}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
 						<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
-							header="L&ouml;schen" message="Wirklich l&ouml;schen?" width="400" modal="true"
-							closable="false" severity="alert">
+							header="L&ouml;schen" message="Wirklich l&ouml;schen?"
+							width="400" modal="true" closable="false" severity="alert">
 							<h:panelGroup layout="block" style="text-align: right">
 								<p:commandButton value="Ja" action="#{DekanBean.deleteExRules}"
 									oncomplete="deleteDlg.hide();"
-									update=":outer-tabview:tabview-exRules:exRules-delete-frame,  
-										:outer-tabview:tabview-modManual:dekan-frame,  
-										:outer-tabview:tabview-modManual:dekan-edit-frame,  
-										:outer-tabview:tabview-modManual:dekan-delete-frame" />
+									update=":tabview:mm-accPanel,
+											:tabview:ex-accPanel:ex-delete,
+											:tabview:ex-accPanel:ex-create" />
 								<p:commandButton value="Nein" oncomplete="deleteDlg.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
-					</p:layout>
+					</h:form>
 				</p:tab>
-			</p:tabView>
+			</p:accordionPanel>
 		</p:tab>
-		
-		<p:tab title="Zuweisung">
-			<h:form id="access-form">
-			<p:tabView id="tabview-zuweisung">
-				<!-- Dialog to review access -->
 
-				<!-- TabView -->
+		<!-- *****************************************************************************************************  -->
+		<p:tab title="Rechte - Modulverantwortlicher">
+			<p:accordionPanel id="ac-mm-accPanel">
 				<p:tab title="Vergeben">
+					<h:form id="ac-create">
+						<h3>Rechte f&uuml;r einen Modulverantwortlichen vergeben</h3>
+						<table width="250" border="0" cellpadding="2">
+							<tr>
+								<td><h:outputText value="Benutzer" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUserAccept}">
+										<f:selectItem itemLabel="W&auml;hle einen Modulverantwortlichen" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.userModList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
 
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="changes-layout">
-
-						<p:layoutUnit id="changeAccess" position="center">
-
-							<table class="acces-table" width="250" border="0" cellpadding="2">
-								<tr>
-									<td><h:outputText value="User" /> <p:selectOneMenu
-											value="#{AccessBean.selectedUserAccept}">
-											<f:selectItem itemLabel="Select One User" itemValue="-1" />
-											<f:selectItems value="#{AccessBean.userList}" var="#{it}"
-												itemValue="#{it}" itemLabel="#{it}" />
-										</p:selectOneMenu></td>
-								</tr>
-
-								<tr>
-									<td><h:outputText value="Module" /> <p:selectOneMenu
-											value="#{AccessBean.selectedAccess}">
-											<f:selectItem itemLabel="Select One Module" itemValue="-1" />
-											<f:selectItems value="#{AccessBean.modTitleList}" var="#{it}"
-												itemValue="#{it}" itemLabel="#{it}" />
-										</p:selectOneMenu></td>
-								</tr>
-								<tr>
-									<td><p:commandButton
-											actionListener="#{AccessBean.acceptChanges}" value="accept" 
-											update=":outer-tabview:access-form:tabview-zuweisung:changes-layout, 
-											:outer-tabview:access-form:tabview-zuweisung:modAccessList"/></td>
-								</tr>
-							</table>
-							<p:messages id="messages-access" for="messages-access"
-								showDetail="true" autoUpdate="true" closable="true" />
-						</p:layoutUnit>
-
-					</p:layout>
-
+							<tr>
+								<td><h:outputText value="Modul" /> <p:selectOneMenu
+										value="#{AccessBean.selectedAccess}">
+										<f:selectItem itemLabel="W&auml;hle ein Modul" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.modTitleList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{AccessBean.acceptChangesMod}" value="Zuweisen"
+										update=":tabview:ac-mm-accPanel" /></td>
+							</tr>
+						</table>
+						<p:messages id="messages-access" for="messages-access"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</h:form>
 				</p:tab>
 				<p:tab title="Entziehen">
+					<h:form id="ac-delete">
+						<h3>Rechte f&uuml;r einen Modulverantwortlichen entziehen</h3>
+						<table width="250" border="0"
+							cellpadding="2">
+							<tr>
+								<td><h:outputText value="Modulverantwortlicher" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUserFilter}">
+										<f:selectItem itemLabel="W&auml;hle einen Modulverantwortlichen" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.userModList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{AccessBean.filterSelectionModList}"
+										value="Filtern"
+										update=":tabview:ac-mm-accPanel:ac-delete:modAccessList" /></td>
+							</tr>
+						</table>
 
-					<p:layout style="min-width:400px;min-height:500px;"
-						id="list-layout">
+						<p:dataTable id="modAccessList" var="modacc"
+							value="#{AccessBean.modAccList}"
+							scrollable="true">
+							<p:column headerText="Email" footerText="" style="width:47%">
+								<h:outputText value="#{modacc.email}" />
+							</p:column>
+							<p:column headerText="Modul" footerText="" style="width:47%">
+								<h:outputText value="#{modacc.modTitle}" />
+							</p:column>
+							<p:column style="width:40px" footerText="">
+								<p:commandButton icon="ui-icon-trash"
+									oncomplete="deleteDlgMod.show();">
+									<f:setPropertyActionListener value="#{modacc}"
+										target="#{AccessBean.deleteMod}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
 
-						<p:layoutUnit id="listAccess" position="center">
-
-							<table class="access-list-table" width="250" border="0"
-								cellpadding="2">
-								<tr>
-									<td><h:outputText value="User" /> <p:selectOneMenu
-											value="#{AccessBean.selectedUserFilter}">
-											<f:selectItem itemLabel="Select One User" itemValue="-1" />
-											<f:selectItems value="#{AccessBean.userList}" var="#{it}"
-												itemValue="#{it}" itemLabel="#{it}" />
-										</p:selectOneMenu></td>
-								</tr>
-								<tr>
-									<td><p:commandButton
-											actionListener="#{AccessBean.filterSelectionList}"
-											value="filter" update=":outer-tabview:access-form:tabview-zuweisung:changes-layout, 
-											:outer-tabview:access-form:tabview-zuweisung:modAccessList" /></td>
-								</tr>
-							</table>
-
-							<p:dataTable id="modAccessList" var="modacc"
-								value="#{AccessBean.modAccList}" style="max-width:1024px"
-								scrollable="true" scrollHeight="250">
-								<p:column headerText="Email" footerText="" style="width:47%">
-									<h:outputText value="#{modacc.email}" />
-								</p:column>
-								<p:column headerText="Module" footerText="" style="width:47%">
-									<h:outputText value="#{modacc.modTitle}" />
-								</p:column>
-								<p:column style="width:40px" footerText="">
-									<p:commandButton icon="ui-icon-trash"
-										oncomplete="deleteDlg.show();">
-										<f:setPropertyActionListener value="#{modacc}"
-											target="#{AccessBean.deleteMod}" />
-									</p:commandButton>
-
-								</p:column>
-							</p:dataTable>
-
-
-						</p:layoutUnit>
-						<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
+						<p:confirmDialog widgetVar="deleteDlgMod" id="deleteDialogMod"
 							header="Delete" message="Delete this ?" width="400" modal="true"
 							closable="false" severity="alert">
 
 							<h:panelGroup layout="block" style="text-align: right">
-								<p:commandButton value="Yes" action="#{AccessBean.deleteRow}"
-									oncomplete="deleteDlg.hide();"
-									update=":outer-tabview:access-form:tabview-zuweisung:changes-layout, 
-											:outer-tabview:access-form:tabview-zuweisung:modAccessList" />
-								<p:commandButton value="No" oncomplete="deleteDlg.hide();" />
+								<p:commandButton value="Yes" action="#{AccessBean.deleteRowMod}"
+									oncomplete="deleteDlgMod.hide();"
+									update=":tabview:ac-mm-accPanel:ac-delete:modAccessList" />
+								<p:commandButton value="No" oncomplete="deleteDlgMod.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
-
-					</p:layout>
-
+					</h:form>
 				</p:tab>
-
-			</p:tabView>
-			</h:form>
-			
+			</p:accordionPanel>
 		</p:tab>
+		
+		<!-- *****************************************************************************************************  -->
+		<p:tab title="Rechte - Redakteur">
+			<p:accordionPanel id="ac-rm-accPanel">
+				<p:tab title="Vergeben">
+					<h:form id="ac-create">
+						<h3>Rechte f&uuml;r einen Redakteur vergeben</h3>
+						<table width="250" border="0" cellpadding="2">
+							<tr>
+								<td><h:outputText value="Redakteur" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUserAccept}">
+										<f:selectItem itemLabel="W&auml;hle einen Redakteur" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.userRedList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+
+							<tr>
+								<td><h:outputText value="Modulhandbuch" /> <p:selectOneMenu
+										value="#{AccessBean.selectedAccess}">
+										<f:selectItem itemLabel="W&auml;hle ein Modulhandbuch" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.modManTitleList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{AccessBean.acceptChangesRed}" value="Zuweisen"
+										update=":tabview:ac-rm-accPanel" /></td>
+							</tr>
+						</table>
+						<p:messages id="messages-access" for="messages-access"
+							showDetail="true" autoUpdate="true" closable="true" />
+					</h:form>
+				</p:tab>
+				<p:tab title="Entziehen">
+					<h:form id="ac-delete">
+						<h3>Rechte f&uuml;r einen Redakteur entziehen</h3>
+						<table width="250" border="0"
+							cellpadding="2">
+							<tr>
+								<td><h:outputText value="Redakteur" /> <p:selectOneMenu
+										value="#{AccessBean.selectedUserFilter}">
+										<f:selectItem itemLabel="W&auml;hle einen Redakteur" itemValue="-1" />
+										<f:selectItems value="#{AccessBean.userRedList}" var="#{it}"
+											itemValue="#{it}" itemLabel="#{it}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:commandButton
+										actionListener="#{AccessBean.filterSelectionRedList}"
+										value="Filtern"
+										update=":tabview:ac-rm-accPanel:ac-delete:modAccessList" /></td>
+							</tr>
+						</table>
+
+						<p:dataTable id="modAccessList" var="modacc"
+							value="#{AccessBean.modManAccList}"
+							scrollable="true">
+							<p:column headerText="Email" footerText="" style="width:47%">
+								<h:outputText value="#{modacc.email}" />
+							</p:column>
+							<p:column headerText="Modul" footerText="" style="width:47%">
+								<h:outputText value="#{modacc.modManTitle}" />
+							</p:column>
+							<p:column style="width:40px" footerText="">
+								<p:commandButton icon="ui-icon-trash"
+									oncomplete="deleteDlgRed.show();">
+									<f:setPropertyActionListener value="#{modacc}"
+										target="#{AccessBean.deleteModMan}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+						<p:confirmDialog widgetVar="deleteDlgRed" id="deleteDialogRed"
+							header="Delete" message="Delete this ?" width="400" modal="true"
+							closable="false" severity="alert">
+
+							<h:panelGroup layout="block" style="text-align: right">
+								<p:commandButton value="Yes" action="#{AccessBean.deleteRowRed}"
+									oncomplete="deleteDlgRed.hide();"
+									update=":tabview:ac-rm-accPanel:ac-delete:modAccessList" />
+								<p:commandButton value="No" oncomplete="deleteDlgRed.hide();" />
+							</h:panelGroup>
+						</p:confirmDialog>
+					</h:form>
+				</p:tab>
+			</p:accordionPanel>
+		</p:tab>
+
+		<!-- *****************************************************************************************************  -->
 		<p:tab title="Logout">
-			<table width="350" border="0" cellpadding="2">
-				<tr>
-					<td><h3>Wirklich ausloggen?</h3></td>
-					<td><p:commandButton value="OK" type="submit"
-							actionListener="#{LoginBean.logout}" /></td>
-				</tr>
-			</table>
+			<h:form id="logout">
+				<table width="350" border="0" cellpadding="2">
+					<tr>
+						<td><h3>Wirklich ausloggen?</h3></td>
+						<td><p:commandButton value="OK" type="submit"
+								actionListener="#{LoginBean.logout}" /></td>
+					</tr>
+				</table>
+			</h:form>
 		</p:tab>
 
 	</p:tabView>

@@ -1,6 +1,5 @@
 package server;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -9,11 +8,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-
-
 import data.ModAccess;
-import data.User;
+import data.ModManAccess;
 import db.DBModAccess;
+import db.DBModManAccess;
+import db.DBModManual;
 import db.DBModule;
 import db.DBUser;
 
@@ -21,45 +20,54 @@ import db.DBUser;
 @SessionScoped
 public class AccessBean {
 	//Display users in SelectOneMenus
-	private List<String> userList;
+	private List<String> userModList;
+	private List<String> userRedList;
 
 	private List<ModAccess> modAccList;
 	private List<String> modTitleList;
+	
+	private List<ModManAccess> modManAccList;
+	private List<String> modManTitleList;
 
 	private String selectedUserAccept;
 	private String selectedUserFilter;
 	private String selectedAccess;
 
 	private ModAccess deleteMod;
+	private ModManAccess deleteModMan;
+	
 	/**
 	 * preload all lists that are being used to display stuff
 	 */
 	public AccessBean() {
 		// TODO Remove link between adam.admin and the testmodule in the
 		// database.
-		userList = DBUser.loadAllUserEmailsByRole("Modulverantwortlicher");
-		new LinkedList<User>();
+		userModList = DBUser.loadAllUserEmailsByRole("Modulverantwortlicher");
+		userRedList = DBUser.loadAllUserEmailsByRole("Redakteur");
 
 		// TODO evtl abgrenzen noch vorher handbuch aussuchen?
 		modTitleList = DBModule.loadAllModuleTitles();
+		modManTitleList = DBModManual.loadAllModManTitles();
 
-		System.out.println(userList.toString());
+//		System.out.println(userModList.toString());
+		System.out.println(userRedList.toString());
 
-		modAccList=DBModAccess.loadAccess();
+		modAccList = DBModAccess.loadAccess();
+		modManAccList = DBModManAccess.loadAccess();
 
-		System.out.println(modAccList.toString());
-
+//		System.out.println(modAccList.toString());
+		System.out.println(modManAccList.toString());
 	}
+	
 	/**
 	 * Adds another module to the users responsibility
 	 * @param e
 	 */
-	public void acceptChanges(ActionEvent e) {
-
+	public void acceptChangesMod(ActionEvent e) {
 		boolean alreadySet = false;
 		System.out.println(selectedUserAccept + "\t" + selectedAccess
 				+ " is selected");
-		if (!userList.contains(selectedUserAccept)
+		if (!userModList.contains(selectedUserAccept)
 				|| !modTitleList.contains(selectedAccess)) {
 			addErrorMessage("messages-access", "Failed",
 					"you need to select both - a user and a module. ");
@@ -77,7 +85,45 @@ public class AccessBean {
 		if (!alreadySet) {
 			if (DBModAccess.saveModAccess(new ModAccess(selectedAccess,
 					selectedUserAccept))){
-				filterSelectionList(null);
+				filterSelectionModList(null);
+				addMessage("messages-access", "Success", selectedUserAccept
+						+ " is now able to edit things in " + selectedAccess);
+			}else 
+				addErrorMessage("messages-access", "Failed",
+						"Error with the database - try again.");
+		}
+		else 
+			addErrorMessage("messages-access", "Failed",
+					"The selected User is already able to edit the selected Module.");
+	}
+	
+	/**
+	 * Adds another module to the users responsibility
+	 * @param e
+	 */
+	public void acceptChangesRed(ActionEvent e) {
+		boolean alreadySet = false;
+		System.out.println(selectedUserAccept + "\t" + selectedAccess
+				+ " is selected");
+		if (!userRedList.contains(selectedUserAccept)
+				|| !modManTitleList.contains(selectedAccess)) {
+			addErrorMessage("messages-access", "Failed",
+					"you need to select both - a user and a module. ");
+			return;
+		}
+		List<ModManAccess> modAccessSelectedUser = DBModManAccess
+				.loadAccess(selectedUserAccept);
+		for (ModManAccess m : modAccessSelectedUser) {
+			if (m.getModManTitle().equals(selectedAccess)) {
+				System.out.println(m.getModManTitle()+" "+selectedAccess);
+				System.out.println("already selected");
+				alreadySet = true;
+			}
+		}
+		if (!alreadySet) {
+			if (DBModManAccess.saveModManAccess(new ModManAccess(selectedAccess,
+					selectedUserAccept))){
+				filterSelectionRedList(null);
 				addMessage("messages-access", "Success", selectedUserAccept
 						+ " is now able to edit things in " + selectedAccess);
 			}else 
@@ -93,25 +139,48 @@ public class AccessBean {
 	 * Filters the List by only displaying the selectedUserFilter's module access rights
 	 * @param e
 	 */
-	public void filterSelectionList(ActionEvent e){
+	public void filterSelectionModList(ActionEvent e){
 		if(selectedUserFilter.equals("-1")){
 			System.out.println("none selected - display all");
-			modAccList=DBModAccess.loadAccess();
+			modAccList = DBModAccess.loadAccess();
 		}
 		else{
 			System.out.println("filter-else use email:"+selectedUserFilter);
-			modAccList=DBModAccess.loadAccess(selectedUserFilter);
+			modAccList = DBModAccess.loadAccess(selectedUserFilter);
 		}
-
+	}
+	
+	/**
+	 * Filters the List by only displaying the selectedUserFilter's module manual access rights
+	 * @param e
+	 */
+	public void filterSelectionRedList(ActionEvent e){
+		if(selectedUserFilter.equals("-1")){
+			System.out.println("none selected - display all");
+			modManAccList = DBModManAccess.loadAccess();
+		}
+		else{
+			System.out.println("filter-else use email:"+selectedUserFilter);
+			modManAccList = DBModManAccess.loadAccess(selectedUserFilter);
+		}
 	}
 
 	/**
-	 * deletes the row that got selected - is confirmed by a dialog
+	 * deletes the Modulverantwortlicher row that got selected - is confirmed by a dialog
 	 */
-	public void deleteRow(){
+	public void deleteRowMod(){
 		System.out.println("delete \t "+deleteMod);
 		DBModAccess.deleteModAccess(deleteMod.getModTitle(), deleteMod.getEmail());
-		filterSelectionList(null);
+		filterSelectionModList(null);
+	}
+	
+	/**
+	 * deletes the Redakteur row that got selected - is confirmed by a dialog
+	 */
+	public void deleteRowRed(){
+		System.out.println("delete \t "+deleteModMan);
+		DBModManAccess.deleteModManAccess(deleteModMan.getModManTitle(), deleteModMan.getEmail());
+		filterSelectionRedList(null);
 	}
 
 	/**
@@ -184,16 +253,16 @@ public class AccessBean {
 	/**
 	 * @return the userList
 	 */
-	public List<String> getUserList() {
-		return userList;
+	public List<String> getUserModList() {
+		return userModList;
 	}
 
 	/**
 	 * @param userList
 	 *            the userList to set
 	 */
-	public void setUserList(List<String> userList) {
-		this.userList = userList;
+	public void setUserModList(List<String> userList) {
+		this.userModList = userList;
 	}
 
 
@@ -223,7 +292,6 @@ public class AccessBean {
 	 * @param deleteMod the deleteMod to set
 	 */
 	public void setDeleteMod(ModAccess deleteMod) {
-		System.out.println(deleteMod.toString());
 		this.deleteMod = deleteMod;
 	}
 	/**
@@ -238,5 +306,54 @@ public class AccessBean {
 	public void setSelectedUserFilter(String selectedUserFilter) {
 		this.selectedUserFilter = selectedUserFilter;
 	}
+	/**
+	 * @return the userRedList
+	 */
+	public List<String> getUserRedList() {
+		return userRedList;
+	}
+	/**
+	 * @param userRedList the userRedList to set
+	 */
+	public void setUserRedList(List<String> userRedList) {
+		this.userRedList = userRedList;
+	}
+	/**
+	 * @return the modManAccList
+	 */
+	public List<ModManAccess> getModManAccList() {
+		return modManAccList;
+	}
+	/**
+	 * @param modManAccList the modManAccList to set
+	 */
+	public void setModManAccList(List<ModManAccess> modManAccList) {
+		this.modManAccList = modManAccList;
+	}
+	/**
+	 * @return the modManTitleList
+	 */
+	public List<String> getModManTitleList() {
+		return modManTitleList;
+	}
+	/**
+	 * @param modManTitleList the modManTitleList to set
+	 */
+	public void setModManTitleList(List<String> modManTitleList) {
+		this.modManTitleList = modManTitleList;
+	}
+	/**
+	 * @return the deleteModMan
+	 */
+	public ModManAccess getDeleteModMan() {
+		return deleteModMan;
+	}
+	/**
+	 * @param deleteModMan the deleteModMan to set
+	 */
+	public void setDeleteModMan(ModManAccess deleteModMan) {
+		this.deleteModMan = deleteModMan;
+	}
 
+	
 }

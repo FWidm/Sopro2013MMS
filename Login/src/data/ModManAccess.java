@@ -42,6 +42,15 @@ public class ModManAccess {
 	public void setModManTitle(String modManTitle) {
 		this.modManTitle = modManTitle;
 	}
+
+	/**
+	 * @return String representation of the ModManAccess object
+	 */
+	@Override
+	public String toString() {
+		return "ModManAccess [email=" + email + ", modManTitle=" + modManTitle
+				+ "]";
+	}
 	
 	
 	
