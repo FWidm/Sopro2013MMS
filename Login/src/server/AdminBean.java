@@ -140,9 +140,15 @@ public class AdminBean {
 		User updateUser = (User) event.getObject();
 		FacesMessage msg = new FacesMessage("User Edited",
 				((User) event.getObject()).toString());
-		if (DBUser.loadUser(updateUser.getEmail()) != null) {
+		if (DBUser.loadUser(updateUser.getEmail()) != null && updateUser.getName()!="" && updateUser.getFirstname()!="") {
 			System.out.println(updateUser.toString());
 			DBUser.updateUser(updateUser, updateUser.getEmail());
+			addMessage("Bearbeiten erfolgreich!", "Benutzer erfolgreich editiert. "+updateUser.toString());
+		}
+		else 
+		{
+			addErrorMessage("Bearbeiten nicht erfolgt!", "Bearbeitete Felder koennen nicht leer sein.");
+			msg = new FacesMessage(FacesMessage.SEVERITY_FATAL,"Editieren nicht erfolgt!","Name oder Nachname sind leer - dürfen aber nicht leer sein!");
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
@@ -208,7 +214,8 @@ public class AdminBean {
 		DBUser.deleteUser(selectedUser.getEmail());
 		System.out.println(selectedUser.getEmail());
 		System.out.println(">>" + selectedUser.getRole());
-		actualizeUserList(selectedUser.getRole());
+		//display all users in the selection
+		actualizeUserList(null);
 	}
 
 	/**
