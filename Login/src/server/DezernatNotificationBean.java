@@ -62,11 +62,12 @@ public class DezernatNotificationBean {
 	}
 
 	/**
-	 * Clicking on the tablerow sets isRead to true
+	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
-	public void selectedNotificationIsRead(SelectEvent e) {
-		DBNotification.updateNotificationIsRead(getSelectedNotification());
+	public void selectedNotificationIsReadRecipient(SelectEvent e) {
+		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
 	}
+
 
 	/**
 	 * Creates the dialog of unread notifications and shows them by changing a

@@ -284,7 +284,7 @@ public class DBNotification extends DBManager {
 	 * @param notif
 	 * 
 	 */
-	public static void updateNotificationIsRead(Notification notif) {
+	public static void updateNotificationIsReadSender(Notification notif) {
 		Connection con = null;
 		try {
 			con = openConnection();

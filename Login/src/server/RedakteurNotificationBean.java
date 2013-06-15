@@ -64,10 +64,16 @@ public class RedakteurNotificationBean {
 
 
 	/**
-	 * Clicking on the tablerow sets isRead to true
+	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
-	public void selectedNotificationIsRead(SelectEvent e) {
-		DBNotification.updateNotificationIsRead(getSelectedNotification());
+	public void selectedNotificationIsReadrecipient(SelectEvent e) {
+		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
+	}
+	/**
+	 * Clicking on the tablerow sets isReadRecipient to true
+	 */
+	public void selectedNotificationIsReadSender(SelectEvent e) {
+		DBNotification.updateNotificationIsReadSender(getSelectedNotification());
 	}
 
 	/**

@@ -313,7 +313,7 @@
 							selection="#{ModulNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{ModulNotificationBean.selectedNotificationIsRead}"
+								listener="#{ModulNotificationBean.selectedNotificationIsReadRecipient}"
 								update=":form:tabview-modEx:notify-layout" />
 
 							<p:column>

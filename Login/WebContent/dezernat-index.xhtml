@@ -104,7 +104,7 @@
 							selection="#{DezernatNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{DezernatNotificationBean.selectedNotificationIsRead}"
+								listener="#{DezernatNotificationBean.selectedNotificationIsReadRecipient}"
 								update=":form:tabview-dez:notify-layout" />
 
 							<p:column>

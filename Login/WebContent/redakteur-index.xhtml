@@ -364,7 +364,7 @@
 							selection="#{RedakteurNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{RedakteurNotificationBean.selectedNotificationIsRead}"
+								listener="#{RedakteurNotificationBean.selectedNotificationIsReadSender}"
 								update=":form:tabview-redak:notify-layout" />
 
 							<p:column>
@@ -489,7 +489,7 @@
 							selection="#{RedDezNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{RedDezNotificationBean.selectedNotificationIsRead}"
+								listener="#{RedDezNotificationBean.selectedNotificationIsReadRecipient}"
 								update=":form:tabview-redak:notify-layout-dez" />
 
 							<p:column>
