@@ -111,20 +111,10 @@ public class DekanBean {
 					+ exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
-			resetFields();
 
-			// *******************************************************************************************************************
-			// add notification code here
-
-			// in der variable deadline ist das datum gespeichert. muss evtl
-			// noch in ein anderes datums-format umgewandelt werden.
-			// umwandeln in sql-kompatibles format geht mit der SimpleDateFormat
-			// klasse, bsp. siehe unten oder DBModManual.java
-
-			// private static SimpleDateFormat sdf = new
-			// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			// String formattedDate = sdf.format(deadline);
-			// *******************************************************************************************************************
+			/**
+			 * create DeadlineNotifications
+			 */
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			Timestamp date = new Timestamp(deadline.getTime());
 			List<String> mailAdresses = new LinkedList<String>();
@@ -139,6 +129,8 @@ public class DekanBean {
 						mailAdresses.get(i), currentUser, timestamp, "", "",
 						"queued", false, false, date, modManTitle));
 			}
+			
+			resetFields();
 			return;
 		}
 
@@ -207,19 +199,25 @@ public class DekanBean {
 			if (!((DBModManual.loadModManual(m.getModManTitle())).getDeadline()
 					.toString().equals(sdf.format(m.getDeadline())))) {
 				System.out.println("date changed!");
-				// *******************************************************************************************************************
-				// add notification code here
+				
+				/**
+				 * create DeadlineNotifications
+				 */
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				Timestamp date = new Timestamp(deadline.getTime());
+				List<String> mailAdresses = new LinkedList<String>();
+				List<String> modEx = DBUser.loadUsersEmailByRole("Redakteur");
+				List<String> redak = DBUser
+						.loadUsersEmailByRole("Modulverantwortlicher");
+				mailAdresses.addAll(modEx);
+				mailAdresses.addAll(redak);
 
-				// in der variable deadline ist das datum gespeichert. muss evtl
-				// noch in ein anderes datums-format umgewandelt werden.
-				// umwandeln in sql-kompatibles format geht mit der
-				// SimpleDateFormat klasse, bsp. siehe unten oder
-				// DBModManual.java
-
-				// private static SimpleDateFormat sdf = new
-				// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				// String formattedDate = sdf.format(deadline);
-				// *******************************************************************************************************************
+				for (int i = 0; i < mailAdresses.size(); i++) {
+					DBNotification.saveNotification(new DeadlineNotification(
+							mailAdresses.get(i), currentUser, timestamp, "", "",
+							"queued", false, false, date, modManTitle));
+				}
+				
 			}
 			DBModManual.updateModManual(m, m.getModManTitle());
 		}
