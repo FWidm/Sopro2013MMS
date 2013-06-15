@@ -378,14 +378,14 @@
 						</p:dataTable>
 
 						<p:confirmDialog widgetVar="deleteDlgMod" id="deleteDialogMod"
-							header="Delete" message="Delete this ?" width="400" modal="true"
+							header="L&ouml;schen" message="Wirklich l&ouml;schen?" width="400" modal="true"
 							closable="false" severity="alert">
 
 							<h:panelGroup layout="block" style="text-align: right">
-								<p:commandButton value="Yes" action="#{AccessBean.deleteRowMod}"
+								<p:commandButton value="Ja" action="#{AccessBean.deleteRowMod}"
 									oncomplete="deleteDlgMod.hide();"
 									update=":tabview:ac-mm-accPanel:ac-delete:modAccessList" />
-								<p:commandButton value="No" oncomplete="deleteDlgMod.hide();" />
+								<p:commandButton value="Nein" oncomplete="deleteDlgMod.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
 					</h:form>
@@ -467,14 +467,14 @@
 						</p:dataTable>
 
 						<p:confirmDialog widgetVar="deleteDlgRed" id="deleteDialogRed"
-							header="Delete" message="Delete this ?" width="400" modal="true"
+							header="L&ouml;schen" message="Wirklich l&ouml;schen?" width="400" modal="true"
 							closable="false" severity="alert">
 
 							<h:panelGroup layout="block" style="text-align: right">
-								<p:commandButton value="Yes" action="#{AccessBean.deleteRowRed}"
+								<p:commandButton value="Ja" action="#{AccessBean.deleteRowRed}"
 									oncomplete="deleteDlgRed.hide();"
 									update=":tabview:ac-rm-accPanel:ac-delete:modAccessList" />
-								<p:commandButton value="No" oncomplete="deleteDlgRed.hide();" />
+								<p:commandButton value="Nein" oncomplete="deleteDlgRed.hide();" />
 							</h:panelGroup>
 						</p:confirmDialog>
 					</h:form>

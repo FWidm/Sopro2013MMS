@@ -64,14 +64,6 @@ public class DekanBean {
 		exRulesSearchList = DBExRules.loadAllExRules();
 	}
 
-	public void onTabChange(TabChangeEvent event) {
-		FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: "
-				+ event.getTab().getTitle());
-
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		System.out.println("Tab Changed!");
-	}
-
 	/**
 	 * reset modManTitle, description, deadline and exRulesTitle
 	 */
@@ -97,8 +89,8 @@ public class DekanBean {
 		if (modManTitle.isEmpty() || description.isEmpty() || exRules == null
 				|| exRules.equals("") || deadline == null) {
 			success = false;
-			addErrorMessage("Empty Field error: ",
-					"Fields may not be empty - be sure to edit every field.");
+			addErrorMessage("Fehler: ",
+					"Bitte f\u00FCllen Sie alle Felder aus.");
 			System.out.println(success);
 			return;
 		}
@@ -107,7 +99,7 @@ public class DekanBean {
 			DBModManual.saveModManual(new ModManual(modManTitle, description,
 					exRules, deadline));
 			System.out.println(success);
-			addMessage("Module manual created: ", "" + modManTitle + ", "
+			addMessage("Modulhandbuch wurde erstellt: ", "" + modManTitle + ", "
 					+ exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
@@ -137,9 +129,9 @@ public class DekanBean {
 		success = false;
 		System.out.println("error - modMantitle already exists: " + modManTitle
 				+ " " + success);
-		addErrorMessage("Module manual title already exists: ", "'"
+		addErrorMessage("Fehler: ", "'"
 				+ modManTitle
-				+ "' is already in the database - please doublecheck.");
+				+ "' ist bereits in der Datenbank gespeichert.");
 	}
 
 	/**
@@ -191,8 +183,8 @@ public class DekanBean {
 	public void onEdit(RowEditEvent event) {
 
 		ModManual m = (ModManual) event.getObject();
-		FacesMessage msg = new FacesMessage("User Edited",
-				((ModManual) event.getObject()).toString());
+		FacesMessage msg = new FacesMessage("Modulhandbuch wurde ge\u00E4ndert:",
+				((ModManual) event.getObject()).getModManTitle().toString());
 		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
 
 			// if deadline was changed --> notify
@@ -231,7 +223,7 @@ public class DekanBean {
 	 * @param event
 	 */
 	public void onCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("User edit cancelled",
+		FacesMessage msg = new FacesMessage("Bearbeiten abgebrochen:",
 				((ModManual) event.getObject()).getModManTitle());
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
