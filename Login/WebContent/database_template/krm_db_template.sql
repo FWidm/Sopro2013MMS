@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 12. Jun 2013 um 10:55
+-- Erstellungszeit: 15. Jun 2013 um 12:28
 -- Server Version: 5.0.51a-24+lenny5
 -- PHP-Version: 5.3.3-7+squeeze15
 
@@ -87,16 +87,34 @@ CREATE TABLE IF NOT EXISTS `modAccess` (
 --
 
 INSERT INTO `modAccess` (`modTitle`, `email`) VALUES
+('Additive Schlüsselqualifikationen (ASQ)', 'markus.modulverantwortlicher@uni-ulm.de'),
+('Additive Schlüsselqualifikationen (ASQ)', 'mo.modulverantwortlicher@uni-ulm.de'),
 ('Algorithmen und Datenstrukturen', 'marianne.modulverantwortlicher@uni-ulm.de'),
 ('Algorithmen und Datenstrukturen', 'markus.modulverantwortlicher@uni-ulm.de'),
-('Analysis für Informatiker', 'marianne.modulverantwortlicher@uni-ulm.de'),
+('Algorithmen und Datenstrukturen', 'max.modulverantwortlicher@uni-ulm.de'),
+('Algorithmen und Datenstrukturen', 'mo.modulverantwortlicher@uni-ulm.de'),
+('Analysis für Informatiker', 'max.modulverantwortlicher@uni-ulm.de'),
+('Analysis für Informatiker', 'michael.modulverantwortlicher@uni-ulm.de'),
+('Analysis für Informatiker', 'mo.modulverantwortlicher@uni-ulm.de'),
+('Angewandte Mathematik', 'marianne.modulverantwortlicher@uni-ulm.de'),
+('Angewandte Mathematik', 'markus.modulverantwortlicher@uni-ulm.de'),
 ('Angewandte Mathematik', 'max.modulverantwortlicher@uni-ulm.de'),
+('Angewandte Mathematik', 'michael.modulverantwortlicher@uni-ulm.de'),
+('Angewandte Mathematik', 'mo.modulverantwortlicher@uni-ulm.de'),
+('Anwendungsmodul Medieninformatik', 'markus.modulverantwortlicher@uni-ulm.de'),
+('Anwendungsmodul Medieninformatik', 'max.modulverantwortlicher@uni-ulm.de'),
+('Bachelorarbeit', 'max.modulverantwortlicher@uni-ulm.de'),
+('Einführung in die Informatik', 'marianne.modulverantwortlicher@uni-ulm.de'),
 ('Informationssysteme', 'michael.modulverantwortlicher@uni-ulm.de'),
-('Konzepte der Programmierung', 'markus.modulverantwortlicher@uni-ulm.de'),
 ('Lineare Algebra für Ingenieure und Informatiker', 'michael.modulverantwortlicher@uni-ulm.de'),
 ('Mediale Informatik', 'michael.modulverantwortlicher@uni-ulm.de'),
+('Medienpsychologie / -pädagogik', 'marianne.modulverantwortlicher@uni-ulm.de'),
+('Proseminar Informatik/Medieninformatik', 'marianne.modulverantwortlicher@uni-ulm.de'),
+('Proseminar Informatik/Medieninformatik', 'markus.modulverantwortlicher@uni-ulm.de'),
+('Proseminar Informatik/Medieninformatik', 'mo.modulverantwortlicher@uni-ulm.de'),
+('Seminar Medieninformatik', 'markus.modulverantwortlicher@uni-ulm.de'),
 ('Softwareprojekt', 'mo.modulverantwortlicher@uni-ulm.de'),
-('Technische Grundlagen der Informatik', 'mo.modulverantwortlicher@uni-ulm.de');
+('Technische Grundlagen der Informatik', 'markus.modulverantwortlicher@uni-ulm.de');
 
 -- --------------------------------------------------------
 
@@ -248,7 +266,8 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `message` varchar(500) collate utf8_unicode_ci NOT NULL,
   `action` varchar(50) collate utf8_unicode_ci NOT NULL,
   `status` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `isRead` tinyint(1) default NULL,
+  `isReadSender` tinyint(1) default NULL,
+  `isReadRecipient` tinyint(4) NOT NULL,
   `exRulesTitle` varchar(50) collate utf8_unicode_ci default NULL,
   `modManTitle` varchar(50) collate utf8_unicode_ci default NULL,
   `modTitle` varchar(50) collate utf8_unicode_ci default NULL,

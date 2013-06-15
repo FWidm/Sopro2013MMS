@@ -117,23 +117,32 @@ public class ModulNotificationBean {
 	 */
 	public void onTabChange(TabChangeEvent event) {
 		loadNotifications();
-		boolean glbIsRead = false;
+		boolean glbIsNotRead = false;
 		String glbSender = new String();
 		int cntr = 0;
 		for (int i = 0; i < getNotificationList().size(); i++) {
-			if (!getNotificationList().get(i).isRead()) {
-				glbIsRead = true;
+			if (!getNotificationList().get(i).isIsReadSender()) {
+				glbIsNotRead = true;
 				cntr += 1;
-				glbSender += cntr + ". "
-						+ getNotificationList().get(i).getSenderEmail()
-						+ "&#x0d;&#x0A";
+				glbSender += cntr + ". ("
+						+ getNotificationList().get(i).getTimeStamp()
+						+ ") &nbsp";
 			}
 		}
-		if (glbIsRead) {
-			FacesMessage msg = new FacesMessage("There are " + cntr
-					+ " unread messages!", glbSender);
-
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+		if (glbIsNotRead) {
+			if (cntr == 1) {
+				FacesMessage msg = new FacesMessage(
+						"Sie haben eine ungelesene Nachricht ("
+								+ getNotificationList().get(0).getTimeStamp()
+								+ ")");
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+			} else {
+				FacesMessage msg = new FacesMessage(
+						"Sie haben "+ cntr +" ungelesene Nachrichten "
+								+ glbSender
+								+ ")");
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+			}
 		}
 	}
 

@@ -20,7 +20,9 @@
 	</div>
 	<!-- body -->
 	<h:form id="form">
-		<p:tabView id="tabview-redak" scrollable="true">
+		<p:growl id="growl" showDetail="true" />
+		<p:tabView id="tabview-dez" scrollable="true" dynamic="true">
+			<p:ajax event="tabChange" listener="#{DezernatNotificationBean.onTabChange}" update=":form:growl :form:tabview-dez:notify-layout"/>
 			<!-- TabView -->
 			<p:tab title="&Uuml;bersicht" id="tabStart">
 
@@ -103,7 +105,7 @@
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
 								listener="#{DezernatNotificationBean.selectedNotificationIsRead}"
-								update=":form:tabview-redak:notify-layout" />
+								update=":form:tabview-dez:notify-layout" />
 
 							<p:column>
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
@@ -115,13 +117,13 @@
 								<div align="center">
 									<p:commandButton value="aktualisieren" icon="ui-icon-refresh"
 										actionListener="#{DezernatNotificationBean.loadNotifications}"
-										update=":form:tabview-redak:notify-layout" />
+										update=":form:tabview-dez:notify-layout" />
 									<p:commandButton value="ablehnen" icon="ui-icon-closethick"
 										actionListener="#{DezernatNotificationBean.declineSelectedNotification}"
-										update=":form:tabview-redak:notify-layout" />
+										update=":form:tabview-dez:notify-layout" />
 									<p:commandButton value="akzeptieren" icon="ui-icon-check"
 										actionListener="#{DezernatNotificationBean.acceptSelectedNotification}"
-										update=":form:tabview-redak:notify-layout" />
+										update=":form:tabview-dez:notify-layout" />
 								</div>
 							</f:facet>
 						</p:dataTable>

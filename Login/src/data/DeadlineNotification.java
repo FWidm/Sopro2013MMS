@@ -9,9 +9,9 @@ public class DeadlineNotification extends Notification {
 	
 	public DeadlineNotification(String recipientEmail, String senderEmail,
 			Timestamp timeStamp, String message, String action, String status,
-			boolean isRead, Timestamp deadline, String modManTitle) {
+			boolean isReadSender, boolean isReadRecipient, Timestamp deadline, String modManTitle) {
 		super(recipientEmail, senderEmail, timeStamp, message, action, status,
-				isRead);
+				isReadSender, isReadRecipient);
 		setDeadline(deadline);
 		setModManTitle(modManTitle);
 		setStatus("deadline");

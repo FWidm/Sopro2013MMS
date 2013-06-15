@@ -27,13 +27,12 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 
-
 @ManagedBean(name = "DezernatNotificationBean")
 @SessionScoped
 public class DezernatNotificationBean {
 
 	public static final String TO_FOR = "message-log-edit";
-	
+
 	private String recipientEmail;
 	private String senderEmail;
 	private Timestamp timeStamp;
@@ -51,7 +50,7 @@ public class DezernatNotificationBean {
 	private String title2, description2, ects2, aim2;
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
-	
+
 	private String currentUser;
 
 	public DezernatNotificationBean() {
@@ -61,7 +60,6 @@ public class DezernatNotificationBean {
 		currentUser = (String) session.getAttribute("email");
 		loadNotifications();
 	}
-
 
 	/**
 	 * Clicking on the tablerow sets isRead to true
@@ -76,22 +74,32 @@ public class DezernatNotificationBean {
 	 */
 	public void onTabChange(TabChangeEvent event) {
 		loadNotifications();
-		boolean glbIsRead = false;
+		boolean glbIsNotRead = false;
 		String glbSender = new String();
 		int cntr = 0;
 		for (int i = 0; i < getNotificationList().size(); i++) {
-			if (!getNotificationList().get(i).isRead()) {
-				glbIsRead = true;
+			if (!getNotificationList().get(i).isIsReadSender()) {
+				glbIsNotRead = true;
 				cntr += 1;
-				glbSender += cntr + ". "
-						+ getNotificationList().get(i).getSenderEmail() + "&#x0d;&#x0A"; 
+				glbSender += cntr + ". ("
+						+ getNotificationList().get(i).getTimeStamp()
+						+ ") &nbsp";
 			}
 		}
-		if (glbIsRead) {
-			FacesMessage msg = new FacesMessage("There are " + cntr
-					+ " unread messages!", glbSender);
-
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+		if (glbIsNotRead) {
+			if (cntr == 1) {
+				FacesMessage msg = new FacesMessage(
+						"Sie haben eine ungelesene Nachricht ("
+								+ getNotificationList().get(0).getTimeStamp()
+								+ ")");
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+			} else {
+				FacesMessage msg = new FacesMessage(
+						"Sie haben "+ cntr +" ungelesene Nachrichten "
+								+ glbSender
+								+ ")");
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+			}
 		}
 	}
 
@@ -103,9 +111,12 @@ public class DezernatNotificationBean {
 
 		if (selectedNotification != null) {
 			DBNotification.declineNotification(selectedNotification);
-			/*Subject sub = (Subject) selectedEditableAfter;
-			DBSubject.deleteSubject(sub);
-			DBField.deleteFields(sub.getVersion(), sub.getSubTitle(), sub.getModTitle());*/
+			/*
+			 * Subject sub = (Subject) selectedEditableAfter;
+			 * DBSubject.deleteSubject(sub);
+			 * DBField.deleteFields(sub.getVersion(), sub.getSubTitle(),
+			 * sub.getModTitle());
+			 */
 			selectedNotification.setStatus("declined");
 			// actualizeNotificationList();
 			System.out.println("was declined");
@@ -145,6 +156,7 @@ public class DezernatNotificationBean {
 		setNotificationList(DBNotification
 				.loadModificationNotificationRedakteur(currentUser));
 	}
+
 	/**
 	 * if anything goes wrong - display an Error
 	 * 
@@ -315,8 +327,10 @@ public class DezernatNotificationBean {
 				ects2 = String.valueOf(sub2.getEcts());
 				aim2 = sub2.getAim();
 				mainVisible2 = true;
-				ectsAimVisible2 = !sub2.getSubTitle().equals("Vorgängerversion nicht verfügbar.");
-				addInfoVisible2 = !sub2.getSubTitle().equals("Vorgängerversion nicht verfügbar.");
+				ectsAimVisible2 = !sub2.getSubTitle().equals(
+						"Vorgängerversion nicht verfügbar.");
+				addInfoVisible2 = !sub2.getSubTitle().equals(
+						"Vorgängerversion nicht verfügbar.");
 			} else if (selectedEditableAfter instanceof Module
 					&& selectedEditableBefore instanceof Module) {
 				// After
@@ -368,7 +382,6 @@ public class DezernatNotificationBean {
 			}
 		}
 	}
-
 
 	/**
 	 * @return the strTimeStamp

@@ -137,7 +137,7 @@ public class DekanBean {
 			for (int i = 0; i < mailAdresses.size(); i++) {
 				DBNotification.saveNotification(new DeadlineNotification(
 						mailAdresses.get(i), currentUser, timestamp, "", "",
-						"queued", false, date, modManTitle));
+						"queued", false, false, date, modManTitle));
 			}
 			return;
 		}

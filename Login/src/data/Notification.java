@@ -9,7 +9,10 @@ public class Notification {
 	private String message;
 	private String action;
 	private String status;
-	private boolean isRead;
+	private boolean isReadSender;
+	private boolean isReadRecipient;
+
+
 
 	/**
 	 * @param recipientEmail
@@ -18,18 +21,21 @@ public class Notification {
 	 * @param message
 	 * @param action
 	 * @param status
-	 * @param isRead
+	 * @param isReadSender
+	 * @param isReadRecipient
 	 */
 	public Notification(String recipientEmail, String senderEmail,
 			Timestamp timeStamp, String message, String action, String status,
-			boolean isRead) {
+			boolean isReadSender, boolean isReadRecipient) {
+		super();
 		this.recipientEmail = recipientEmail;
 		this.senderEmail = senderEmail;
 		this.timeStamp = timeStamp;
 		this.message = message;
 		this.action = action;
 		this.status = status;
-		this.isRead = isRead;
+		this.setIsReadSender(isReadSender);
+		this.setIsReadRecipient(isReadRecipient);
 	}
 
 	/**
@@ -123,18 +129,31 @@ public class Notification {
 	}
 
 	/**
-	 * @return the isRead
+	 * @return the isReadSender
 	 */
-	public boolean isRead() {
-		return isRead;
+	public boolean isIsReadSender() {
+		return isReadSender;
 	}
 
 	/**
-	 * @param isRead
-	 *            the isRead to set
+	 * @param isReadSender the isReadSender to set
 	 */
-	public void setRead(boolean isRead) {
-		this.isRead = isRead;
+	public void setIsReadSender(boolean isReadSender) {
+		this.isReadSender = isReadSender;
+	}
+
+	/**
+	 * @return the isReadRecipient
+	 */
+	public boolean isIsReadRecipient() {
+		return isReadRecipient;
+	}
+
+	/**
+	 * @param isReadRecipient the isReadRecipient to set
+	 */
+	public void setIsReadRecipient(boolean isReadRecipient) {
+		this.isReadRecipient = isReadRecipient;
 	}
 
 }

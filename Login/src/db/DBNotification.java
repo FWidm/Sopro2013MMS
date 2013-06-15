@@ -35,7 +35,7 @@ public class DBNotification extends DBManager {
 			// checks the instance of the editable
 			if (modNotif.getModification().getBefore() instanceof ExRules) {
 				ExRules edit = (ExRules) modNotif.getModification().getBefore();
-				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, exRulesTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isReadSender, isReadRecipient, exRulesTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -49,12 +49,14 @@ public class DBNotification extends DBManager {
 						+ notif.getStatus()
 						+ "', "
 						+ false
+						+ ", "
+						+ false
 						+ ", '"
 						+ edit.getExRulesTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof ModManual) {
 				ModManual edit = (ModManual) modNotif.getModification()
 						.getBefore();
-				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ExRulesTitle, ModManTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isReadSender, isReadRecipient, ExRulesTitle, ModManTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -67,6 +69,8 @@ public class DBNotification extends DBManager {
 						+ "', '"
 						+ notif.getStatus()
 						+ "', "
+						+ false
+						+ ", "
 						+ false
 						+ ", '"
 						+ edit.getExRulesTitle()
@@ -74,7 +78,7 @@ public class DBNotification extends DBManager {
 						+ edit.getModManTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Module) {
 				Module edit = (Module) modNotif.getModification().getBefore();
-				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isReadSender, isReadRecipient, modTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -88,11 +92,13 @@ public class DBNotification extends DBManager {
 						+ notif.getStatus()
 						+ "', "
 						+ false
+						+ ", "
+						+ false
 						+ ", '"
 						+ edit.getModTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Subject) {
 				Subject edit = (Subject) modNotif.getModification().getBefore();
-				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, ModTitle, SubTitle) Values('"
+				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isReadSender, isReadRecipient, ModTitle, SubTitle) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -105,6 +111,8 @@ public class DBNotification extends DBManager {
 						+ "', '"
 						+ notif.getStatus()
 						+ "', "
+						+ false
+						+ ", "
 						+ false
 						+ ", '"
 						+ edit.getModTitle()
@@ -137,7 +145,7 @@ public class DBNotification extends DBManager {
 			try {
 				con = openConnection();
 				Statement stmt = con.createStatement();
-				String update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isRead, modManTitle, deadline) Values('"
+				String update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isReadSender, isReadRecipient, modManTitle, deadline) Values('"
 						+ notif.getRecipientEmail()
 						+ "', '"
 						+ notif.getSenderEmail()
@@ -150,6 +158,8 @@ public class DBNotification extends DBManager {
 						+ "', '"
 						+ "deadline"
 						+ "', "
+						+ false
+						+ ", "
 						+ false
 						+ ", '"
 						+ deadNotif.getModManTitle()
@@ -267,42 +277,9 @@ public class DBNotification extends DBManager {
 		}
 	}
 
-	/**
-	 * Updates a specific notification if edited
-	 */
-	public static void updateNotificationEdit(Notification notif) {
-		Connection con = null;
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET isRead = " + false
-					+ ", status = 'queued'" + ", message = '"
-					+ notif.getMessage() + "', " + " action = 'Edit by "
-					+ notif.getSenderEmail() + "'"
-					+ " WHERE recipientEmail = '" + notif.getRecipientEmail()
-					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
-					+ "' AND " + " timeStamp = '"
-					+ (Timestamp) notif.getTimeStamp() + "';";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen - "
-						+ "Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
-	 * Update a specific notification to isRead = true
+	 * Update a specific notification to isReadSender = true
 	 * 
 	 * @param notif
 	 * 
@@ -312,7 +289,41 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET isRead = " + true
+			String update = "UPDATE notification SET isReadSender = " + true
+					+ " WHERE recipientEmail = '" + notif.getRecipientEmail()
+					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
+					+ "' AND " + " timeStamp = '"
+					+ (Timestamp) notif.getTimeStamp() + "';";
+			con.setAutoCommit(false);
+			stmt.executeUpdate(update);
+			try {
+				con.commit();
+			} catch (SQLException exc) {
+				con.rollback(); // bei Fehlschlag Rollback der Transaktion
+				System.out.println("COMMIT fehlgeschlagen - "
+						+ "Rollback durchgefuehrt");
+			} finally {
+				closeQuietly(stmt);
+				closeQuietly(con); // Abbau Verbindung zur Datenbank
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Update a specific notification to isReadRecipient = true
+	 * 
+	 * @param notif
+	 * 
+	 */
+	public static void updateNotificationIsReadRecipient(Notification notif) {
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String update = "UPDATE notification SET isReadRecipient = " + true
 					+ " WHERE recipientEmail = '" + notif.getRecipientEmail()
 					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
 					+ "' AND " + " timeStamp = '"
@@ -335,49 +346,9 @@ public class DBNotification extends DBManager {
 		}
 	}
 
-	/**
-	 * Update a specific notification
-	 * 
-	 * @param notif
-	 * @param recipientEmail
-	 * @param senderEmail
-	 * @param timeStamp
-	 */
-	public static void updateNotification(Notification notif,
-			String recipientEmail, String senderEmail, Timestamp timeStamp) {
-		Connection con = null;
-		try {
-			con = openConnection();
-			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET recipientEmail = '"
-					+ notif.getRecipientEmail() + "', senderEmail = '"
-					+ notif.getSenderEmail() + "', timeStamp = '"
-					+ (Timestamp) notif.getTimeStamp() + "', message = '"
-					+ notif.getMessage() + "', action = '" + notif.getAction()
-					+ "', " + "status= '" + notif.getStatus() + "' ,'"
-					+ "WHERE recipientEmail = '" + recipientEmail + "' AND "
-					+ "senderEmail = '" + senderEmail + "' AND "
-					+ " timeStamp = '" + (Timestamp) timeStamp + "';";
-			con.setAutoCommit(false);
-			stmt.executeUpdate(update);
-			try {
-				con.commit();
-			} catch (SQLException exc) {
-				con.rollback(); // bei Fehlschlag Rollback der Transaktion
-				System.out.println("COMMIT fehlgeschlagen - "
-						+ "Rollback durchgefuehrt");
-			} finally {
-				closeQuietly(stmt);
-				closeQuietly(con); // Abbau Verbindung zur Datenbank
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
-	 * Update a specific notifications status to declined
+	 * Update a specific notifications status to declined and sets isReadSender to false
 	 * 
 	 * @param Notification
 	 * @return boolean
@@ -387,7 +358,7 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET status = 'declined', isRead = false "
+			String update = "UPDATE notification SET status = 'declined', isReadSender = false "
 					+ "WHERE senderEmail = '"
 					+ notif.getSenderEmail()
 					+ "' AND "
@@ -416,7 +387,7 @@ public class DBNotification extends DBManager {
 	}
 
 	/**
-	 * Update a specific notifications status to accepted
+	 * Update a specific notifications status to accepted and sets isReadSender to false
 	 * 
 	 * @param Notification
 	 * @return boolean
@@ -426,7 +397,7 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET status = 'accepted', isRead = false  "
+			String update = "UPDATE notification SET status = 'accepted', isReadSender = false  "
 					+ "WHERE "
 					+ "senderEmail = '"
 					+ notif.getSenderEmail()
@@ -485,10 +456,11 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
-				boolean isRead = rs.getBoolean("isRead");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
 
 				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
-						isRead));
+						isReadS, isReadR));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -525,10 +497,12 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
-				boolean isRead = rs.getBoolean("isRead");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
+
 
 				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
-						isRead));
+						isReadS, isReadR));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -558,10 +532,11 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
-				boolean isRead = rs.getBoolean("isRead");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
 
 				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
-						isRead));
+						isReadS, isReadR));
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -600,7 +575,8 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
-				boolean isRead = rs.getBoolean("isRead");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
 				String exRules = rs.getString("exRulesTitle");
 				String modMan = rs.getString("modManTitle");
 				String mod = rs.getString("modTitle");
@@ -609,7 +585,7 @@ public class DBNotification extends DBManager {
 
 				if (deadline != null && modMan != null) {
 					notif.add(new DeadlineNotification(recEm, senEm, timS,
-							mess, act, stat, isRead, deadline, modMan));
+							mess, act, stat, isReadS, isReadR, deadline, modMan));
 				} else if (exRules != null) {
 					if (modMan != null) {
 						// TODO add version for ModMan or not ;)
@@ -636,7 +612,7 @@ public class DBNotification extends DBManager {
 											"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.", "", 0, false);
 								}
 								notif.add(new ModificationNotification(recEm,
-										senEm, timS, mess, act, stat, isRead,
+										senEm, timS, mess, act, stat, isReadS, isReadR,
 										new Modification(subBefore, subject)));
 							}
 						} else {
@@ -650,7 +626,7 @@ public class DBNotification extends DBManager {
 										"", 0, false);
 							}
 							notif.add(new ModificationNotification(recEm,
-									senEm, timS, mess, act, stat, isRead,
+									senEm, timS, mess, act, stat, isReadS, isReadR,
 									new Modification(subBefore, subject)));
 						}
 					}
@@ -694,7 +670,8 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
-				boolean isRead = rs.getBoolean("isRead");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
 				String exRules = rs.getString("exRulesTitle");
 				String modMan = rs.getString("modManTitle");
 				String mod = rs.getString("modTitle");
@@ -718,7 +695,7 @@ public class DBNotification extends DBManager {
 						}
 						if (subject != null) {
 							notif.add(new ModificationNotification(recEm,
-									senEm, timS, mess, act, stat, isRead,
+									senEm, timS, mess, act, stat, isReadS, isReadR,
 									new Modification(subBefore, subject)));
 						}
 					}
@@ -762,10 +739,11 @@ public class DBNotification extends DBManager {
 				String mess = rs.getString("message");
 				String act = rs.getString("action");
 				String stat = rs.getString("status");
-				boolean isRead = rs.getBoolean("isRead");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
 
 				notif = new Notification(recEm, senEm, timS, mess, act, stat,
-						isRead);
+						isReadS, isReadR);
 			}
 			closeQuietly(rs);
 			closeQuietly(stmt);
@@ -778,18 +756,6 @@ public class DBNotification extends DBManager {
 		return notif;
 	}
 
-	public static void main(String[] args) {
-		Notification notif = new Notification("test3", "test4", new Timestamp(
-				System.currentTimeMillis()), "Edited: Modulverantwortlicher",
-				"edit", "queued", false);
-		saveNotification(notif);
-		System.out.println("saved");
-		List<Notification> notifs = loadNotification("test3", "test4");
-
-		System.out.println(notifs.get(0).getTimeStamp());
-		System.out.println(notifs.get(0).getMessage());
-
-	}
 
 	/**
 	 * DELETE all notifications from one user with specified email

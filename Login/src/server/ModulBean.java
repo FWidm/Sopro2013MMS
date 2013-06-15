@@ -441,7 +441,7 @@ public class ModulBean {
 			for (int i = 0; i < modAccessList.size(); i++) {
 				ModificationNotification mn = new ModificationNotification(
 						modAccessList.get(i), currentUser, timestamp, message,
-						"edit", "queued", false, new Modification(oldSub,
+						"edit", "queued", false, false, new Modification(oldSub,
 								newSub));
 				DBNotification.saveNotification(mn);
 			}
@@ -480,7 +480,7 @@ public class ModulBean {
 			for (int i = 0; i < dezernatList.size(); i++) {
 				ModificationNotification mn = new ModificationNotification(
 						dezernatList.get(i), currentUser, timestamp, message,
-						"edit", "queued", false, new Modification(oldSub,
+						"edit", "queued", false, false, new Modification(oldSub,
 								newSub));
 				DBNotification.saveNotification(mn);
 			}

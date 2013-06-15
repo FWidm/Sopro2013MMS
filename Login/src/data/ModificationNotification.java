@@ -26,9 +26,9 @@ public class ModificationNotification extends Notification {
 	 */
 	public ModificationNotification(String recipientEmail, String senderEmail,
 			Timestamp timeStamp, String message, String action, String status,
-			boolean isRead, Modification modification) {
+			boolean isReadSender, boolean isReadRecipient, Modification modification) {
 		super(recipientEmail, senderEmail, timeStamp, message, action, status,
-				isRead);
+				isReadSender, isReadRecipient);
 		this.modification = modification;
 	}
 

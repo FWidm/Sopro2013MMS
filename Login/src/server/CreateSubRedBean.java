@@ -246,7 +246,7 @@ public class CreateSubRedBean {
 			for (int i = 0; i < dezernatList.size(); i++) {
 				ModificationNotification mn = new ModificationNotification(
 						dezernatList.get(i), currentUser, timestamp, "",
-						"edit", "queued", false, new Modification(sub, sub));
+						"edit", "queued", false, true, new Modification(sub, sub));
 				DBNotification.saveNotification(mn);
 			}
 			
