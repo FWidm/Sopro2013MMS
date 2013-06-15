@@ -50,13 +50,13 @@ public class AccessBean {
 		modManTitleList = DBModManual.loadAllModManTitles();
 
 //		System.out.println(userModList.toString());
-		System.out.println(userRedList.toString());
+//		System.out.println(userRedList.toString());
 
 		modAccList = DBModAccess.loadAccess();
 		modManAccList = DBModManAccess.loadAccess();
 
 //		System.out.println(modAccList.toString());
-		System.out.println(modManAccList.toString());
+//		System.out.println(modManAccList.toString());
 	}
 	
 	/**
@@ -69,8 +69,8 @@ public class AccessBean {
 				+ " is selected");
 		if (!userModList.contains(selectedUserAccept)
 				|| !modTitleList.contains(selectedAccess)) {
-			addErrorMessage("messages-access", "Failed",
-					"you need to select both - a user and a module. ");
+			addErrorMessage("messages-access", "Fehler:",
+					"Sie m\u00FCssen sowohl einen Modulverantwortlichen als auch ein Modul ausw\u00E4hlen.");
 			return;
 		}
 		List<ModAccess> modAccessSelectedUser = DBModAccess
@@ -86,15 +86,15 @@ public class AccessBean {
 			if (DBModAccess.saveModAccess(new ModAccess(selectedAccess,
 					selectedUserAccept))){
 				filterSelectionModList(null);
-				addMessage("messages-access", "Success", selectedUserAccept
-						+ " is now able to edit things in " + selectedAccess);
+				addMessage("messages-access", "Speichern erfolgreich:", selectedUserAccept
+						+ " ist nun f\u00FCr '" + selectedAccess + "' verantwortlich.");
 			}else 
-				addErrorMessage("messages-access", "Failed",
-						"Error with the database - try again.");
+				addErrorMessage("messages-access", "Fehler:",
+						"Es ist ein Fehler mit der Datenbank aufgetreten.");
 		}
 		else 
-			addErrorMessage("messages-access", "Failed",
-					"The selected User is already able to edit the selected Module.");
+			addErrorMessage("messages-access", "Fehler:",
+					"Der ausgew\u00E4hlte Modulverantwortliche ist bereits f\u00FCr das Modul '" + selectedAccess + "' verantwortlich.");
 	}
 	
 	/**
@@ -107,8 +107,8 @@ public class AccessBean {
 				+ " is selected");
 		if (!userRedList.contains(selectedUserAccept)
 				|| !modManTitleList.contains(selectedAccess)) {
-			addErrorMessage("messages-access", "Failed",
-					"you need to select both - a user and a module. ");
+			addErrorMessage("messages-access", "Fehler:",
+					"Sie m\u00FCssen sowohl einen Redakteur als auch ein Modulhandbuch ausw\u00E4hlen.");
 			return;
 		}
 		List<ModManAccess> modAccessSelectedUser = DBModManAccess
@@ -121,18 +121,18 @@ public class AccessBean {
 			}
 		}
 		if (!alreadySet) {
-			if (DBModManAccess.saveModManAccess(new ModManAccess(selectedAccess,
-					selectedUserAccept))){
+			if (DBModManAccess.saveModManAccess(new ModManAccess(selectedUserAccept,
+					selectedAccess))){
 				filterSelectionRedList(null);
-				addMessage("messages-access", "Success", selectedUserAccept
-						+ " is now able to edit things in " + selectedAccess);
+				addMessage("messages-access", "Speichern erfolgreich:", selectedUserAccept
+						+ " ist nun f\u00FCr '" + selectedAccess + "' verantwortlich.");
 			}else 
-				addErrorMessage("messages-access", "Failed",
-						"Error with the database - try again.");
+				addErrorMessage("messages-access", "Fehler:",
+						"Es ist ein Fehler mit der Datenbank aufgetreten.");
 		}
 		else 
-			addErrorMessage("messages-access", "Failed",
-					"The selected User is already able to edit the selected Module.");
+			addErrorMessage("messages-access", "Fehler",
+					"Der ausgew\u00E4hlte Redakteur ist bereits f\u00FCr das Modulhandbuch '" + selectedAccess + "' verantwortlich.");
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class AccessBean {
 	 */
 	public void deleteRowRed(){
 		System.out.println("delete \t "+deleteModMan);
-		DBModManAccess.deleteModManAccess(deleteModMan.getModManTitle(), deleteModMan.getEmail());
+		DBModManAccess.deleteModManAccess(deleteModMan.getEmail(), deleteModMan.getModManTitle());
 		filterSelectionRedList(null);
 	}
 
