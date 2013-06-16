@@ -3,6 +3,77 @@ body {
 	border-radius: 0px !important;
 }
 
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+	and (max-width: 1024px) {
+	img {
+		max-height: 90px !important;
+		margin-bottom: .0em !important;
+	}
+	body {
+		font-size: 10px;
+		width: 1024px !important;
+	}
+	.header {
+		height: 90px !important;
+	}
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+	and (max-width: 800px) {
+	img {
+		max-height: 70px !important;
+		font-size:8px;
+		margin-bottom: .0em !important;
+	}
+	body {
+		font-size: 8px;
+		width: 800px !important;
+	}
+	.header {
+		height: 70px !important;
+	}
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+	and (max-width: 580px) {
+	img {
+		max-height: 40px !important;
+		font-size:8px;
+		margin-bottom: .0em !important;
+	}
+	body {
+		font-size: 8px;
+		width: 580px !important;
+	}
+	.header {
+		height: 40px !important;
+	}
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+	and (max-width: 480px) {
+	img {
+		max-height: 30px !important;
+		font-size:8px;
+		margin-bottom: .0em !important;
+	}
+	body {
+		font-size: 8px;
+		width: 480px !important;
+		}
+	.header {
+		height: 30px !important;
+	}
+}
+
+/*icon*/
+.ui-icon {
+	width: 1.4em;
+	height: 1.4em;
+}
+
 /*header image*/
 img {
 	float: right !important; 
@@ -82,9 +153,10 @@ input:-webkit-autofill {
     /*border-bottom: 1px #c2bdae dotted !important;*/
 }
 
-/*First Header (modulemanual*/
-.ui-layout-unit-header, .ui-layout-unit-footer {
+/*First Header and table-menu header (modulemanual)*/
+.ui-layout-unit-header {
     background: none !important;
+    /*width: 17.2em;*/
 }
 
 /* hover of tabs */
