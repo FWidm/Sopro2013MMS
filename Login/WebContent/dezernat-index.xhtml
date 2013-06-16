@@ -97,7 +97,7 @@
 					id="notify-layout">
 
 					<p:layoutUnit position="west" resizable="true" size="400"
-						minSize="215" maxSize="400" header="Nachrichten"
+						minSize="215" maxSize="400" header="Best&auml;tigungen"
 						collapsible="true">
 
 
@@ -108,14 +108,19 @@
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
 								listener="#{DezernatNotificationBean.selectedNotificationIsReadRecipient}"
+								actionListener="#{DezernatNotificationBean.loadNotifications}"
 								update=":form:tabview-dez:notify-layout" />
 
 							<p:column>
+								<p:graphicImage value="/Image/Notification/#{noti.isReadSender}.png"
+									style="width: 40px;" />
+								<p:graphicImage value="/Image/Notification/#{noti.isReadRecipient}.png"
+									style="width: 40px;" />
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
-                    #{noti.timeStamp}
-
-                </p:column>
+                    			#{noti.timeStamp}
+                			</p:column>
+                			
 							<f:facet name="footer">
 								<div align="center">
 									<p:commandButton value="aktualisieren" icon="ui-icon-refresh"
@@ -155,7 +160,7 @@
 									toggleable="true" toggleSpeed="500"
 									visible="#{DezernatNotificationBean.ectsAimVisible}">
 
-									<strong>Leistungspunkte:</strong> #{DezernatNotificationBean.ects}<br />
+									<font color="red"><strong>Leistungspunkte:</strong> #{DezernatNotificationBean.ects}<br /></font>
 									<br />
 									<strong>Lernziele:</strong> #{DezernatNotificationBean.aim}
 

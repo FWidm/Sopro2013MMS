@@ -128,12 +128,12 @@ public class RedDezNotificationBean {
 		String glbSender = new String();
 		int cntr = 0;
 		for (int i = 0; i < getNotificationList().size(); i++) {
-			if (!getNotificationList().get(i).isIsReadSender()) {
+			if (!getNotificationList().get(i).isIsReadRecipient()) {
 				glbIsNotRead = true;
 				cntr += 1;
 				glbSender += cntr + ". ("
 						+ getNotificationList().get(i).getTimeStamp()
-						+ ") &nbsp";
+						+ ") ";
 			}
 		}
 		if (glbIsNotRead) {
@@ -143,7 +143,7 @@ public class RedDezNotificationBean {
 								+ getNotificationList().get(0).getTimeStamp()
 								+ ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
+			} else if (cntr > 1){
 				FacesMessage msg = new FacesMessage(
 						"Sie haben "+ cntr +" ungelesene Nachrichten "
 								+ glbSender

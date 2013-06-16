@@ -317,16 +317,21 @@
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
 								listener="#{ModulNotificationBean.selectedNotificationIsReadSender}"
+								actionListener="#{ModulNotificationBean.loadNotifications}"
 								update=":form:tabview-modEx:notify-layout" />
 
 							<p:column>
-								<p:graphicImage value="/Image/Notification/#{noti.isReadRecipient}.png"
-									style="width: 10px; margin-bottom: 5px"  />
+								<p:graphicImage
+									value="/Image/Notification/#{noti.isReadSender}.png"
+									style="width: 10px; margin-bottom: 5px" />
+								<p:graphicImage
+									value="/Image/Notification/#{noti.isReadRecipient}.png"
+									style="width: 10px; margin-bottom: 5px" />
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
-                    #{noti.timeStamp}
-
-                </p:column>
+                    			#{noti.timeStamp}
+                			</p:column>
+                			
 							<f:facet name="footer">
 								<div align="center">
 									<p:commandButton value="Widerrufen/Entfernen"
@@ -343,7 +348,8 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
-						<p:panel visible="#{!ModulNotificationBean.isDeadline}" header="Deine mutter mag kleine kinder">
+						<p:panel visible="#{!ModulNotificationBean.isDeadline}"
+							header="Deine mutter mag kleine kinder">
 							<p:layout>
 								<p:layoutUnit position="north" minSize="80"
 									header="Nachricht vom: #{ModulNotificationBean.selectedNotification.timeStamp} 
