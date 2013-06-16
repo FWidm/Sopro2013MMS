@@ -27,13 +27,14 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 
-
 @ManagedBean(name = "RedakteurNotificationBean")
 @SessionScoped
 public class RedakteurNotificationBean {
 
 	public static final String TO_FOR = "message-log-edit";
-	
+	public static final String BLACK = "black";
+	public static final String RED = "red";
+
 	private String recipientEmail;
 	private String senderEmail;
 	private Timestamp timeStamp;
@@ -51,7 +52,12 @@ public class RedakteurNotificationBean {
 	private String title2, description2, ects2, aim2;
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
-	
+
+	// Variables for validation of change
+	private String validateChangedTitle, validateChangedDescription,
+			validateChangedEcts, validateChangedAim,
+			validateChangedFieldListLength;
+
 	private String currentUser;
 
 	public RedakteurNotificationBean() {
@@ -62,18 +68,93 @@ public class RedakteurNotificationBean {
 		loadNotifications();
 	}
 
+	/**
+	 * validates if title has changed
+	 * 
+	 */
+	public void validateChangedTitle() {
+		if (!title.equals(title2)) {
+			setValidateChangedTitle(RED);
+		} else {
+			setValidateChangedTitle(BLACK);
+		}
+	}
+
+	/**
+	 * validates if description has changed
+	 * 
+	 */
+	public void validateChangedDescription() {
+		if (!description.equals(description2)) {
+			setValidateChangedDescription(RED);
+		} else {
+			setValidateChangedDescription(BLACK);
+		}
+	}
+
+	/**
+	 * validates if ects has changed
+	 * 
+	 */
+	public void validateChangedEcts() {
+		if (!ects.equals(ects2)) {
+			setValidateChangedEcts(RED);
+		} else {
+			setValidateChangedEcts(BLACK);
+		}
+	}
+
+	/**
+	 * validates if aim has changed
+	 * 
+	 */
+	public void validateChangedAim() {
+		if (!aim.equals(aim2)) {
+			setValidateChangedAim(RED);
+		} else {
+			setValidateChangedAim(BLACK);
+		}
+	}
+
+	/**
+	 * validates if fieldlist lenngth has changed
+	 * 
+	 */
+	public void validateChangedFieldListLength() {
+		if (!fieldList.equals(fieldList2)) {
+			setValidateChangedFieldListLength(RED);
+		} else {
+			setValidateChangedFieldListLength(BLACK);
+		}
+	}
+	
+	/**
+	 * calls all validations
+	 */
+	public void validateAll() {
+		validateChangedAim();
+		validateChangedDescription();
+		validateChangedEcts(); 
+		validateChangedFieldListLength(); 
+		validateChangedTitle(); 
+	}
 
 	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
 	public void selectedNotificationIsReadRecipient(SelectEvent e) {
-		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
+		validateAll();
+		DBNotification
+				.updateNotificationIsReadRecipient(getSelectedNotification());
 	}
+
 	/**
 	 * Clicking on the tablerow sets isReadSender to true
 	 */
 	public void selectedNotificationIsReadSender(SelectEvent e) {
-		DBNotification.updateNotificationIsReadSender(getSelectedNotification());
+		validateAll();
+		DBNotification
+				.updateNotificationIsReadSender(getSelectedNotification());
 	}
 
 	/**
@@ -102,10 +183,8 @@ public class RedakteurNotificationBean {
 								+ ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			} else if (cntr > 1) {
-				FacesMessage msg = new FacesMessage(
-						"Sie haben "+ cntr +" ungelesene Nachrichten "
-								+ glbSender
-								+ ")");
+				FacesMessage msg = new FacesMessage("Sie haben " + cntr
+						+ " ungelesene Nachrichten " + glbSender + ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			}
 		}
@@ -119,9 +198,12 @@ public class RedakteurNotificationBean {
 
 		if (selectedNotification != null) {
 			DBNotification.declineNotification(selectedNotification);
-			/*Subject sub = (Subject) selectedEditableAfter;
-			DBSubject.deleteSubject(sub);
-			DBField.deleteFields(sub.getVersion(), sub.getSubTitle(), sub.getModTitle());*/
+			/*
+			 * Subject sub = (Subject) selectedEditableAfter;
+			 * DBSubject.deleteSubject(sub);
+			 * DBField.deleteFields(sub.getVersion(), sub.getSubTitle(),
+			 * sub.getModTitle());
+			 */
 			selectedNotification.setStatus("declined");
 			// actualizeNotificationList();
 			System.out.println("was declined");
@@ -161,6 +243,7 @@ public class RedakteurNotificationBean {
 		setNotificationList(DBNotification
 				.loadModificationNotificationRedakteur(currentUser));
 	}
+
 	/**
 	 * if anything goes wrong - display an Error
 	 * 
@@ -384,7 +467,6 @@ public class RedakteurNotificationBean {
 			}
 		}
 	}
-
 
 	/**
 	 * @return the strTimeStamp
@@ -669,6 +751,77 @@ public class RedakteurNotificationBean {
 	 */
 	public void setFieldList2(List<Field> fieldList2) {
 		this.fieldList2 = fieldList2;
+	}
+
+	/**
+	 * @return the validateChangedTitle
+	 */
+	public String getValidateChangedTitle() {
+		return validateChangedTitle;
+	}
+
+	/**
+	 * @param validateChangedTitle the validateChangedTitle to set
+	 */
+	public void setValidateChangedTitle(String validateChangedTitle) {
+		this.validateChangedTitle = validateChangedTitle;
+	}
+
+	/**
+	 * @return the validateChangedDescription
+	 */
+	public String getValidateChangedDescription() {
+		return validateChangedDescription;
+	}
+
+	/**
+	 * @param validateChangedDescription the validateChangedDescription to set
+	 */
+	public void setValidateChangedDescription(String validateChangedDescription) {
+		this.validateChangedDescription = validateChangedDescription;
+	}
+
+	/**
+	 * @return the validateChangedEcts
+	 */
+	public String getValidateChangedEcts() {
+		return validateChangedEcts;
+	}
+
+	/**
+	 * @param validateChangedEcts the validateChangedEcts to set
+	 */
+	public void setValidateChangedEcts(String validateChangedEcts) {
+		this.validateChangedEcts = validateChangedEcts;
+	}
+
+	/**
+	 * @return the validateChangedAim
+	 */
+	public String getValidateChangedAim() {
+		return validateChangedAim;
+	}
+
+	/**
+	 * @param validateChangedAim the validateChangedAim to set
+	 */
+	public void setValidateChangedAim(String validateChangedAim) {
+		this.validateChangedAim = validateChangedAim;
+	}
+
+	/**
+	 * @return the validateChangedFieldListLength
+	 */
+	public String getValidateChangedFieldListLength() {
+		return validateChangedFieldListLength;
+	}
+
+	/**
+	 * @param validateChangedFieldListLength the validateChangedFieldListLength to set
+	 */
+	public void setValidateChangedFieldListLength(
+			String validateChangedFieldListLength) {
+		this.validateChangedFieldListLength = validateChangedFieldListLength;
 	}
 
 }

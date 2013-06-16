@@ -1,4 +1,3 @@
-
 package server;
 
 import java.sql.Timestamp;
@@ -30,12 +29,13 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 
-
 @ManagedBean(name = "RedDezNotificationBean")
 @SessionScoped
 public class RedDezNotificationBean {
 
 	public static final String TO_FOR = "message-log-edit-dez";
+	public static final String BLACK = "black";
+	public static final String RED = "red";
 
 	private String recipientEmail;
 	private String senderEmail;
@@ -60,6 +60,11 @@ public class RedDezNotificationBean {
 	private Timestamp deadline;
 	private boolean isDeadline;
 
+	// Variables for validation of change
+	private String validateChangedTitle, validateChangedDescription,
+			validateChangedEcts, validateChangedAim,
+			validateChangedFieldListLength;
+
 	private String currentUser;
 
 	public RedDezNotificationBean() {
@@ -71,18 +76,94 @@ public class RedDezNotificationBean {
 	}
 
 	/**
+	 * validates if title has changed
+	 * 
+	 */
+	public void validateChangedTitle() {
+		if (!title.equals(title2)) {
+			setValidateChangedTitle(RED);
+		} else {
+			setValidateChangedTitle(BLACK);
+		}
+	}
+
+	/**
+	 * validates if description has changed
+	 * 
+	 */
+	public void validateChangedDescription() {
+		if (!description.equals(description2)) {
+			setValidateChangedDescription(RED);
+		} else {
+			setValidateChangedDescription(BLACK);
+		}
+	}
+
+	/**
+	 * validates if ects has changed
+	 * 
+	 */
+	public void validateChangedEcts() {
+		if (!ects.equals(ects2)) {
+			setValidateChangedEcts(RED);
+		} else {
+			setValidateChangedEcts(BLACK);
+		}
+	}
+
+	/**
+	 * validates if aim has changed
+	 * 
+	 */
+	public void validateChangedAim() {
+		if (!aim.equals(aim2)) {
+			setValidateChangedAim(RED);
+		} else {
+			setValidateChangedAim(BLACK);
+		}
+	}
+
+	/**
+	 * validates if fieldlist lenngth has changed
+	 * 
+	 */
+	public void validateChangedFieldListLength() {
+		if (!fieldList.equals(fieldList2)) {
+			setValidateChangedFieldListLength(RED);
+		} else {
+			setValidateChangedFieldListLength(BLACK);
+		}
+	}
+
+	/**
+	 * calls all validations
+	 */
+	public void validateAll() {
+		validateChangedAim();
+		validateChangedDescription();
+		validateChangedEcts();
+		validateChangedFieldListLength();
+		validateChangedTitle();
+	}
+
+	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
 	public void selectedNotificationIsReadRecipient(SelectEvent e) {
-		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
+		validateAll();
+		DBNotification
+				.updateNotificationIsReadRecipient(getSelectedNotification());
 	}
 
 	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
 	public void selectedNotificationIsReadSender(SelectEvent e) {
-		DBNotification.updateNotificationIsReadSender(getSelectedNotification());
+		validateAll();
+		DBNotification
+				.updateNotificationIsReadSender(getSelectedNotification());
 	}
+
 	/**
 	 * Deletes a specific notification from DB
 	 */
@@ -132,8 +213,7 @@ public class RedDezNotificationBean {
 				glbIsNotRead = true;
 				cntr += 1;
 				glbSender += cntr + ". ("
-						+ getNotificationList().get(i).getTimeStamp()
-						+ ") ";
+						+ getNotificationList().get(i).getTimeStamp() + ") ";
 			}
 		}
 		if (glbIsNotRead) {
@@ -143,15 +223,14 @@ public class RedDezNotificationBean {
 								+ getNotificationList().get(0).getTimeStamp()
 								+ ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else if (cntr > 1){
-				FacesMessage msg = new FacesMessage(
-						"Sie haben "+ cntr +" ungelesene Nachrichten "
-								+ glbSender
-								+ ")");
+			} else if (cntr > 1) {
+				FacesMessage msg = new FacesMessage("Sie haben " + cntr
+						+ " ungelesene Nachrichten " + glbSender + ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			}
 		}
 	}
+
 	/**
 	 * Loads all Notifications from the database
 	 * 
@@ -335,8 +414,10 @@ public class RedDezNotificationBean {
 					ects2 = String.valueOf(sub2.getEcts());
 					aim2 = sub2.getAim();
 					mainVisible2 = true;
-					ectsAimVisible2 = !sub2.getSubTitle().equals("Vorgängerversion nicht verfügbar.");
-					addInfoVisible2 = !sub2.getSubTitle().equals("Vorgängerversion nicht verfügbar.");
+					ectsAimVisible2 = !sub2.getSubTitle().equals(
+							"Vorgängerversion nicht verfügbar.");
+					addInfoVisible2 = !sub2.getSubTitle().equals(
+							"Vorgängerversion nicht verfügbar.");
 				} else if (selectedEditableAfter instanceof Module
 						&& selectedEditableBefore instanceof Module) {
 					// After
@@ -726,6 +807,82 @@ public class RedDezNotificationBean {
 	 */
 	public void setIsDeadline(boolean isDeadline) {
 		this.isDeadline = isDeadline;
+	}
+
+	/**
+	 * @return the validateChangedTitle
+	 */
+	public String getValidateChangedTitle() {
+		return validateChangedTitle;
+	}
+
+	/**
+	 * @param validateChangedTitle
+	 *            the validateChangedTitle to set
+	 */
+	public void setValidateChangedTitle(String validateChangedTitle) {
+		this.validateChangedTitle = validateChangedTitle;
+	}
+
+	/**
+	 * @return the validateChangedDescription
+	 */
+	public String getValidateChangedDescription() {
+		return validateChangedDescription;
+	}
+
+	/**
+	 * @param validateChangedDescription
+	 *            the validateChangedDescription to set
+	 */
+	public void setValidateChangedDescription(String validateChangedDescription) {
+		this.validateChangedDescription = validateChangedDescription;
+	}
+
+	/**
+	 * @return the validateChangedEcts
+	 */
+	public String getValidateChangedEcts() {
+		return validateChangedEcts;
+	}
+
+	/**
+	 * @param validateChangedEcts
+	 *            the validateChangedEcts to set
+	 */
+	public void setValidateChangedEcts(String validateChangedEcts) {
+		this.validateChangedEcts = validateChangedEcts;
+	}
+
+	/**
+	 * @return the validateChangedAim
+	 */
+	public String getValidateChangedAim() {
+		return validateChangedAim;
+	}
+
+	/**
+	 * @param validateChangedAim
+	 *            the validateChangedAim to set
+	 */
+	public void setValidateChangedAim(String validateChangedAim) {
+		this.validateChangedAim = validateChangedAim;
+	}
+
+	/**
+	 * @return the validateChangedFieldListLength
+	 */
+	public String getValidateChangedFieldListLength() {
+		return validateChangedFieldListLength;
+	}
+
+	/**
+	 * @param validateChangedFieldListLength
+	 *            the validateChangedFieldListLength to set
+	 */
+	public void setValidateChangedFieldListLength(
+			String validateChangedFieldListLength) {
+		this.validateChangedFieldListLength = validateChangedFieldListLength;
 	}
 
 }

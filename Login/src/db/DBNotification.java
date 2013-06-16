@@ -357,7 +357,7 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String update = "UPDATE notification SET status = 'declined', isReadSender = false "
+			String update = "UPDATE notification SET status = 'declined', isReadSender = false, isReadRecipient = true "
 					+ "WHERE senderEmail = '"
 					+ notif.getSenderEmail()
 					+ "' AND "
