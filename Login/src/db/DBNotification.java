@@ -290,8 +290,7 @@ public class DBNotification extends DBManager {
 			con = openConnection();
 			Statement stmt = con.createStatement();
 			String update = "UPDATE notification SET isReadSender = " + true
-					+ " WHERE recipientEmail = '" + notif.getRecipientEmail()
-					+ "' AND " + "senderEmail = '" + notif.getSenderEmail()
+					+ " WHERE senderEmail = '" + notif.getSenderEmail()
 					+ "' AND " + " timeStamp = '"
 					+ (Timestamp) notif.getTimeStamp() + "';";
 			con.setAutoCommit(false);

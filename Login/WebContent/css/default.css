@@ -193,11 +193,12 @@ li.ui-state-default.ui-corner-top.ui-state-hover {
 
 /*tables */
 .ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td {
-	padding: 4px 0px;
+	padding: 12px 8px;
 	overflow: hidden;
 	white-space: nowrap;
 	border-width: 1px;
 	border-style: solid;
+	background-color: #A32638;
 }
 
 /*parent header of menu*/

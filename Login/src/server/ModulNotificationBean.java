@@ -70,10 +70,10 @@ public class ModulNotificationBean {
 	}
 
 	/**
-	 * Clicking on the tablerow sets isReadRecipient to true
+	 * Clicking on the tablerow sets isReadSender to true
 	 */
-	public void selectedNotificationIsReadRecipient(SelectEvent e) {
-		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
+	public void selectedNotificationIsReadSender(SelectEvent e) {
+		DBNotification.updateNotificationIsReadSender(getSelectedNotification());
 	}
 
 

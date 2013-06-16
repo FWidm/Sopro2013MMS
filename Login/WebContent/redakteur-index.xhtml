@@ -20,7 +20,11 @@
 	</div>
 	<!-- body -->
 	<h:form id="form">
-		<p:tabView id="tabview-redak" scrollable="true">
+	<p:growl id="growl" showDetail="true" />
+		<p:tabView id="tabview-redak" scrollable="true" dynamic="true">
+			<p:ajax event="tabChange"
+				listener="#{RedakteurNotificationBean.onTabChange}" update=":form:growl" />
+
 			<!-- TabView -->
 			<p:tab title="&Uuml;bersicht" id="tabStart">
 
@@ -364,10 +368,12 @@
 							selection="#{RedakteurNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{RedakteurNotificationBean.selectedNotificationIsReadSender}"
+								listener="#{RedakteurNotificationBean.selectedNotificationIsReadRecipient}"
 								update=":form:tabview-redak:notify-layout" />
 
 							<p:column>
+								<p:graphicImage value="/Image/Notification/#{noti.isReadRecipient}.png"
+									style="width: 10px; margin-bottom: 5px"  />
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
                     #{noti.timeStamp}
@@ -489,13 +495,15 @@
 							selection="#{RedDezNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{RedDezNotificationBean.selectedNotificationIsReadRecipient}"
+								listener="#{RedDezNotificationBean.selectedNotificationIsReadSender}"
 								update=":form:tabview-redak:notify-layout-dez" />
 
 							<p:column>
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
-                    #{noti.senderEmail}
+								<p:graphicImage value="/Image/Notification/#{noti.isReadRecipient}.png"
+									style="width: 10px;" />
+                    #{noti.timeStamp}
 
                 </p:column>
 							<f:facet name="footer">

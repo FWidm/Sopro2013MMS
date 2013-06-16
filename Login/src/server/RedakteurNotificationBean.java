@@ -66,11 +66,11 @@ public class RedakteurNotificationBean {
 	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
-	public void selectedNotificationIsReadrecipient(SelectEvent e) {
+	public void selectedNotificationIsReadRecipient(SelectEvent e) {
 		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
 	}
 	/**
-	 * Clicking on the tablerow sets isReadRecipient to true
+	 * Clicking on the tablerow sets isReadSender to true
 	 */
 	public void selectedNotificationIsReadSender(SelectEvent e) {
 		DBNotification.updateNotificationIsReadSender(getSelectedNotification());
@@ -86,7 +86,7 @@ public class RedakteurNotificationBean {
 		String glbSender = new String();
 		int cntr = 0;
 		for (int i = 0; i < getNotificationList().size(); i++) {
-			if (!getNotificationList().get(i).isIsReadSender()) {
+			if (!getNotificationList().get(i).isIsReadRecipient()) {
 				glbIsNotRead = true;
 				cntr += 1;
 				glbSender += cntr + ". ("
@@ -101,7 +101,7 @@ public class RedakteurNotificationBean {
 								+ getNotificationList().get(0).getTimeStamp()
 								+ ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
+			} else if (cntr > 1) {
 				FacesMessage msg = new FacesMessage(
 						"Sie haben "+ cntr +" ungelesene Nachrichten "
 								+ glbSender
