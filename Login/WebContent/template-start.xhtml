@@ -73,14 +73,16 @@
 
 					<p:layoutUnit position="south" resizable="false">
 						<div align="center">
-							<p:commandButton
-								action="pdf/Medienpsychologiepdagogik_v1.pdf?faces-redirect=true"
-								ajax="false" value="Drucken">
-							</p:commandButton>
-							<p:commandButton id="downloadLink" value="Download" ajax="false"
+							<p:commandButton value="Download Fach" ajax="false"
 								onclick="PrimeFaces.monitorDownload(start, stop)"
 								icon="ui-icon-disk"
-								actionListener="#{DownloadBean.prepareStream}">
+								actionListener="#{DownloadBean.prepareStreamSubject}">
+								<p:fileDownload value="#{DownloadBean.file}" />
+							</p:commandButton>
+							<p:commandButton value="Download Modulhandbuch" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop)"
+								icon="ui-icon-disk"
+								actionListener="#{DownloadBean.prepareStreamModMan}">
 								<p:fileDownload value="#{DownloadBean.file}" />
 							</p:commandButton>
 						</div>

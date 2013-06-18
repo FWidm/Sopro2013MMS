@@ -23,33 +23,37 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.util.PDFMergerUtility;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-
-
+import data.ExRules;
 import data.Field;
+import data.ModManual;
+import data.Module;
 import data.Subject;
 import db.DBField;
+import db.DBModule;
+import db.DBSubject;
 
 @ManagedBean(name = "DownloadBean")
 @SessionScoped
 public class DownloadBean {
 	private String pathToFile;
 	private StreamedContent file;
-	private String pdfPath;
+	private String path;
 
 	// PDFBOX
 	public static int headX = 50;
 	public static int headY = 660;
 
 	private Subject downloadSub;
+	private ModManual downloadModMan;
+	private ExRules downloadExRule;
 
 	public DownloadBean() {
-		setPdfPath(((ServletContext) FacesContext.getCurrentInstance()
-				.getExternalContext().getContext()).getContextPath()
-				+ "/pdf/");
-		System.err.println("pdfPath: " + pdfPath);
+		setPath(((ServletContext) FacesContext.getCurrentInstance()
+				.getExternalContext().getContext()).getRealPath(""));
 	}
 
 	/**
@@ -57,10 +61,39 @@ public class DownloadBean {
 	 * 
 	 * @param e
 	 */
-	public void prepareStream() {
-		System.err.println(downloadSub);
+	public void prepareStreamSubject() {
 		if (downloadSub != null) {
 			pathToFile = processSubject(downloadSub);
+			System.err.println(pathToFile);
+			// split the path to remove the pdf prefix.
+			String filename = pathToFile.split("/pdf/")[1];
+			System.out.println(filename);
+			// InputStream stream =
+			// this.getClass().getResourceAsStream(pathToFile);
+			InputStream stream;
+			try {
+				stream = new FileInputStream(pathToFile);
+				System.out.println("stream is null: " + (stream == null));
+
+				file = new DefaultStreamedContent(stream, "pdf", filename);
+				System.out.println(file == null);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * prepares the stream to reopen with the needed content.
+	 * 
+	 * @param e
+	 */
+	public void prepareStreamModMan() {
+		new File(path + "/pdf/").mkdir();
+		if (downloadModMan != null && downloadExRule != null) {
+			pathToFile = processModuleManual(downloadModMan.getModManTitle(),
+					downloadExRule.getExRulesTitle());
 			System.err.println(pathToFile);
 			// split the path to remove the pdf prefix.
 			String filename = pathToFile.split("/pdf/")[1];
@@ -86,7 +119,7 @@ public class DownloadBean {
 	 * 
 	 * @param sub
 	 */
-	public static String processSubject(Subject sub) {
+	public String processSubject(Subject sub) {
 		// LOAD FIELDS FROM DB
 		List<Field> fields = DBField.loadFieldList(sub.getModTitle(),
 				sub.getVersion(), sub.getSubTitle());
@@ -105,6 +138,42 @@ public class DownloadBean {
 	}
 
 	/**
+	 * 
+	 * @param modManTitle
+	 * @param exRule
+	 * @return
+	 */
+	public String processModuleManual(String modManTitle, String exRule) {
+		List<String> paths = new LinkedList<String>();
+
+		List<Module> mods = DBModule.loadModulesByManTitle(exRule, modManTitle);
+		for (Module m : mods) {
+			List<Subject> subs = DBSubject.loadSubjectListMaxVersion(m
+					.getModTitle());
+			for (Subject s : subs) {
+				paths.add(processSubject(s));
+			}
+		}
+
+		PDFMergerUtility merger = new PDFMergerUtility();
+		for (String s : paths) {
+			merger.addSource(s);
+		}
+
+		merger.setDestinationFileName(getPath() + "/pdf/" + exRule + "_"
+				+ modManTitle + ".pdf");
+
+		try {
+			merger.mergeDocuments();
+		} catch (COSVisitorException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return getPath() + "/pdf/" + exRule + "_" + modManTitle + ".pdf";
+	}
+
+	/**
 	 * takes a subject and its fields, prints the subjects details and calls a
 	 * method to print field details
 	 * 
@@ -113,13 +182,10 @@ public class DownloadBean {
 	 * @return Filepath
 	 * @throws IOException
 	 */
-	private static String printPDF(Subject sub, List<Field> fields)
-			throws IOException {
+	private String printPDF(Subject sub, List<Field> fields) throws IOException {
 		InputStream stream = ((ServletContext) FacesContext
 				.getCurrentInstance().getExternalContext().getContext())
 				.getResourceAsStream("/Image/logo_50_sw.jpg");
-		String path = ((ServletContext) FacesContext.getCurrentInstance()
-				.getExternalContext().getContext()).getRealPath("");
 		PDDocument doc = null;
 		PDPage page = null;
 		int y = 0;
@@ -167,9 +233,6 @@ public class DownloadBean {
 			String version = "v" + sub.getVersion();
 			// remove all chars that are not a-z or A-Z
 			String charsOnly = name.replaceAll("[^a-zA-Z]+", "");
-
-			// maybe creats a directory
-			new File("MMS").mkdirs();
 
 			doc.save(path + "/pdf/" + charsOnly + "_" + version + ".pdf");
 			doc.close();
@@ -345,17 +408,47 @@ public class DownloadBean {
 	}
 
 	/**
-	 * @return the pdfPath
+	 * @return the path
 	 */
-	public String getPdfPath() {
-		return pdfPath;
+	public String getPath() {
+		return path;
 	}
 
 	/**
-	 * @param pdfPath
-	 *            the pdfPath to set
+	 * @param path
+	 *            the path to set
 	 */
-	public void setPdfPath(String pdfPath) {
-		this.pdfPath = pdfPath;
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	/**
+	 * @return the downloadModMan
+	 */
+	public ModManual getDownloadModMan() {
+		return downloadModMan;
+	}
+
+	/**
+	 * @param downloadModMan
+	 *            the downloadModMan to set
+	 */
+	public void setDownloadModMan(ModManual downloadModMan) {
+		this.downloadModMan = downloadModMan;
+	}
+
+	/**
+	 * @return the downloadExRule
+	 */
+	public ExRules getDownloadExRule() {
+		return downloadExRule;
+	}
+
+	/**
+	 * @param downloadExRule
+	 *            the downloadExRule to set
+	 */
+	public void setDownloadExRule(ExRules downloadExRule) {
+		this.downloadExRule = downloadExRule;
 	}
 }
