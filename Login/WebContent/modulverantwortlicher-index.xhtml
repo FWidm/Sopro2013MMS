@@ -28,6 +28,95 @@
 			<p:ajax event="tabChange"
 				listener="#{ModulNotificationBean.onTabChange}" update=":form:growl" />
 			<!-- TabView -->
+					<p:tab title="Startseite">
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;"
+					id="welcome">
+					<p:layoutUnit position="center" resizable="true" size="215"
+						minSize="215" header="Willkommen auf der Hilfeseite"
+						collapsible="false">
+						<!-- moegliche Funktionen jeden Users -->
+						<h2>M&ouml;gliche Funktionen</h2>
+						<ul>
+							<li>Als Modulverantwortlicher ist es ihnen m&ouml;glich das
+								Modulhandbuch aufzurufen und runterzuladen.</li>
+							<li>Den Logintab nutzen
+								<ul>
+									<li>sich abzumelden</li>
+								</ul>
+							</li>
+
+							<li>Edit Tab nutzen
+								<ul>
+									<li>Modulinhalt editieren.</li>
+								</ul>
+							</li>
+
+							<li>Notification Tab nutzen
+								<ul>
+									<li>Notifications ablehnen.</li>
+									<li>Notifications annehmen</li>
+								</ul>
+							</li>
+						</ul>
+						<!-- Funktion Modulhandbuch -->
+
+						<h4>Funktion Modulhandbuch</h4>
+						<strong>Modulhandbuch aufrufen </strong>
+						<p>Als Nutzer k&ouml;nnen sie auf den Start Tab und in dieser
+							Tab View in der linken Spalte selektieren Sie die PO</p>
+						<p>dann das Modulhandbuch und gehen Sie solange durch in der
+							Hierarchie bis Sie ihr gew&uuml;nschtes Fach haben.</p>
+						<p>Sie sehen nun ihr gew&uuml;nschtes Fach oder Modul.</p>
+						<strong> Modulhandbuch runterladen </strong>
+						<p>Gehen Sie hierbei vor wie in Modulhandbuch aufrufen.
+							Letztendlich w&auml;hlen Sie den Download Button in der
+							Oberfl&auml;che und Ihr gew&uuml;nschtes Handbuch wird geladen.</p>
+
+						<h4>Funktion Edit</h4>
+
+						<strong> Modul editieren</strong>
+						<p>W&auml;hlen Sie den Tab Edit.</p>
+						<p>Hierbei selektieren sie ein Modul f&uuml; das sie
+							zust&auml;ndig sind.</p>
+						<p>Vollziehen sie Ihre &auml;nderung und best&auml;tigen sie
+							diese.</p>
+
+						<!-- funktion notifications -->
+
+						<h4>Funktion Notifications</h4>
+
+						<strong> Notification aktualisieren</strong>
+						<p>Wechseln sie hierbei zu ihrem Notification Tab. Falls sie
+							Benachrichtungen bekommen haben werden diese hier gelistet.</p>
+						<p>Selektieren Sie eine Benachrichtigung und klicken Sie den
+							Aktualisieren Button. Nun werden Ihre Notifications aktualisiert.</p>
+
+
+						<strong> Notification annehmen</strong>
+						<p>Wechseln sie hierbei zu ihrem Notification Tab. Falls sie
+							Benachrichtungen bekommen haben werden diese hier gelistet.</p>
+						<p>Selektieren Sie eine Benachrichtigung und klicken Sie den
+							Annehmen Button. Die Annahme wird nun weitergeleitet.</p>
+
+						<strong>Notification ablehnen.</strong>
+						<p>Wechseln sie hierbei zu ihrem Notification Tab. Falls sie
+							Benachrichtungen bekommen haben werden diese hier gelistet.</p>
+						<p>Selektieren Sie eine Benachrichtigung und klicken Sie den
+							Ablehnen Button. Die Abnahme wird nun weitergeleitet.</p>
+
+						<!-- funktion Logout -->
+						<h4>Funktion Logout</h4>
+
+						<strong> Abmeldung</strong>
+						<p>W&auml;hlen Sie den Tab Logout.</p>
+						<p>Best&auml;tigen Sie mit dem OK-Button</p>
+						<p>Sie werden ausgeloggt</p>
+
+					</p:layoutUnit>
+
+				</p:layout>
+			</p:tab>
 			<p:tab title="&Uuml;bersicht" id="tabStart">
 				<!-- Begin of first tab // Start -->
 				<p:layout
