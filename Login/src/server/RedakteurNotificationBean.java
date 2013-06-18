@@ -27,6 +27,8 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 
+import com.sun.org.apache.bcel.internal.generic.LADD;
+
 @ManagedBean(name = "RedakteurNotificationBean")
 @SessionScoped
 public class RedakteurNotificationBean {
@@ -127,23 +129,22 @@ public class RedakteurNotificationBean {
 			setValidateChangedFieldListLength(BLACK);
 		}
 	}
-	
+
 	/**
 	 * calls all validations
 	 */
 	public void validateAll() {
 		validateChangedAim();
 		validateChangedDescription();
-		validateChangedEcts(); 
-		validateChangedFieldListLength(); 
-		validateChangedTitle(); 
+		validateChangedEcts();
+		validateChangedFieldListLength();
+		validateChangedTitle();
 	}
 
 	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
-	public void selectedNotificationIsReadRecipient(SelectEvent e) {
-		validateAll();
+	public void selectedNotificationIsReadRecipient() {
 		DBNotification
 				.updateNotificationIsReadRecipient(getSelectedNotification());
 	}
@@ -151,8 +152,7 @@ public class RedakteurNotificationBean {
 	/**
 	 * Clicking on the tablerow sets isReadSender to true
 	 */
-	public void selectedNotificationIsReadSender(SelectEvent e) {
-		validateAll();
+	public void selectedNotificationIsReadSender() {
 		DBNotification
 				.updateNotificationIsReadSender(getSelectedNotification());
 	}
@@ -386,7 +386,17 @@ public class RedakteurNotificationBean {
 	public void setSelectedNotification(
 			ModificationNotification selectedNotification) {
 		this.selectedNotification = selectedNotification;
+
 		if (selectedNotification != null) {
+
+			/**
+			 * handle updates
+			 */
+			{
+				selectedNotificationIsReadRecipient();
+				loadNotifications();
+			}
+
 			selectedEditableAfter = selectedNotification.getModification()
 					.getAfter();
 			selectedEditableBefore = selectedNotification.getModification()
@@ -416,6 +426,14 @@ public class RedakteurNotificationBean {
 				mainVisible2 = true;
 				ectsAimVisible2 = true;
 				addInfoVisible2 = true;
+
+				/**
+				 * validate changes between head revision and the new one
+				 */
+				{
+					validateAll();
+				}
+
 			} else if (selectedEditableAfter instanceof Module
 					&& selectedEditableBefore instanceof Module) {
 				// After
@@ -761,7 +779,8 @@ public class RedakteurNotificationBean {
 	}
 
 	/**
-	 * @param validateChangedTitle the validateChangedTitle to set
+	 * @param validateChangedTitle
+	 *            the validateChangedTitle to set
 	 */
 	public void setValidateChangedTitle(String validateChangedTitle) {
 		this.validateChangedTitle = validateChangedTitle;
@@ -775,7 +794,8 @@ public class RedakteurNotificationBean {
 	}
 
 	/**
-	 * @param validateChangedDescription the validateChangedDescription to set
+	 * @param validateChangedDescription
+	 *            the validateChangedDescription to set
 	 */
 	public void setValidateChangedDescription(String validateChangedDescription) {
 		this.validateChangedDescription = validateChangedDescription;
@@ -789,7 +809,8 @@ public class RedakteurNotificationBean {
 	}
 
 	/**
-	 * @param validateChangedEcts the validateChangedEcts to set
+	 * @param validateChangedEcts
+	 *            the validateChangedEcts to set
 	 */
 	public void setValidateChangedEcts(String validateChangedEcts) {
 		this.validateChangedEcts = validateChangedEcts;
@@ -803,7 +824,8 @@ public class RedakteurNotificationBean {
 	}
 
 	/**
-	 * @param validateChangedAim the validateChangedAim to set
+	 * @param validateChangedAim
+	 *            the validateChangedAim to set
 	 */
 	public void setValidateChangedAim(String validateChangedAim) {
 		this.validateChangedAim = validateChangedAim;
@@ -817,7 +839,8 @@ public class RedakteurNotificationBean {
 	}
 
 	/**
-	 * @param validateChangedFieldListLength the validateChangedFieldListLength to set
+	 * @param validateChangedFieldListLength
+	 *            the validateChangedFieldListLength to set
 	 */
 	public void setValidateChangedFieldListLength(
 			String validateChangedFieldListLength) {

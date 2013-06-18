@@ -16,7 +16,7 @@
 
 <h:body>
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/iui_19.png"/>
+		<p:graphicImage value="/Image/iui_19.png" />
 		<p:graphicImage
 			style="float: left !important; margin-left: 1.6em !important; margin-top: -0.7em !important; max-height: 110px; margin-top: 0px !important;"
 			value="/Image/MyBestLogo.png" />
@@ -25,7 +25,9 @@
 	<h:form id="form">
 		<p:growl id="growl" showDetail="true" />
 		<p:tabView id="tabview-dez" scrollable="true" dynamic="true">
-			<p:ajax event="tabChange" listener="#{DezernatNotificationBean.onTabChange}" update=":form:growl :form:tabview-dez:notify-layout"/>
+			<p:ajax event="tabChange"
+				listener="#{DezernatNotificationBean.onTabChange}"
+				update=":form:growl :form:tabview-dez:notify-layout" />
 			<!-- TabView -->
 			<p:tab title="&Uuml;bersicht" id="tabStart">
 
@@ -89,7 +91,7 @@
 			<!-- End first tab // Start -->
 
 			<!-- No Edit Tab for Dezernat -->
-			
+
 			<!-- Start Notification Tab -->
 			<p:tab title="Best&auml;tigungen">
 				<p:layout
@@ -107,20 +109,20 @@
 							selection="#{DezernatNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{DezernatNotificationBean.selectedNotificationIsReadRecipient}"
-								actionListener="#{DezernatNotificationBean.loadNotifications}"
 								update=":form:tabview-dez:notify-layout" />
 
 							<p:column>
-								<p:graphicImage value="/Image/Notification/#{noti.isReadSender}.png"
-									style="width: 40px;" />
-								<p:graphicImage value="/Image/Notification/#{noti.isReadRecipient}.png"
-									style="width: 40px;" />
+								<p:graphicImage
+									value="/Image/Notification/#{noti.isReadSender}.png"
+									style="width: 10px;" />
+								<p:graphicImage
+									value="/Image/Notification/#{noti.isReadRecipient}.png"
+									style="width: 10px;" />
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
 									style="width: 40px;" />
                     			#{noti.timeStamp}
                 			</p:column>
-                			
+
 							<f:facet name="footer">
 								<div align="center">
 									<p:commandButton value="aktualisieren" icon="ui-icon-refresh"
@@ -152,17 +154,21 @@
 									header="#{DezernatNotificationBean.title}" toggleable="true"
 									toggleSpeed="500"
 									visible="#{DezernatNotificationBean.mainVisible}">
-
-                        #{DezernatNotificationBean.description}
-
-                    </p:panel>
+									<font
+										color="#{DezernatNotificationBean.validateChangedDescription}">
+									#{DezernatNotificationBean.description} </font>
+								</p:panel>
 								<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
 									toggleable="true" toggleSpeed="500"
 									visible="#{DezernatNotificationBean.ectsAimVisible}">
 
-									<font color="red"><strong>Leistungspunkte:</strong> #{DezernatNotificationBean.ects}<br /></font>
+									<strong>Leistungspunkte:</strong>
+									<font
+										color="#{DezernatNotificationBean.validateChangedEcts}">#{DezernatNotificationBean.ects}</font><br />
+
 									<br />
-									<strong>Lernziele:</strong> #{DezernatNotificationBean.aim}
+									<strong>Lernziele:</strong><font
+										color="#{DezernatNotificationBean.validateChangedAim}"> #{DezernatNotificationBean.aim}</font>
 
                     </p:panel>
 								<p:panel id="pnlDescription1"
@@ -172,8 +178,10 @@
 
 									<ui:repeat var="iterator"
 										value="#{DezernatNotificationBean.fieldList}">
-										<strong>Titel: </strong>#{iterator.fieldTitle}<br />
-										<strong>Beschreibung: </strong>#{iterator.description}<br />
+										<strong>Titel: </strong><font
+											color="#{RedakteurNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font>s<br />
+										<strong>Beschreibung: </strong><font
+											color="#{RedakteurNotificationBean.validateChangedDescription}">#{iterator.description}</font><br />
 										<br />
 									</ui:repeat>
 								</p:panel>
@@ -193,7 +201,9 @@
 									toggleable="true" toggleSpeed="500"
 									visible="#{DezernatNotificationBean.ectsAimVisible2}">
 
-									<font color="red"><strong>Leistungspunkte:</strong> #{DezernatNotificationBean.ects2}</font><br />
+									<font color="red"> <strong>Leistungspunkte:</strong>
+									#{DezernatNotificationBean.ects2}</font>
+									<br />
 									<br />
 									<strong>Lernziele:</strong> #{DezernatNotificationBean.aim2}
 

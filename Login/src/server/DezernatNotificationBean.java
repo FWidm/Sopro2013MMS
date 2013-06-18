@@ -25,13 +25,14 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
-import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "DezernatNotificationBean")
 @SessionScoped
 public class DezernatNotificationBean {
 
 	public static final String TO_FOR = "message-log-edit";
+	public static final String BLACK = "black";
+	public static final String RED = "red";
 
 	private String recipientEmail;
 	private String senderEmail;
@@ -51,6 +52,11 @@ public class DezernatNotificationBean {
 	private boolean mainVisible2, ectsAimVisible2, addInfoVisible2;
 	List<Field> fieldList, fieldList2;
 
+	// Variables for validation of change
+	private String validateChangedTitle, validateChangedDescription,
+			validateChangedEcts, validateChangedAim,
+			validateChangedFieldListLength;
+	
 	private String currentUser;
 
 	public DezernatNotificationBean() {
@@ -62,12 +68,83 @@ public class DezernatNotificationBean {
 	}
 
 	/**
-	 * Clicking on the tablerow sets isReadRecipient to true
+	 * validates if title has changed
+	 * 
 	 */
-	public void selectedNotificationIsReadRecipient(SelectEvent e) {
-		DBNotification.updateNotificationIsReadRecipient(getSelectedNotification());
+	public void validateChangedTitle() {
+		if (!title.equals(title2)) {
+			setValidateChangedTitle(RED);
+		} else {
+			setValidateChangedTitle(BLACK);
+		}
 	}
 
+	/**
+	 * validates if description has changed
+	 * 
+	 */
+	public void validateChangedDescription() {
+		if (!description.equals(description2)) {
+			setValidateChangedDescription(RED);
+		} else {
+			setValidateChangedDescription(BLACK);
+		}
+	}
+
+	/**
+	 * validates if ects has changed
+	 * 
+	 */
+	public void validateChangedEcts() {
+		if (!ects.equals(ects2)) {
+			setValidateChangedEcts(RED);
+		} else {
+			setValidateChangedEcts(BLACK);
+		}
+	}
+
+	/**
+	 * validates if aim has changed
+	 * 
+	 */
+	public void validateChangedAim() {
+		if (!aim.equals(aim2)) {
+			setValidateChangedAim(RED);
+		} else {
+			setValidateChangedAim(BLACK);
+		}
+	}
+
+	/**
+	 * validates if fieldlist lenngth has changed
+	 * 
+	 */
+	public void validateChangedFieldListLength() {
+		if (!fieldList.equals(fieldList2)) {
+			setValidateChangedFieldListLength(RED);
+		} else {
+			setValidateChangedFieldListLength(BLACK);
+		}
+	}
+
+	/**
+	 * calls all validations
+	 */
+	public void validateAll() {
+		validateChangedAim();
+		validateChangedDescription();
+		validateChangedEcts();
+		validateChangedFieldListLength();
+		validateChangedTitle();
+	}
+
+	/**
+	 * Clicking on the tablerow sets isReadRecipient to true
+	 */
+	public void selectedNotificationIsReadRecipient() {
+		DBNotification
+				.updateNotificationIsReadRecipient(getSelectedNotification());
+	}
 
 	/**
 	 * Creates the dialog of unread notifications and shows them by changing a
@@ -95,10 +172,8 @@ public class DezernatNotificationBean {
 								+ ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			} else {
-				FacesMessage msg = new FacesMessage(
-						"Sie haben "+ cntr +" ungelesene Nachrichten "
-								+ glbSender
-								+ ")");
+				FacesMessage msg = new FacesMessage("Sie haben " + cntr
+						+ " ungelesene Nachrichten " + glbSender + ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			}
 		}
@@ -301,6 +376,15 @@ public class DezernatNotificationBean {
 			ModificationNotification selectedNotification) {
 		this.selectedNotification = selectedNotification;
 		if (selectedNotification != null) {
+
+			/**
+			 * handle updates
+			 */
+			{
+				selectedNotificationIsReadRecipient();
+				loadNotifications();
+			}
+
 			selectedEditableAfter = selectedNotification.getModification()
 					.getAfter();
 			selectedEditableBefore = selectedNotification.getModification()
@@ -332,6 +416,14 @@ public class DezernatNotificationBean {
 						"Vorgängerversion nicht verfügbar.");
 				addInfoVisible2 = !sub2.getSubTitle().equals(
 						"Vorgängerversion nicht verfügbar.");
+
+				/**
+				 * validate changes between head revision and the new one
+				 */
+				{
+					validateAll();
+				}
+
 			} else if (selectedEditableAfter instanceof Module
 					&& selectedEditableBefore instanceof Module) {
 				// After
@@ -669,4 +761,76 @@ public class DezernatNotificationBean {
 		this.fieldList2 = fieldList2;
 	}
 
+	/**
+	 * @return the validateChangedTitle
+	 */
+	public String getValidateChangedTitle() {
+		return validateChangedTitle;
+	}
+
+	/**
+	 * @param validateChangedTitle the validateChangedTitle to set
+	 */
+	public void setValidateChangedTitle(String validateChangedTitle) {
+		this.validateChangedTitle = validateChangedTitle;
+	}
+
+	/**
+	 * @return the validateChangedDescription
+	 */
+	public String getValidateChangedDescription() {
+		return validateChangedDescription;
+	}
+
+	/**
+	 * @param validateChangedDescription the validateChangedDescription to set
+	 */
+	public void setValidateChangedDescription(String validateChangedDescription) {
+		this.validateChangedDescription = validateChangedDescription;
+	}
+
+	/**
+	 * @return the validateChangedEcts
+	 */
+	public String getValidateChangedEcts() {
+		return validateChangedEcts;
+	}
+
+	/**
+	 * @param validateChangedEcts the validateChangedEcts to set
+	 */
+	public void setValidateChangedEcts(String validateChangedEcts) {
+		this.validateChangedEcts = validateChangedEcts;
+	}
+
+	/**
+	 * @return the validateChangedAim
+	 */
+	public String getValidateChangedAim() {
+		return validateChangedAim;
+	}
+
+	/**
+	 * @param validateChangedAim the validateChangedAim to set
+	 */
+	public void setValidateChangedAim(String validateChangedAim) {
+		this.validateChangedAim = validateChangedAim;
+	}
+
+	/**
+	 * @return the validateChangedFieldListLength
+	 */
+	public String getValidateChangedFieldListLength() {
+		return validateChangedFieldListLength;
+	}
+
+	/**
+	 * @param validateChangedFieldListLength the validateChangedFieldListLength to set
+	 */
+	public void setValidateChangedFieldListLength(
+			String validateChangedFieldListLength) {
+		this.validateChangedFieldListLength = validateChangedFieldListLength;
+	}
+
+	
 }

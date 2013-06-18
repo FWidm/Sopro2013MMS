@@ -374,8 +374,6 @@
 							selection="#{RedakteurNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{RedakteurNotificationBean.selectedNotificationIsReadRecipient}"
-								actionListener="#{RedakteurNotificationBean.loadNotifications}"
 								update=":form:tabview-redak:notify-layout" />
 
 							<p:column>
@@ -408,7 +406,7 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
-					
+
 						<p:layout>
 							<p:layoutUnit position="north" minSize="80"
 								header="Nachricht vom: #{RedakteurNotificationBean.selectedNotification.timeStamp}
@@ -516,16 +514,18 @@
 							selection="#{RedDezNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{RedDezNotificationBean.selectedNotificationIsReadSender}"
 								update=":form:tabview-redak:notify-layout-dez" />
 
 							<p:column>
-								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
-									style="width: 40px;" />
+								<p:graphicImage
+									value="/Image/Notification/#{noti.isReadSender}.png"
+									style="width: 10px;" />
 								<p:graphicImage
 									value="/Image/Notification/#{noti.isReadRecipient}.png"
 									style="width: 10px;" />
-                    #{noti.timeStamp}
+								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
+									style="width: 40px;" />
+                   				#{noti.timeStamp}
 
                 </p:column>
 							<f:facet name="footer">
@@ -563,20 +563,23 @@
 										<font
 											color="#{RedDezNotificationBean.validateChangedDescription}">#{RedDezNotificationBean.description}</font>
 
-										
+
 									</p:panel>
 									<p:panel id="pnlEcts1-dez"
 										header="Leistungspunkte und Lernziele" toggleable="true"
 										toggleSpeed="500"
 										visible="#{RedDezNotificationBean.ectsAimVisible}">
 
-										<strong>Leistungspunkte:</strong><font
-										color="#{RedDezNotificationBean.validateChangedEcts}"> #{RedDezNotificationBean.ects}</font><br />
+										<strong>Leistungspunkte:</strong>
+										<font color="#{RedDezNotificationBean.validateChangedEcts}">
+										#{RedDezNotificationBean.ects}</font>
 										<br />
-										<strong>Lernziele:</strong><font
-										color="#{RedDezNotificationBean.validateChangedAim}"> #{RedDezNotificationBean.aim}</font>
-	
-	                    </p:panel>
+										<br />
+										<strong>Lernziele:</strong>
+										<font color="#{RedDezNotificationBean.validateChangedAim}">
+										#{RedDezNotificationBean.aim}</font>
+
+									</p:panel>
 									<p:panel id="pnlDescription1-dez"
 										header="Zusaetzliche Informationen" toggleable="true"
 										toggleSpeed="500"
@@ -584,10 +587,14 @@
 
 										<ui:repeat var="iterator"
 											value="#{RedDezNotificationBean.fieldList}">
-											<strong>Titel: </strong><font
-										color="#{RedDezNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font><br />
-											<strong>Beschreibung: </strong><font
-										color="#{RedDezNotificationBean.validateChangedFieldListLength}">#{iterator.description}</font><br />
+											<strong>Titel: </strong>
+											<font
+												color="#{RedDezNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font>
+											<br />
+											<strong>Beschreibung: </strong>
+											<font
+												color="#{RedDezNotificationBean.validateChangedFieldListLength}">#{iterator.description}</font>
+											<br />
 											<br />
 										</ui:repeat>
 									</p:panel>

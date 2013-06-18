@@ -14,9 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.TabChangeEvent;
-
-
 import data.DeadlineNotification;
 import data.ExRules;
 import data.ModManual;

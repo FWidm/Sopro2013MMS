@@ -321,7 +321,7 @@ public class RedakteurBean {
 
 					// if old sub isn't the same as the new sub
 					// we create new database entries and create a notification
-					if (!oldSub.equals(newSub)) {
+					else if (!oldSub.equals(newSub)) {
 						if (handleAccept(newSub, oldSub)) {
 							oldFieldList = new LinkedList<Field>();
 							for (Field field : fieldList) {

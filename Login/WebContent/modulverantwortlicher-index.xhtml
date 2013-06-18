@@ -316,8 +316,6 @@
 							selection="#{ModulNotificationBean.selectedNotification}"
 							selectionMode="single" autoUpdate="true">
 							<p:ajax event="rowSelect"
-								listener="#{ModulNotificationBean.selectedNotificationIsReadSender}"
-								actionListener="#{ModulNotificationBean.loadNotifications}"
 								update=":form:tabview-modEx:notify-layout" />
 
 							<p:column>
@@ -331,7 +329,7 @@
 									style="width: 40px;" />
                     			#{noti.timeStamp}
                 			</p:column>
-                			
+
 							<f:facet name="footer">
 								<div align="center">
 									<p:commandButton value="Widerrufen/Entfernen"
@@ -362,19 +360,24 @@
 									<p:panel id="pnlTitle1" header="#{ModulNotificationBean.title}"
 										toggleable="true" toggleSpeed="500"
 										visible="#{ModulNotificationBean.mainVisible}">
-	
-	                        #{ModulNotificationBean.description}
-	
-	                    </p:panel>
+										<font
+											color="#{ModulNotificationBean.validateChangedDescription}">
+										#{ModulNotificationBean.description}</font>
+
+									</p:panel>
 									<p:panel id="pnlEcts1" header="Leistungspunkte und Lernziele"
 										toggleable="true" toggleSpeed="500"
 										visible="#{ModulNotificationBean.ectsAimVisible}">
 
-										<strong>Leistungspunkte:</strong> #{ModulNotificationBean.ects}<br />
+										<strong>Leistungspunkte:</strong>
+										<font color="#{ModulNotificationBean.validateChangedEcts}">#{ModulNotificationBean.ects}</font>
 										<br />
-										<strong>Lernziele:</strong> #{ModulNotificationBean.aim}
-	
-	                    </p:panel>
+										<br />
+										<strong>Lernziele:</strong>
+										<font color="#{ModulNotificationBean.validateChangedAim}">
+										#{ModulNotificationBean.aim}</font>
+
+									</p:panel>
 									<p:panel id="pnlDescription1"
 										header="Zusaetzliche Informationen" toggleable="true"
 										toggleSpeed="500"
@@ -382,8 +385,8 @@
 
 										<ui:repeat var="iterator"
 											value="#{ModulNotificationBean.fieldList}">
-											<strong>Titel: </strong>#{iterator.fieldTitle}<br />
-											<strong>Beschreibung: </strong>#{iterator.description}<br />
+											<strong>Titel: </strong><font color="#{ModulNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font><br />
+											<strong>Beschreibung: </strong><font color="#{ModulNotificationBean.validateChangedDescription}">#{iterator.description}</font><br />
 											<br />
 										</ui:repeat>
 									</p:panel>

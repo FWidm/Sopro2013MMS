@@ -149,8 +149,7 @@ public class RedDezNotificationBean {
 	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
-	public void selectedNotificationIsReadRecipient(SelectEvent e) {
-		validateAll();
+	public void selectedNotificationIsReadRecipient() {
 		DBNotification
 				.updateNotificationIsReadRecipient(getSelectedNotification());
 	}
@@ -158,8 +157,7 @@ public class RedDezNotificationBean {
 	/**
 	 * Clicking on the tablerow sets isReadRecipient to true
 	 */
-	public void selectedNotificationIsReadSender(SelectEvent e) {
-		validateAll();
+	public void selectedNotificationIsReadSender() {
 		DBNotification
 				.updateNotificationIsReadSender(getSelectedNotification());
 	}
@@ -382,6 +380,14 @@ public class RedDezNotificationBean {
 		this.selectedNotification = selectedNotification;
 		if (selectedNotification != null) {
 			if (selectedNotification instanceof ModificationNotification) {
+				
+				/**
+				 * handle updates
+				 */
+				{
+					selectedNotificationIsReadSender();
+					loadNotifications();
+				}
 
 				// set boolean for visibillity
 				isDeadline = false;
@@ -418,6 +424,14 @@ public class RedDezNotificationBean {
 							"Vorgängerversion nicht verfügbar.");
 					addInfoVisible2 = !sub2.getSubTitle().equals(
 							"Vorgängerversion nicht verfügbar.");
+
+					/**
+					 * validate changes between head revision and the new one
+					 */
+					{
+						validateAll();
+					}
+
 				} else if (selectedEditableAfter instanceof Module
 						&& selectedEditableBefore instanceof Module) {
 					// After
@@ -468,7 +482,15 @@ public class RedDezNotificationBean {
 					addInfoVisible2 = false;
 				}
 			} else if (selectedNotification instanceof DeadlineNotification) {
-
+				
+				/**
+				 * handle updates
+				 */
+				{
+					selectedNotificationIsReadRecipient();
+					loadNotifications();
+				}
+				
 				// set boolean for visibillity
 				isDeadline = true;
 
