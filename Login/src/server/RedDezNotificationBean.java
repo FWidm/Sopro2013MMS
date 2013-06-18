@@ -27,8 +27,6 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
-import org.primefaces.event.SelectEvent;
-
 @ManagedBean(name = "RedDezNotificationBean")
 @SessionScoped
 public class RedDezNotificationBean {

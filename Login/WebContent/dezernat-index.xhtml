@@ -89,7 +89,66 @@
 				</p:layout>
 			</p:tab>
 			<!-- End first tab // Start -->
+			<!-- START tab-Re -->
+			<p:tab title="Versionsverwaltung">
+				<p:layout
+					style="min-width:800px; min-height:600px; max-height:600px;">
+					<!-- Beginn Layout unit // see http://primefaces.org/showcase/ui/layoutFull.jsf -->
+					<p:layoutUnit position="west" resizable="true" size="215"
+						minSize="215" header="Modulelist" collapsible="true">
 
+						<p:menu id="back-menu-version"
+							model="#{DezernatVersionBean.backModel}" />
+						<p:menu id="list-menu-version"
+							model="#{DezernatVersionBean.model}" />
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" header="Versionsverwaltung">
+						<p:scrollPanel id="scrollPanel-version" mode="native"
+							style="min-width:400px; min-height:470px;">
+							<p:panel header="#{DezernatVersionBean.title}" toggleable="true"
+								toggleSpeed="500" visible="#{DezernatVersionBean.mainVisible}">
+	
+								#{DezernatVersionBean.description}
+							
+							</p:panel>
+							<p:panel header="Leistungspunkte und Lernziele" toggleable="true"
+								toggleSpeed="500"
+								visible="#{DezernatVersionBean.ectsAimVisible}">
+
+								<strong>leistungspunkte:</strong> #{DezernatVersionBean.ects}<br />
+								<br />
+								<strong>Lernziele:</strong> #{DezernatVersionBean.aim}
+	
+							</p:panel>
+							<p:panel header="Zusaetzliche Informationen" toggleable="true"
+								toggleSpeed="500"
+								visible="#{DezernatVersionBean.addInfoVisible}">
+
+								<ui:repeat var="iterator"
+									value="#{DezernatVersionBean.fieldList}">
+									<strong>Titel: </strong>#{iterator.fieldTitle}<br />
+									<strong>Beschreibung: </strong>#{iterator.description}<br />
+									<br />
+								</ui:repeat>
+							</p:panel>
+						</p:scrollPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="south" resizable="false">
+						<div align="center">
+							<p:commandButton type="push" value="Vorherige Version" actionListener="#{DezernatVersionBean.changeSubjectsVersion}"
+								title="Vorherige Version" icon="ui-icon-transferthick-e-w"
+								update=":form:tabview-dez:scrollPanel-version">
+								<p:effect type="slide" event="click" for="scrollPanel-version">
+								</p:effect>
+							</p:commandButton>
+						</div>
+					</p:layoutUnit>
+				</p:layout>
+			</p:tab>
+			<!-- END tab-Re -->
 			<!-- No Edit Tab for Dezernat -->
 
 			<!-- Start Notification Tab -->
@@ -163,14 +222,15 @@
 									visible="#{DezernatNotificationBean.ectsAimVisible}">
 
 									<strong>Leistungspunkte:</strong>
-									<font
-										color="#{DezernatNotificationBean.validateChangedEcts}">#{DezernatNotificationBean.ects}</font><br />
+									<font color="#{DezernatNotificationBean.validateChangedEcts}">#{DezernatNotificationBean.ects}</font>
+									<br />
 
 									<br />
-									<strong>Lernziele:</strong><font
-										color="#{DezernatNotificationBean.validateChangedAim}"> #{DezernatNotificationBean.aim}</font>
+									<strong>Lernziele:</strong>
+									<font color="#{DezernatNotificationBean.validateChangedAim}">
+									#{DezernatNotificationBean.aim}</font>
 
-                    </p:panel>
+								</p:panel>
 								<p:panel id="pnlDescription1"
 									header="Zusaetzliche Informationen" toggleable="true"
 									toggleSpeed="500"
@@ -178,10 +238,13 @@
 
 									<ui:repeat var="iterator"
 										value="#{DezernatNotificationBean.fieldList}">
-										<strong>Titel: </strong><font
+										<strong>Titel: </strong>
+										<font
 											color="#{RedakteurNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font>s<br />
-										<strong>Beschreibung: </strong><font
-											color="#{RedakteurNotificationBean.validateChangedDescription}">#{iterator.description}</font><br />
+										<strong>Beschreibung: </strong>
+										<font
+											color="#{RedakteurNotificationBean.validateChangedDescription}">#{iterator.description}</font>
+										<br />
 										<br />
 									</ui:repeat>
 								</p:panel>

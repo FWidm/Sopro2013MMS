@@ -25,10 +25,6 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
-import org.primefaces.event.SelectEvent;
-
-import com.sun.org.apache.bcel.internal.generic.LADD;
-
 @ManagedBean(name = "RedakteurNotificationBean")
 @SessionScoped
 public class RedakteurNotificationBean {

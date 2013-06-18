@@ -216,5 +216,15 @@ public class Subject implements Editable, Serializable {
 				+ ", modTitle=" + modTitle + ", description=" + description
 				+ ", aim=" + aim + ", ects=" + ects + ", ack=" + ack + "]";
 	}
+	/**
+	 * Returns a copy of the given subject
+	 * @return
+	 */
+	public Subject getCopy() {
+		return new Subject(this.getVersion(), this.getSubTitle(),
+				this.getModTitle(), this.getDescription(), this.getAim(),
+				this.getEcts(), this.isAck());
+
+	}
 
 }

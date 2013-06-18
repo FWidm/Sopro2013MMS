@@ -155,6 +155,17 @@ public class DBSubject extends DBManager {
 	}
 
 	/**
+	 * loads the version before current
+	 * 
+	 * @param current
+	 * @return
+	 */
+	public static Subject loadVersionBefore(Subject current) {
+		return loadSubject(current.getVersion() - 1, current.getSubTitle(),
+				current.getModTitle());
+	}
+
+	/**
 	 * load subjects by version and modTitle
 	 * 
 	 * @param version

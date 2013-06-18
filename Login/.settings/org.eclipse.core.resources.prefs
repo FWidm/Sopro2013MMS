@@ -4,6 +4,7 @@ encoding//WebContent/redakteur-index.xhtml=UTF-8
 encoding//src/ctrl/CreateModRedActionListenerBack.java=UTF-8
 encoding//src/ctrl/CreateSubModActionListenerBack.java=UTF-8
 encoding//src/ctrl/CreateSubRedActionListenerBack.java=UTF-8
+encoding//src/ctrl/DezernatVersionActionListenerBack.java=UTF-8
 encoding//src/ctrl/StartActionListenerBack.java=UTF-8
 encoding//src/ctrl/TemplateActionListenerBack.java=UTF-8
 encoding//src/db/DBExRules.java=UTF-8
