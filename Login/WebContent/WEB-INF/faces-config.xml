@@ -6,7 +6,7 @@
 	version="2.0">
 
 	<lifecycle>
-		<phase-listener>server.AuthorizationListener</phase-listener>
+		<phase-listener>de.mms.server.AuthorizationListener</phase-listener>
 	</lifecycle>
 
 	<!-- Empty for now. Your entries will go here. But even if you have no entries 
