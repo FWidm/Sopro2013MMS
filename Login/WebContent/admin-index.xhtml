@@ -219,7 +219,7 @@
 					header="Diesen Benutzer l&ouml;schen?" message="L&ouml;schen des Benutzers entfernt gleichzeitig alle Notifikationen von und f&uuml;r ihn und seine Zugriffsrechte." width="400" modal="true"
 					closable="false" severity="alert">
 					<h:panelGroup layout="block" style="text-align: right">
-						<p:commandButton value="L&ouml;schen" action="#{AdminBean.deleteRow}"
+						<p:commandButton value="L&ouml;schen" actionListener="#{AdminBean.deleteUser}"
 							oncomplete="deleteDlg.hide();"
 							update=":tabview-admin:delete-frame:users" />
 						<p:commandButton value="Abbruch" oncomplete="deleteDlg.hide();" />

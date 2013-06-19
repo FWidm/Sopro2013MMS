@@ -179,6 +179,7 @@ public class DBModManAccess extends DBManager {
 			Statement stmt = con.createStatement();
 			String update = "DELETE FROM modManAccess WHERE email = '" + email
 					+ "'";
+			System.err.println(email + " update: " + update);
 			con.setAutoCommit(false);
 			stmt.executeUpdate(update);
 			try {

@@ -197,11 +197,11 @@ public class AdminBean {
 		// missing to do this until now.
 		//User tmp=DBUser.loadUser(email);
 		//Maybe check if the delete methods are neccessary, but should be no problem if the queries do nothing.
-		DBModManAccess.deleteModuleModManbyEmail(email);
-		DBModAccess.deleteModAccessbyEmail(email);
-		DBNotification.deleteNotificationFromUser(email);
-		DBUser.deleteUser(email);
-		System.out.println(email);
+		DBModManAccess.deleteModuleModManbyEmail(selectedUser.getEmail());
+		DBModAccess.deleteModAccessbyEmail(selectedUser.getEmail());
+		DBNotification.deleteNotificationFromUser(selectedUser.getEmail());
+		DBUser.deleteUser(selectedUser.getEmail());
+		System.out.println(selectedUser.getEmail());
 		System.out.println(">>" + lastRole);
 		actualizeUserList(null);
 	}
