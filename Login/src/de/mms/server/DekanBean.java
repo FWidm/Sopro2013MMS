@@ -97,8 +97,8 @@ public class DekanBean {
 			DBModManual.saveModManual(new ModManual(modManTitle, description,
 					exRules, deadline));
 			System.out.println(success);
-			addMessage("Modulhandbuch wurde erstellt: ", "" + modManTitle + ", "
-					+ exRules + ", " + deadline);
+			addMessage("Modulhandbuch wurde erstellt: ", "" + modManTitle
+					+ ", " + exRules + ", " + deadline);
 			exRules = null;
 			actualizeModManualList();
 
@@ -119,7 +119,7 @@ public class DekanBean {
 						mailAdresses.get(i), currentUser, timestamp, "", "",
 						"queued", false, false, date, modManTitle));
 			}
-			
+
 			resetFields();
 			return;
 		}
@@ -127,8 +127,7 @@ public class DekanBean {
 		success = false;
 		System.out.println("error - modMantitle already exists: " + modManTitle
 				+ " " + success);
-		addErrorMessage("Fehler: ", "'"
-				+ modManTitle
+		addErrorMessage("Fehler: ", "'" + modManTitle
 				+ "' ist bereits in der Datenbank gespeichert.");
 	}
 
@@ -141,7 +140,8 @@ public class DekanBean {
 		System.out.println("**** " + exRules);
 		if (exRules.equals("") || exRules == null) {
 			success = false;
-			addErrorMessage("Fehler - leeres Feld: ", "Bitte f\u00FCllen Sie alle Felder aus.");
+			addErrorMessage("Fehler - leeres Feld: ",
+					"Bitte f\u00FCllen Sie alle Felder aus.");
 			System.out.println(success);
 			return;
 		}
@@ -155,11 +155,10 @@ public class DekanBean {
 			System.out.println(success);
 			return;
 		}
-		
+
 		success = false;
-		addErrorMessage("Fehler - Pr\u00FCfungsordnung existiert bereits: ", "'"
-				+ exRules
-				+ "' ist bereits in der Datenbank gespeichert.");
+		addErrorMessage("Fehler - Pr\u00FCfungsordnung existiert bereits: ",
+				"'" + exRules + "' ist bereits in der Datenbank gespeichert.");
 	}
 
 	/**
@@ -181,7 +180,8 @@ public class DekanBean {
 	public void onEdit(RowEditEvent event) {
 
 		ModManual m = (ModManual) event.getObject();
-		FacesMessage msg = new FacesMessage("Modulhandbuch wurde ge\u00E4ndert:",
+		FacesMessage msg = new FacesMessage(
+				"Modulhandbuch wurde ge\u00E4ndert:",
 				((ModManual) event.getObject()).getModManTitle().toString());
 		if (DBModManual.loadModManual(m.getModManTitle()) != null) {
 
@@ -189,12 +189,12 @@ public class DekanBean {
 			if (!((DBModManual.loadModManual(m.getModManTitle())).getDeadline()
 					.toString().equals(sdf.format(m.getDeadline())))) {
 				System.out.println("date changed!");
-				
+
 				/**
 				 * create DeadlineNotifications
 				 */
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				Timestamp date = new Timestamp(deadline.getTime());
+				Timestamp date = new Timestamp(m.getDeadline().getTime());
 				List<String> mailAdresses = new LinkedList<String>();
 				List<String> modEx = DBUser.loadUsersEmailByRole("Redakteur");
 				List<String> redak = DBUser
@@ -204,12 +204,15 @@ public class DekanBean {
 
 				for (int i = 0; i < mailAdresses.size(); i++) {
 					DBNotification.saveNotification(new DeadlineNotification(
-							mailAdresses.get(i), currentUser, timestamp, "", "",
-							"queued", false, false, date, modManTitle));
+							mailAdresses.get(i), currentUser, timestamp, "",
+							"", "queued", false, false, date, modManTitle));
 				}
-				
+
 			}
+
+			// save changes on modManual
 			DBModManual.updateModManual(m, m.getModManTitle());
+
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 		actualizeModManualList();

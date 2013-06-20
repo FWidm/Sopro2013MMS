@@ -560,10 +560,15 @@ public class DBNotification extends DBManager {
 		try {
 			con = openConnection();
 			Statement stmt = con.createStatement();
-			String query = "SELECT * FROM notification WHERE senderEmail= '"
+			String query = null;
+			try {
+			query = "SELECT * FROM notification WHERE senderEmail= '"
 					+ currentUser + "' OR recipientEmail='" + currentUser
 					+ "' AND senderEmail= '"
 					+ DBUser.loadUsersEmailByRole("Dekan").get(0) + "'";
+			} catch (IndexOutOfBoundsException e){
+				e.printStackTrace();
+			}
 
 			ResultSet rs = stmt.executeQuery(query);
 
