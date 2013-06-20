@@ -2,8 +2,12 @@ package de.mms.server;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
@@ -28,6 +32,8 @@ public class DezernatVersionBean {
 	public static final String MODMANUAL = "Modulhandb\u00FCcher";
 	public static final String MODULE = "Module";
 	public static final String FAECHER = "F\u00E4cher";
+	
+	public static final String TO_FOR = "message-log-dez";
 
 	// Add your tag id's for ajax-update on menuItemClick here.
 	public static final String UPDATE_AJAX = "list-menu-version back-menu-version scrollPanel-version";
@@ -66,14 +72,37 @@ public class DezernatVersionBean {
 		model.addSubmenu(submenu);
 
 	}
+	
+	/**
+	 * if anything goes wrong - display an Error
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addErrorMessage(String toFor, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, title, msg));
+	}
+
+	/**
+	 * Informs the User via message.
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void addMessage(String toFor, String title, String msg) {
+		FacesContext.getCurrentInstance().addMessage(toFor,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
+	}
 
 	public void changeSubjectsVersion() {
 		if (old == null) {
-			System.out.println("es gibt keine alte version => messages");
+			addErrorMessage(TO_FOR, "Es gibt keine alte Version:",
+					"Es wurde keine Änderung vorgenommen.");
 		} else if (DBSubject.loadSubject(current.getVersion() + 1,
 				current.getSubTitle(), current.getModTitle()) != null) {
-			System.out
-					.println("es gibt eine unbestätigte neuere version => messages");
+			addErrorMessage(TO_FOR, "Es existiert eine unbestätigte Änderung:",
+					"Es wurde keine Änderung vorgenommen.");
 		} else {
 			title = old.getSubTitle();
 			description = old.getDescription();
@@ -114,7 +143,9 @@ public class DezernatVersionBean {
 					current.getVersion(), current.getSubTitle());
 			fieldList2 = DBField.loadFieldList(old.getModTitle(),
 					old.getVersion(), old.getSubTitle());
-
+			
+			addMessage(TO_FOR, "Erfolgreich:",
+					"Die Vorgängerversion würde wieder hergestellt.");
 		}
 	}
 

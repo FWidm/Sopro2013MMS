@@ -50,9 +50,7 @@ public class DBNotification extends DBManager {
 						+ "', "
 						+ false
 						+ ", "
-						+ false
-						+ ", '"
-						+ edit.getExRulesTitle() + "')";
+						+ false + ", '" + edit.getExRulesTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof ModManual) {
 				ModManual edit = (ModManual) modNotif.getModification()
 						.getBefore();
@@ -93,9 +91,7 @@ public class DBNotification extends DBManager {
 						+ "', "
 						+ false
 						+ ", "
-						+ false
-						+ ", '"
-						+ edit.getModTitle() + "')";
+						+ false + ", '" + edit.getModTitle() + "')";
 			} else if (modNotif.getModification().getBefore() instanceof Subject) {
 				Subject edit = (Subject) modNotif.getModification().getBefore();
 				update = "INSERT INTO notification(RecipientEmail, SenderEmail, Timestamp, Message, Action, Status, isReadSender, isReadRecipient, ModTitle, SubTitle) Values('"
@@ -117,8 +113,7 @@ public class DBNotification extends DBManager {
 						+ ", '"
 						+ edit.getModTitle()
 						+ "', '"
-						+ edit.getSubTitle()
-						+ "')";
+						+ edit.getSubTitle() + "')";
 			}
 			try {
 				con = openConnection();
@@ -277,7 +272,6 @@ public class DBNotification extends DBManager {
 		}
 	}
 
-
 	/**
 	 * Update a specific notification to isReadSender = true
 	 * 
@@ -310,7 +304,7 @@ public class DBNotification extends DBManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Update a specific notification to isReadRecipient = true
 	 * 
@@ -345,9 +339,9 @@ public class DBNotification extends DBManager {
 		}
 	}
 
-
 	/**
-	 * Update a specific notifications status to declined and sets isReadSender to false
+	 * Update a specific notifications status to declined and sets isReadSender
+	 * to false
 	 * 
 	 * @param Notification
 	 * @return boolean
@@ -386,7 +380,8 @@ public class DBNotification extends DBManager {
 	}
 
 	/**
-	 * Update a specific notifications status to accepted and sets isReadSender to false
+	 * Update a specific notifications status to accepted and sets isReadSender
+	 * to false
 	 * 
 	 * @param Notification
 	 * @return boolean
@@ -499,7 +494,6 @@ public class DBNotification extends DBManager {
 				boolean isReadS = rs.getBoolean("isReadSender");
 				boolean isReadR = rs.getBoolean("isReadRecipient");
 
-
 				notif.add(new Notification(recEm, senEm, timS, mess, act, stat,
 						isReadS, isReadR));
 			}
@@ -562,11 +556,11 @@ public class DBNotification extends DBManager {
 			Statement stmt = con.createStatement();
 			String query = null;
 			try {
-			query = "SELECT * FROM notification WHERE senderEmail= '"
-					+ currentUser + "' OR recipientEmail='" + currentUser
-					+ "' AND senderEmail= '"
-					+ DBUser.loadUsersEmailByRole("Dekan").get(0) + "'";
-			} catch (IndexOutOfBoundsException e){
+				query = "SELECT * FROM notification WHERE senderEmail= '"
+						+ currentUser + "' OR recipientEmail='" + currentUser
+						+ "' AND senderEmail= '"
+						+ DBUser.loadUsersEmailByRole("Dekan").get(0) + "'";
+			} catch (IndexOutOfBoundsException e) {
 				e.printStackTrace();
 			}
 
@@ -611,13 +605,26 @@ public class DBNotification extends DBManager {
 								Subject subBefore = DBSubject.loadSubject(
 										subject.getVersion() - 1, sub, mod);
 								if (subBefore == null) {
-									subBefore = new Subject(0,
-											"Vorgängerversion nicht verfügbar.", "",
-											"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.", "", 0, false);
+									if (stat.equals("declined")) {
+										subBefore = new Subject(
+												0,
+												"Ein neues Fach wurde abgelehnt.",
+												"",
+												"Da das neue Fach abgelehnt wurde, is keine Anzeige einer Vorgängerversion möglich.",
+												"", 0, false);
+									} else {
+										subBefore = new Subject(
+												0,
+												"Vorgängerversion nicht verfügbar.",
+												"",
+												"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.",
+												"", 0, false);
+									}
 								}
 								notif.add(new ModificationNotification(recEm,
-										senEm, timS, mess, act, stat, isReadS, isReadR,
-										new Modification(subBefore, subject)));
+										senEm, timS, mess, act, stat, isReadS,
+										isReadR, new Modification(subBefore,
+												subject)));
 							}
 						} else {
 							Subject subject = DBSubject
@@ -625,13 +632,26 @@ public class DBNotification extends DBManager {
 							Subject subBefore = DBSubject.loadSubject(
 									subject.getVersion() - 1, sub, mod);
 							if (subBefore == null) {
-								subBefore = new Subject(0,
-										"Vorgängerversion nicht verfügbar.", "", "Da das Fach neu angelegt wurde, ist keine Anzeige möglich.",
-										"", 0, false);
+								if (stat.equals("declined")) {
+									subBefore = new Subject(
+											0,
+											"Ein neues Fach wurde abgelehnt.",
+											"",
+											"Da das neue Fach abgelehnt wurde, is keine Anzeige einer Vorgängerversion möglich.",
+											"", 0, false);
+								} else {
+									subBefore = new Subject(
+											0,
+											"Vorgängerversion nicht verfügbar.",
+											"",
+											"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.",
+											"", 0, false);
+								}
 							}
 							notif.add(new ModificationNotification(recEm,
-									senEm, timS, mess, act, stat, isReadS, isReadR,
-									new Modification(subBefore, subject)));
+									senEm, timS, mess, act, stat, isReadS,
+									isReadR, new Modification(subBefore,
+											subject)));
 						}
 					}
 					// TODO add version for Module or not ;)
@@ -693,14 +713,18 @@ public class DBNotification extends DBManager {
 						Subject subBefore = DBSubject.loadSubject(
 								subject.getVersion() - 1, sub, mod);
 						if (subBefore == null) {
-							subBefore = new Subject(0,
-									"Vorgängerversion nicht verfügbar.", "", "Da das Fach neu angelegt wurde, ist keine Anzeige möglich.", "",
-									0, true);
+							subBefore = new Subject(
+									0,
+									"Vorgängerversion nicht verfügbar.",
+									"",
+									"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.",
+									"", 0, true);
 						}
 						if (subject != null) {
 							notif.add(new ModificationNotification(recEm,
-									senEm, timS, mess, act, stat, isReadS, isReadR,
-									new Modification(subBefore, subject)));
+									senEm, timS, mess, act, stat, isReadS,
+									isReadR, new Modification(subBefore,
+											subject)));
 						}
 					}
 					// TODO add version for Module or not ;)
@@ -759,7 +783,6 @@ public class DBNotification extends DBManager {
 		}
 		return notif;
 	}
-
 
 	/**
 	 * DELETE all notifications from one user with specified email

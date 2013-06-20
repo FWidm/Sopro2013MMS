@@ -438,8 +438,6 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
-						<p:panel visible="#{!ModulNotificationBean.isDeadline}"
-							header="Deine mutter mag kleine kinder">
 							<p:layout>
 								<p:layoutUnit position="north" minSize="80"
 									header="Nachricht vom: #{ModulNotificationBean.selectedNotification.timeStamp} 
@@ -517,7 +515,6 @@
 									</p:panel>
 								</p:layoutUnit>
 							</p:layout>
-						</p:panel>
 						<p:panel visible="#{ModulNotificationBean.isDeadline}"
 							header="Deadline">
 							Bitte taetigen Sie all ihre Aenderungen/Eintragungen fuer das Modulhandbuch <strong>#{ModulNotificationBean.deadlineModMan}</strong> bis einschliesslich <strong>#{ModulNotificationBean.deadline}</strong>.
