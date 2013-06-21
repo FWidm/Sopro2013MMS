@@ -17,96 +17,120 @@
 <h:body>
 	<!-- body -->
 	<div style="height: 120px;">
-		<p:graphicImage value="/Image/iui_19.png"/>
+		<p:graphicImage value="/Image/iui_19.png" />
 		<p:graphicImage
 			style="float: left !important; margin-left: 1.6em !important; margin-top: -0.7em !important; max-height: 110px; margin-top: 0px !important;"
 			value="/Image/MyBestLogo.png" />
 	</div>
 
 	<p:tabView id="tabview-admin">
-	<p:tab title="Startseite" >
-			<p:layout style="min-width:800px; min-height:600px; max-height:600px;"
-					id="welcome">
-			<p:layoutUnit position="center" resizable="true" size="215"
-						minSize="215" header="Willkommen auf der Hilfeseite" collapsible="false">
-						<!-- moegliche Funktionen jeden Users -->
-						<h2>M&ouml;gliche Funktionen</h2>
-						<ul>
-							<li>Als Administrator ist es ihnen m&ouml;glich Benutzer zu erstellen, zu l&ouml;schen und zu editieren</li>
-							<li>Den Benutzer erstellen Tab nutzen
-								<ul>
-									<li>Benutzer erstellen</li>
-								</ul>
-							</li>
-							<li>Benutzer l&ouml;schen Tab nutzen
-								<ul>
-									<li>Benutzer nach Rollen filtern</li>
-									<li>Benutzer l&ouml;schen</li>
-								</ul>
-							</li>
-							<li>Benutzer editieren Tab nutzen
-								<ul>
-									<li>Benutzer nach Rollen filtern</li>
-									<li>Benutzer editieren (Name, Vorname und Rolle)</li>
-								</ul>
-							</li>
-						</ul>
-						
-						<!-- funktion Benutzer erstellen -->
-						<ul>
-						
-							<h4> Funktion Benutzer erstellen</h4>
-							
-							<li><strong> Benutzer erstellen</strong></li>
-							<p>Der "Benutzer erstellen"-Tab ist Ihre Startseite. Hier k&ouml;nnen Sie neue Benutzer erstellen/anlegen.</p>
-							<p>Dazu geben Sie in die entsprechenden Felder den Nachnamen, Vornamen, Email ein und w&auml;hlen die Rolle aus.</p>
-							<p>Auswa&auml;hlbar sind die Rollen: Administrator, Modulverantwortlicher, Dezernat, Redakteur und Dekan.</p>
-							<p>Wenn Sie alle Felder ausgef&uuml;llt haben, klicken Sie auf den Button "create" um den Benutzer zu erstellen</p>
-							<p>Um die Felder zu leeren klicken Sie auf den Button "Felder zur&uuml;cksetzen".</p>
-						</ul>
+		<p:tab title="Startseite">
+			<p:layout
+				style="min-width:800px; min-height:600px; max-height:600px;"
+				id="welcome">
+				<p:layoutUnit position="center" resizable="true" size="215"
+					minSize="215" header="Willkommen auf der Hilfeseite"
+					collapsible="false">
+					<!-- moegliche Funktionen jeden Users -->
+					<h2>M&ouml;gliche Funktionen</h2>
+					<ul>
+						<li>Als Administrator ist es ihnen m&ouml;glich Benutzer zu
+							erstellen, zu l&ouml;schen und zu editieren</li>
+						<li>Den Benutzer erstellen Tab nutzen
+							<ul>
+								<li>Benutzer erstellen</li>
+							</ul>
+						</li>
+						<li>Benutzer l&ouml;schen Tab nutzen
+							<ul>
+								<li>Benutzer nach Rollen filtern</li>
+								<li>Benutzer l&ouml;schen</li>
+							</ul>
+						</li>
+						<li>Benutzer editieren Tab nutzen
+							<ul>
+								<li>Benutzer nach Rollen filtern</li>
+								<li>Benutzer editieren (Name, Vorname und Rolle)</li>
+							</ul>
+						</li>
+					</ul>
 
-						<!-- funktion Benutzer L&ouml;schen -->
-						<ul>
-						
-							<h4> Funktion Benutzer L&ouml;schen</h4>
-							
-							<li><strong> Benutzer L&ouml;schen</strong></li>
-							<p>Hier sehen Sie nun eine Tabelle, welche Benutzer aller Rollen anzeigt.</p>
-							<p>Um eine Ansicht von einer bestimmten Benutzer-Gruppe zu erhalten, klicken Sie auf das Drop-Down-Men&uuml;.</p>
-							<p>Dort k&ouml;nnen Sie eine Rolle ausw&auml;hlen und anschliessend auf den Button "find" klicken.</p>
-							<p>Um einen Benutzer zu l&ouml;schen, klicken Sie in der Zeile des entsprechenden Benutzers auf den Button mit dem M&uuml;lleimer.</p>
-							<p>Daraufhin &ouml;ffnet sich ein Pop-Up Fenster als Sicherheitsabfrage. Klicken Sie dann auf "L&ouml;schen" wird der Benutzer gel&ouml;scht, klicken Sie auf "Abbruch" wird abgebrochen.</p>
-						</ul>
-						
-						<!-- funktion Benutzer editieren -->
-						<ul>
-						
-							<h4> Funktion Benutzer editieren</h4>
-							
-							<li><strong> Benutzer editieren</strong></li>
-							<p>Um einen Benutzer zu editieren, klicken Sie auf den "Benutzer editieren"-Tab.</p>
-							<p>Hier sehen Sie nun eine Tabelle, welche Benutzer aller Rollen anzeigt.</p>
-							<p>Um eine Ansicht von einer bestimmten Benutzer-Gruppe zu erhalten, klicken Sie auf das Drop-Down-Men&uuml;.</p>
-							<p>Dort k&ouml;nnen Sie eine Rolle ausw&auml;hlen und anschliessend auf den Button "find" klicken.</p>
-							<p>Um einen Benutzer zu editieren, klicken Sie in der Zeile des entsprechenden Benutzers auf den Button mit dem Stift.</p>
-							<p>Es kann der Name, Vorname und die Rolle des Benutzers ge&auml;ndert werden. Dazu klicken Sie einfach in das jeweilige Feld.</p>
-							<p>Um diese &Auml;nderungen zu speichern klicken sie auf den Hacken, um abzubrechen klicken Sie auf das x</p>
-						</ul>
-						
-						<!-- funktion Logout -->
-						<ul>
-						
-							<h4> Funktion Logout</h4>
-							
-							<li><strong> Abmeldung</strong></li>
-							<p> W&auml;hlen Sie den Tab Logout.</p>
-							<p> Best&auml;tigen Sie mit dem OK-Button</p>
-							<p>Sie werden ausgeloggt </p>
-						</ul>					
-						
-					</p:layoutUnit>
+					<!-- funktion Benutzer erstellen -->
+					<ul>
+
+						<h4>Funktion Benutzer erstellen</h4>
+
+						<li><strong> Benutzer erstellen</strong></li>
+						<p>Der "Benutzer erstellen"-Tab ist Ihre Startseite. Hier
+							k&ouml;nnen Sie neue Benutzer erstellen/anlegen.</p>
+						<p>Dazu geben Sie in die entsprechenden Felder den Nachnamen,
+							Vornamen, Email ein und w&auml;hlen die Rolle aus.</p>
+						<p>Auswa&auml;hlbar sind die Rollen: Administrator,
+							Modulverantwortlicher, Dezernat, Redakteur und Dekan.</p>
+						<p>Wenn Sie alle Felder ausgef&uuml;llt haben, klicken Sie auf
+							den Button "create" um den Benutzer zu erstellen</p>
+						<p>Um die Felder zu leeren klicken Sie auf den Button "Felder
+							zur&uuml;cksetzen".</p>
+					</ul>
+
+					<!-- funktion Benutzer L&ouml;schen -->
+					<ul>
+
+						<h4>Funktion Benutzer L&ouml;schen</h4>
+
+						<li><strong> Benutzer L&ouml;schen</strong></li>
+						<p>Hier sehen Sie nun eine Tabelle, welche Benutzer aller
+							Rollen anzeigt.</p>
+						<p>Um eine Ansicht von einer bestimmten Benutzer-Gruppe zu
+							erhalten, klicken Sie auf das Drop-Down-Men&uuml;.</p>
+						<p>Dort k&ouml;nnen Sie eine Rolle ausw&auml;hlen und
+							anschliessend auf den Button "find" klicken.</p>
+						<p>Um einen Benutzer zu l&ouml;schen, klicken Sie in der Zeile
+							des entsprechenden Benutzers auf den Button mit dem
+							M&uuml;lleimer.</p>
+						<p>Daraufhin &ouml;ffnet sich ein Pop-Up Fenster als
+							Sicherheitsabfrage. Klicken Sie dann auf "L&ouml;schen" wird der
+							Benutzer gel&ouml;scht, klicken Sie auf "Abbruch" wird
+							abgebrochen.</p>
+					</ul>
+
+					<!-- funktion Benutzer editieren -->
+					<ul>
+
+						<h4>Funktion Benutzer editieren</h4>
+
+						<li><strong> Benutzer editieren</strong></li>
+						<p>Um einen Benutzer zu editieren, klicken Sie auf den
+							"Benutzer editieren"-Tab.</p>
+						<p>Hier sehen Sie nun eine Tabelle, welche Benutzer aller
+							Rollen anzeigt.</p>
+						<p>Um eine Ansicht von einer bestimmten Benutzer-Gruppe zu
+							erhalten, klicken Sie auf das Drop-Down-Men&uuml;.</p>
+						<p>Dort k&ouml;nnen Sie eine Rolle ausw&auml;hlen und
+							anschliessend auf den Button "find" klicken.</p>
+						<p>Um einen Benutzer zu editieren, klicken Sie in der Zeile
+							des entsprechenden Benutzers auf den Button mit dem Stift.</p>
+						<p>Es kann der Name, Vorname und die Rolle des Benutzers
+							ge&auml;ndert werden. Dazu klicken Sie einfach in das jeweilige
+							Feld.</p>
+						<p>Um diese &Auml;nderungen zu speichern klicken sie auf den
+							Hacken, um abzubrechen klicken Sie auf das x</p>
+					</ul>
+
+					<!-- funktion Logout -->
+					<ul>
+
+						<h4>Funktion Logout</h4>
+
+						<li><strong> Abmeldung</strong></li>
+						<p>W&auml;hlen Sie den Tab Logout.</p>
+						<p>Best&auml;tigen Sie mit dem OK-Button</p>
+						<p>Sie werden ausgeloggt</p>
+					</ul>
+
+				</p:layoutUnit>
 			</p:layout>
-		</p:tab> 
+		</p:tab>
 		<!-- TabView -->
 		<p:tab title="Benutzer erstellen">
 			<!--  Begin of first tab // Start -->
@@ -120,8 +144,8 @@
 								<td colspan="2"><h2>Benutzer erstellen</h2></td>
 							</tr>
 							<tr>
-								<td><h:outputText value="Nachname: " /> <h:inputText id="name"
-										value="#{AdminBean.name}" styleClass="input_text" /></td>
+								<td><h:outputText value="Nachname: " /> <h:inputText
+										id="name" value="#{AdminBean.name}" styleClass="input_text" /></td>
 							</tr>
 							<tr>
 								<td><h:outputText value="Vorname:  " /> <h:inputText
@@ -180,8 +204,8 @@
 									</p:selectOneMenu></td>
 							</tr>
 							<tr>
-								<td><p:commandButton
-										actionListener="#{AdminBean.findUser}" value="find"
+								<td><p:commandButton actionListener="#{AdminBean.findUser}"
+										value="find"
 										update=":tabview-admin:delete-frame:users,:tabview-admin:edit-frame" /></td>
 							</tr>
 						</table>
@@ -216,10 +240,12 @@
 
 				</p:layoutUnit>
 				<p:confirmDialog widgetVar="deleteDlg" id="deleteDialog"
-					header="Diesen Benutzer l&ouml;schen?" message="L&ouml;schen des Benutzers entfernt gleichzeitig alle Notifikationen von und f&uuml;r ihn und seine Zugriffsrechte." width="400" modal="true"
-					closable="false" severity="alert">
+					header="Diesen Benutzer l&ouml;schen?"
+					message="L&ouml;schen des Benutzers entfernt gleichzeitig alle Notifikationen von und f&uuml;r ihn und seine Zugriffsrechte."
+					width="400" modal="true" closable="false" severity="alert">
 					<h:panelGroup layout="block" style="text-align: right">
-						<p:commandButton value="L&ouml;schen" actionListener="#{AdminBean.deleteUser}"
+						<p:commandButton value="L&ouml;schen"
+							actionListener="#{AdminBean.deleteUser}"
 							oncomplete="deleteDlg.hide();"
 							update=":tabview-admin:delete-frame:users" />
 						<p:commandButton value="Abbruch" oncomplete="deleteDlg.hide();" />
@@ -247,8 +273,8 @@
 									</p:selectOneMenu></td>
 							</tr>
 							<tr>
-								<td><p:commandButton
-										actionListener="#{AdminBean.findUser}" value="find"
+								<td><p:commandButton actionListener="#{AdminBean.findUser}"
+										value="find"
 										update=":tabview-admin:delete-frame,:tabview-admin:edit-frame:users" /></td>
 							</tr>
 						</table>
@@ -322,11 +348,6 @@
 				</p:layoutUnit>
 			</p:layout>
 
-		</p:tab>
-
-		<p:tab title="Pro">
-			<p:terminal commandHandler="#{AdminBean.handleCommand}" height="300px"  
-            welcomeMessage="Welcome to the Pro-Tool for Admins. Type help for gettin' started!" />
 		</p:tab>
 
 		<p:tab title="Logout">
