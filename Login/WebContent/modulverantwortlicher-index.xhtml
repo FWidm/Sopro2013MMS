@@ -28,7 +28,7 @@
 			<p:ajax event="tabChange"
 				listener="#{ModulNotificationBean.onTabChange}" update=":form:growl" />
 			<!-- TabView -->
-					<p:tab title="Startseite">
+			<p:tab title="Startseite">
 				<p:layout
 					style="min-width:800px; min-height:600px; max-height:600px;"
 					id="welcome">
@@ -438,6 +438,9 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
+
+						<p:panel visible="#{!ModulNotificationBean.isDeadline}">
+
 							<p:layout>
 								<p:layoutUnit position="north" minSize="80"
 									header="Nachricht vom: #{ModulNotificationBean.selectedNotification.timeStamp} 
@@ -475,8 +478,14 @@
 
 										<ui:repeat var="iterator"
 											value="#{ModulNotificationBean.fieldList}">
-											<strong>Titel: </strong><font color="#{ModulNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font><br />
-											<strong>Beschreibung: </strong><font color="#{ModulNotificationBean.validateChangedDescription}">#{iterator.description}</font><br />
+											<strong>Titel: </strong>
+											<font
+												color="#{ModulNotificationBean.validateChangedFieldListLength}">#{iterator.fieldTitle}</font>
+											<br />
+											<strong>Beschreibung: </strong>
+											<font
+												color="#{ModulNotificationBean.validateChangedDescription}">#{iterator.description}</font>
+											<br />
 											<br />
 										</ui:repeat>
 									</p:panel>
@@ -515,6 +524,7 @@
 									</p:panel>
 								</p:layoutUnit>
 							</p:layout>
+						</p:panel>
 						<p:panel visible="#{ModulNotificationBean.isDeadline}"
 							header="Deadline">
 							Bitte taetigen Sie all ihre Aenderungen/Eintragungen fuer das Modulhandbuch <strong>#{ModulNotificationBean.deadlineModMan}</strong> bis einschliesslich <strong>#{ModulNotificationBean.deadline}</strong>.
