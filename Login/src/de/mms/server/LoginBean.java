@@ -19,8 +19,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
-
-
 @ManagedBean(name = "LoginBean")
 @SessionScoped
 public class LoginBean {
@@ -34,7 +32,8 @@ public class LoginBean {
 
 	public LoginBean() {
 		fc = FacesContext.getCurrentInstance();
-		nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
+		nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance()
+				.getApplication().getNavigationHandler();
 	}
 
 	/**
@@ -58,7 +57,8 @@ public class LoginBean {
 	public void logout() {
 		dbUser = null;
 		loggedIn = false;
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		FacesContext.getCurrentInstance().getExternalContext()
+				.invalidateSession();
 		nav.performNavigation("index");
 	}
 
@@ -69,42 +69,50 @@ public class LoginBean {
 		if (checkValidUser()) {
 			loggedIn = true;
 			// set session attributes for current user
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("role", dbUser.getRole());
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("email", dbUser.getEmail());
-			switch(dbUser.getRole()){
-			case "Administrator": 
+			FacesContext.getCurrentInstance().getExternalContext()
+					.getSessionMap().put("role", dbUser.getRole());
+			FacesContext.getCurrentInstance().getExternalContext()
+					.getSessionMap().put("email", dbUser.getEmail());
+			switch (dbUser.getRole()) {
+			case "Administrator":
 				nav.performNavigation("admin-index");
 				break;
-			case "Redakteur": 
+			case "Redakteur":
 				nav.performNavigation("redakteur-index");
 				break;
-			case "Modulverantwortlicher": 
+			case "Modulverantwortlicher":
 				nav.performNavigation("modulverantwortlicher-index");
 				break;
-			case "Dezernat": 
+			case "Dezernat":
 				nav.performNavigation("dezernat-index");
 				break;
-			case "Dekan": 
+			case "Dekan":
 				nav.performNavigation("dekan-index");
 				break;
+			case "Pro":
+				nav.performNavigation("pro-index");
+				break;
 			}
-			
+
 		} else {
 			loggedIn = false;
 			addErrorMessage("login", "Login failed", "Please check your input.");
 		}
 	}
-	
+
 	/**
 	 * Resets the password of the selected user
 	 */
 	public void resetUserPass() {
-		String currentmail=email;
+		String currentmail = email;
 		System.out.println("reset! " + currentmail);
 		if (loadUser(currentmail)) {
 			User tmp = DBUser.loadUser(currentmail);
 			System.out.println("reset password of user: " + tmp.toString());
-			addMessage("login",	"Reset success!",currentmail
+			addMessage(
+					"login",
+					"Reset success!",
+					currentmail
 							+ " your password reset was successful - check your emails.");
 			tmp.resetPassword(10);
 			DBUser.updateUser(tmp, currentmail);
@@ -145,9 +153,10 @@ public class LoginBean {
 		System.out.println("invalid");
 		return false;
 	}
-	
+
 	/**
 	 * checks if the user is logged in
+	 * 
 	 * @param event
 	 */
 	public void checkLoggedIn(ComponentSystemEvent event) {
