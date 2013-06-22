@@ -6,11 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import de.mms.data.Subject;
-
 public class DBManager {
 
-	public static final boolean LOCAL = true;
+	public static final boolean LOCAL = false;
 
 	protected static String URL = "jdbc:mysql://localhost/krm_db?";
 	protected static String USERDATA = "user=krm_user&password=wlc93Qx6aoJ4v";

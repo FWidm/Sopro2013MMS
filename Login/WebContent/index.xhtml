@@ -46,25 +46,22 @@
 					<p:layoutUnit position="center" header="Modulemanual">
 						<p:scrollPanel id="scrollPanel-start" mode="native"
 							style="min-width:400px; min-height:470px;">
-							<p:panel header="#{StartBean.title}"
-								toggleable="true" toggleSpeed="500"
-								visible="#{StartBean.mainVisible}">
+							<p:panel header="#{StartBean.title}" toggleable="true"
+								toggleSpeed="500" visible="#{StartBean.mainVisible}">
 	
 								#{StartBean.description}
 							
 							</p:panel>
-							<p:panel header="Leistungspunkte und Lernziele"
-								toggleable="true" toggleSpeed="500"
-								visible="#{StartBean.ectsAimVisible}">
+							<p:panel header="Leistungspunkte und Lernziele" toggleable="true"
+								toggleSpeed="500" visible="#{StartBean.ectsAimVisible}">
 
 								<strong>leistungspunkte:</strong> #{StartBean.ects}<br />
 								<br />
 								<strong>Lernziele:</strong> #{StartBean.aim}
 	
 							</p:panel>
-							<p:panel header="Zusaetzliche Informationen"
-								toggleable="true" toggleSpeed="500"
-								visible="#{StartBean.addInfoVisible}">
+							<p:panel header="Zusaetzliche Informationen" toggleable="true"
+								toggleSpeed="500" visible="#{StartBean.addInfoVisible}">
 
 								<ui:repeat var="iterator" value="#{StartBean.fieldList}">
 									<strong>Titel: </strong>#{iterator.fieldTitle}<br />

@@ -3,13 +3,10 @@
  */
 package de.mms.server;
 
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.mms.data.User;
-import de.mms.db.DBManager;
 import de.mms.db.DBModAccess;
 import de.mms.db.DBModManAccess;
 import de.mms.db.DBNotification;
@@ -25,7 +22,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.primefaces.event.RowEditEvent;
-
 
 //Changed to Sessionscope - if in doubt revert to RequestScoped
 @ManagedBean(name = "AdminBean")
@@ -62,8 +58,10 @@ public class AdminBean {
 		return (T) context.getApplication().evaluateExpressionGet(context,
 				"#{" + beanName + "}", Object.class);
 	}
+
 	/**
 	 * checks if the user is an admin
+	 * 
 	 * @param event
 	 */
 	public void checkAdmin(ComponentSystemEvent event) {
@@ -87,7 +85,9 @@ public class AdminBean {
 	}
 
 	/**
-	 * Method that is colled from the xhtml admin-index page that checks if parameters are nonempty and then saves the user if email is not already in the database
+	 * Method that is colled from the xhtml admin-index page that checks if
+	 * parameters are nonempty and then saves the user if email is not already
+	 * in the database
 	 */
 	public void saveUser(ActionEvent action) {
 
@@ -99,8 +99,7 @@ public class AdminBean {
 			return;
 		}
 
-		
-		if(email.contains(" ") || !email.matches(".+@.+\\.[a-z]+")){
+		if (email.contains(" ") || !email.matches(".+@.+\\.[a-z]+")) {
 			addErrorMessage("Email nicht valide",
 					"Die email darf keine leerzeichen enthalten und muss von der Form x@y.z sein");
 			return;
@@ -144,15 +143,19 @@ public class AdminBean {
 		User updateUser = (User) event.getObject();
 		FacesMessage msg = new FacesMessage("Benutzer bearbeitet.",
 				((User) event.getObject()).toString());
-		if (DBUser.loadUser(updateUser.getEmail()) != null && updateUser.getName()!="" && updateUser.getFirstname()!="") {
+		if (DBUser.loadUser(updateUser.getEmail()) != null
+				&& updateUser.getName() != ""
+				&& updateUser.getFirstname() != "") {
 			System.out.println(updateUser.toString());
 			DBUser.updateUser(updateUser, updateUser.getEmail());
-			addMessage("Bearbeiten erfolgreich!", "Benutzer erfolgreich editiert.");
-		}
-		else 
-		{
-			addErrorMessage("Bearbeiten nicht erfolgt!", "Bearbeitete Felder koennen nicht leer sein.");
-			msg = new FacesMessage(FacesMessage.SEVERITY_FATAL,"Editieren nicht erfolgt!","Name oder Nachname sind leer - dürfen aber nicht leer sein!");
+			addMessage("Bearbeiten erfolgreich!",
+					"Benutzer erfolgreich editiert.");
+		} else {
+			addErrorMessage("Bearbeiten nicht erfolgt!",
+					"Bearbeitete Felder koennen nicht leer sein.");
+			msg = new FacesMessage(FacesMessage.SEVERITY_FATAL,
+					"Editieren nicht erfolgt!",
+					"Name oder Nachname sind leer - dürfen aber nicht leer sein!");
 		}
 		FacesContext.getCurrentInstance().addMessage("edit-messages", msg);
 	}
@@ -197,10 +200,12 @@ public class AdminBean {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		this.email = fc.getExternalContext().getRequestParameterMap()
 				.get("email");
-		// TODO: Delete notifications and modaccess/modmanaccess before deleting the user. - Methods are
+		// TODO: Delete notifications and modaccess/modmanaccess before deleting
+		// the user. - Methods are
 		// missing to do this until now.
-		//User tmp=DBUser.loadUser(email);
-		//Maybe check if the delete methods are neccessary, but should be no problem if the queries do nothing.
+		// User tmp=DBUser.loadUser(email);
+		// Maybe check if the delete methods are neccessary, but should be no
+		// problem if the queries do nothing.
 		DBModManAccess.deleteModuleModManbyEmail(selectedUser.getEmail());
 		DBModAccess.deleteModAccessbyEmail(selectedUser.getEmail());
 		DBNotification.deleteNotificationFromUser(selectedUser.getEmail());
@@ -218,7 +223,7 @@ public class AdminBean {
 		DBUser.deleteUser(selectedUser.getEmail());
 		System.out.println(selectedUser.getEmail());
 		System.out.println(">>" + selectedUser.getRole());
-		//display all users in the selection
+		// display all users in the selection
 		actualizeUserList(null);
 	}
 
@@ -266,35 +271,6 @@ public class AdminBean {
 		FacesContext.getCurrentInstance().addMessage("create-messages",
 				new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg));
 	}
-	
-	public String handleCommand(String command, String[] params) {  
-        if(command.equals("sql")) {
-        	if(params[0] != null && params[0].toLowerCase().equals("drop")) {
-        		return "The requested database has been completely erased.";
-        	} else if(params[0] != null && params[0].toLowerCase().equals("select")) {
-        		return "There's nothing to select. ;)";
-        	} else {
-        		String query = new String();
-        		for(int i = 0; i < params.length; i++) {
-        			query += " " + params[i]; 
-        		}
-        		try {
-					DBManager.runQuery(query);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return "Your sql-query contains errors or isn't valid. Try again.";
-				}
-        		return "Your sql-query has been successfully executed.";
-        	}
-        }
-        else if(command.equals("date"))  
-            return new Date().toString();
-        else if(command.equals("cat"))
-        	return "TODO: Show this cat: http://adultcatfinder.com/";
-        else  
-            return command + " not found";  
-    }
 
 	/**
 	 * @return the firstname

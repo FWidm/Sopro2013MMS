@@ -18,41 +18,58 @@ public class AuthorizationListener implements PhaseListener {
 
 		boolean isLoginPage = (currentPage.lastIndexOf("/index.xhtml") > -1);
 		System.out.println("isLoginPage: " + isLoginPage);
-		
-		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
-		if(session==null){
-			NavigationHandler nh = facesContext.getApplication().getNavigationHandler();
+		HttpSession session = (HttpSession) facesContext.getExternalContext()
+				.getSession(false);
+
+		if (session == null) {
+			NavigationHandler nh = facesContext.getApplication()
+					.getNavigationHandler();
 			nh.handleNavigation(facesContext, null, "index");
-		}
-		else{
+		} else {
 			// get session attributes from current user
 			String currentUser = (String) session.getAttribute("role");
 			System.out.println("currenUser: " + currentUser);
-			
+
 			if (!isLoginPage) {
-				NavigationHandler nh = facesContext.getApplication().getNavigationHandler();
-				if(currentUser == null || currentUser == ""){
+				NavigationHandler nh = facesContext.getApplication()
+						.getNavigationHandler();
+				if (currentUser == null || currentUser == "") {
 					nh.handleNavigation(facesContext, null, "index");
-				}else{
-					if((currentUser.equals("Administrator")) && !(currentPage.lastIndexOf("admin-index.xhtml") > -1)){
+				} else {
+					if ((currentUser.equals("Administrator"))
+							&& !(currentPage.lastIndexOf("admin-index.xhtml") > -1)) {
 						nh.handleNavigation(facesContext, null, "admin-index");
 					}
-					if((currentUser.equals("Redakteur")) && !(currentPage.lastIndexOf("redakteur-index.xhtml") > -1)){
-						nh.handleNavigation(facesContext, null, "redakteur-index");
+					if ((currentUser.equals("Redakteur"))
+							&& !(currentPage
+									.lastIndexOf("redakteur-index.xhtml") > -1)) {
+						nh.handleNavigation(facesContext, null,
+								"redakteur-index");
 					}
-					if((currentUser.equals("Dezernat")) && !(currentPage.lastIndexOf("dezernat-index.xhtml") > -1)){
-						nh.handleNavigation(facesContext, null, "dezernat-index");
+					if ((currentUser.equals("Dezernat"))
+							&& !(currentPage
+									.lastIndexOf("dezernat-index.xhtml") > -1)) {
+						nh.handleNavigation(facesContext, null,
+								"dezernat-index");
 					}
-					if((currentUser.equals("Dekan")) && !(currentPage.lastIndexOf("dekan-index.xhtml") > -1)){
+					if ((currentUser.equals("Dekan"))
+							&& !(currentPage.lastIndexOf("dekan-index.xhtml") > -1)) {
 						nh.handleNavigation(facesContext, null, "dekan-index");
 					}
-					if((currentUser.equals("Modulverantwortlicher")) && !(currentPage.lastIndexOf("modulverantwortlicher-index.xhtml") > -1)){
-						nh.handleNavigation(facesContext, null, "modulverantwortlicher-index");
+					if ((currentUser.equals("Modulverantwortlicher"))
+							&& !(currentPage
+									.lastIndexOf("modulverantwortlicher-index.xhtml") > -1)) {
+						nh.handleNavigation(facesContext, null,
+								"modulverantwortlicher-index");
 					}
-				}				
+					if ((currentUser.equals("Pro"))
+							&& !(currentPage.lastIndexOf("pro-index.xhtml") > -1)) {
+						nh.handleNavigation(facesContext, null, "pro-index");
+					}
+				}
 			}
-			
+
 		}
 	}
 
