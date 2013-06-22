@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 15. Jun 2013 um 12:28
+-- Erstellungszeit: 22. Jun 2013 um 14:32
 -- Server Version: 5.0.51a-24+lenny5
 -- PHP-Version: 5.3.3-7+squeeze15
 
@@ -366,6 +366,7 @@ INSERT INTO `user` (`email`, `password`, `name`, `firstname`, `role`) VALUES
 ('max.modulverantwortlicher@uni-ulm.de', 0x313030303a323437316132633835396130333438393a31626331653335386365653031366137, 'modulvreantwortlicher', 'max', 'Modulverantwortlicher'),
 ('michael.modulverantwortlicher@uni-ulm.de', 0x313030303a323065326363336365623863626538343a65323230613663613131346666383032, 'modulvreantwortlicher', 'michael', 'Modulverantwortlicher'),
 ('mo.modulverantwortlicher@uni-ulm.de', 0x313030303a383737636165383864613237343338663a36633331373363623934313235346230, 'modulvreantwortlicher', 'mo', 'Modulverantwortlicher'),
+('prollo.pro@uni-ulm.de', 0x313030303a373537306266353638343864636536643a39323230643730636633396464613763, 'pro', 'prollo', 'Pro'),
 ('rabarbara.redakteur@uni-ulm.de', 0x313030303a353562353036316562343337333031373a63633762613665653762626632303738, 'redakteur', 'rabarbara', 'Redakteur'),
 ('richard.redakteur@uni-ulm.de', 0x313030303a633761363362646233656164356565383a35303037623232616535356163303036, 'redakteur', 'richard', 'Redakteur'),
 ('robin.redakteur@uni-ulm.de', 0x313030303a376633626330343736653261343539663a66313733373133303030336264393330, 'redakteur', 'robin', 'Redakteur'),
