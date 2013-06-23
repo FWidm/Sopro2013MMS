@@ -15,6 +15,7 @@ import de.mms.data.Field;
 import de.mms.data.ModManual;
 import de.mms.data.ModificationNotification;
 import de.mms.data.Module;
+import de.mms.data.Notification;
 import de.mms.data.Subject;
 import de.mms.db.DBField;
 import de.mms.db.DBNotification;
@@ -40,6 +41,7 @@ public class RedakteurNotificationBean {
 	private String action;
 	private String status;
 	private List<ModificationNotification> notificationList;
+	private List<ModificationNotification> notificationListDez;
 	private ModificationNotification selectedNotification;
 	Editable selectedEditableAfter, selectedEditableBefore;
 	private String strTimeStamp;
@@ -171,12 +173,21 @@ public class RedakteurNotificationBean {
 						+ ") &nbsp";
 			}
 		}
+		for (int i = 0; i < getNotificationListDez().size(); i++) {
+			if (!getNotificationListDez().get(i).isIsReadRecipient()) {
+				glbIsNotRead = true;
+				cntr += 1;
+				glbSender += cntr + ". ("
+						+ getNotificationListDez().get(i).getTimeStamp()
+						+ ") &nbsp";
+			}
+		}
 		if (glbIsNotRead) {
 			if (cntr == 1) {
 				FacesMessage msg = new FacesMessage(
 						"Sie haben eine ungelesene Nachricht ("
-								+ getNotificationList().get(0).getTimeStamp()
-								+ ")");
+								+ getNotificationList().get(0)
+										.getTimeStamp() + ")");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			} else if (cntr > 1) {
 				FacesMessage msg = new FacesMessage("Sie haben " + cntr
@@ -238,6 +249,10 @@ public class RedakteurNotificationBean {
 	public void loadNotifications() {
 		setNotificationList(DBNotification
 				.loadModificationNotificationRedakteur(currentUser));
+		// loads the notifications from the dezernat
+		setNotificationListDez(DBNotification
+				.loadModificationNotificationRedDez(currentUser));
+
 	}
 
 	/**
@@ -842,5 +857,22 @@ public class RedakteurNotificationBean {
 			String validateChangedFieldListLength) {
 		this.validateChangedFieldListLength = validateChangedFieldListLength;
 	}
+
+	/**
+	 * @return the notificationListDez
+	 */
+	public List<ModificationNotification> getNotificationListDez() {
+		return notificationListDez;
+	}
+
+	/**
+	 * @param notificationListDez the notificationListDez to set
+	 */
+	public void setNotificationListDez(
+			List<ModificationNotification> notificationListDez) {
+		this.notificationListDez = notificationListDez;
+	}
+
+
 
 }

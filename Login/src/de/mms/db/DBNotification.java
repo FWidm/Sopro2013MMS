@@ -740,6 +740,80 @@ public class DBNotification extends DBManager {
 		}
 		return notif;
 	}
+	
+	/**
+	 * load all modNotifs where status is "queued"
+	 * 
+	 * @param currentUser
+	 * 
+	 * @return
+	 */
+	public static List<ModificationNotification> loadModificationNotificationRedDez(
+			String currentUser) {
+		List<ModificationNotification> notif = new LinkedList<ModificationNotification>();
+		Connection con = null;
+		try {
+			con = openConnection();
+			Statement stmt = con.createStatement();
+			String query = "SELECT * FROM notification where senderEmail = '"
+					+ currentUser + "'";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String recEm = rs.getString("recipientEmail");
+				String senEm = rs.getString("senderEmail");
+				Timestamp timS = rs.getTimestamp("timeStamp");
+				String mess = rs.getString("message");
+				String act = rs.getString("action");
+				String stat = rs.getString("status");
+				boolean isReadS = rs.getBoolean("isReadSender");
+				boolean isReadR = rs.getBoolean("isReadRecipient");
+				String exRules = rs.getString("exRulesTitle");
+				String modMan = rs.getString("modManTitle");
+				String mod = rs.getString("modTitle");
+				String sub = rs.getString("subTitle");
+
+				if (exRules != null) {
+					if (modMan != null) {
+						// TODO add version for ModMan or not ;)
+					}
+					// TODO add version for ExRule or not ;)
+				} else if (mod != null) {
+					if (sub != null) {
+						Subject subject = DBSubject
+								.loadSubjectMaxVersionForRedakNotif(sub, mod);
+						Subject subBefore = DBSubject.loadSubject(
+								subject.getVersion() - 1, sub, mod);
+						if (subBefore == null) {
+							subBefore = new Subject(
+									0,
+									"Vorgängerversion nicht verfügbar.",
+									"",
+									"Da das Fach neu angelegt wurde, ist keine Anzeige möglich.",
+									"", 0, true);
+						}
+						if (subject != null) {
+							notif.add(new ModificationNotification(recEm,
+									senEm, timS, mess, act, stat, isReadS,
+									isReadR, new Modification(subBefore,
+											subject)));
+						}
+					}
+					// TODO add version for Module or not ;)
+				}
+			}
+			closeQuietly(rs);
+			closeQuietly(stmt);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeQuietly(con);
+		}
+		return notif;
+	}
+
 
 	public static Notification loadNotification(String recipientEmail,
 			String senderEmail, Timestamp timeStamp) {

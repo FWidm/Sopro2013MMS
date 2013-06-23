@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class DezernatNotificationBean {
 
-	public static final String TO_FOR = "message-log-edit";
+	public static final String TO_FOR = "message-log-dez";
 	public static final String BLACK = "black";
 	public static final String RED = "red";
 
