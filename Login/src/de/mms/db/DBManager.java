@@ -33,7 +33,7 @@ public class DBManager {
 	protected static Connection openConnection() throws SQLException {
 		if (LOCAL) {
 			URL = "jdbc:mysql://localhost/krm_db?";
-			USERDATA = "user=root&password=";
+			USERDATA = "user=root&password=1913";
 		} else {
 
 			USERDATA = "user=krm_user&password=wlc93Qx6aoJ4v";

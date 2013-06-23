@@ -10,7 +10,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
 	<title>Redakteur</title>
 
-	<link rel="stylesheet" href="./css/default.css" />
 
 </h:head>
 
@@ -90,13 +89,10 @@
 						<p>Sie sehen nun ihr gew&uuml;nschtes Fach oder Modul.</p>
 						<p>Nun k&ouml;nnen Sie in den einzelnen Textfeldern ihre
 							gew&uuml;nschten &Auml;nderungen vornehmen</p>
-						<p>
-							Bei den zus&auml;tzlichen Informationen k&ouml;nnen Sie ausserdem
-							mit einem Klick auf den Button "+"/"-" neue
-							&Uuml;
+						<p>Bei den zus&auml;tzlichen Informationen k&ouml;nnen Sie
+							ausserdem mit einem Klick auf den Button "+"/"-" neue &Uuml;
 							berschriften mit zugeh&ouml;riger Beschreibung
-							hinzuf&uuml;gen/entfernen.
-						</p>
+							hinzuf&uuml;gen/entfernen.</p>
 						<!-- funktion Notifications -->
 						<h4>Funktion Notifications</h4>
 						<ul>
@@ -509,14 +505,16 @@
 							<p:column>
 								<p:graphicImage
 									value="/Image/Notification/#{noti.isReadSender}.png"
-									style="width: 10px; margin-bottom: 5px" />
+									style="width: 20px; opacity: .8; padding-top:1.7em;" />
 								<p:graphicImage
 									value="/Image/Notification/#{noti.isReadRecipient}.png"
-									style="width: 10px; margin-bottom: 5px" />
+									style="width: 20px; opacity: .8; padding-top:1.7em;" />
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
-									style="width: 40px;" />
-                   				#{noti.timeStamp}
-               				</p:column>
+									style="width: 40px; opacity: .8; padding-top:.5em;" />
+							</p:column>
+							<p:column>
+								<strong>#{noti.timeStamp}</strong>
+							</p:column>
 
 							<f:facet name="footer">
 								<div align="center">
@@ -649,15 +647,17 @@
 							<p:column>
 								<p:graphicImage
 									value="/Image/Notification/#{noti.isReadSender}.png"
-									style="width: 10px;" />
+									style="width: 20px; opacity: .8; padding-top:1.7em;" />
 								<p:graphicImage
 									value="/Image/Notification/#{noti.isReadRecipient}.png"
-									style="width: 10px;" />
+									style="width: 20px; opacity: .8; padding-top:1.7em;" />
 								<p:graphicImage value="/Image/Notification/#{noti.status}.png"
-									style="width: 40px;" />
-                   				#{noti.timeStamp}
+									style="width: 40px; opacity: .8; padding-top:.5em;" />
+							</p:column>
+							<p:column>
+								<strong>#{noti.timeStamp}</strong>
+							</p:column>
 
-                </p:column>
 							<f:facet name="footer">
 								<div align="center">
 									<p:commandButton value="Widerrufen/Entfernen"
