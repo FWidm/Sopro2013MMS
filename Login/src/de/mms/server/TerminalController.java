@@ -8,6 +8,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.primefaces.context.RequestContext;
+
 import de.mms.db.DBManager;
 
 @ManagedBean(name = "TerminalController")
@@ -15,14 +17,16 @@ import de.mms.db.DBManager;
 public class TerminalController {
 
 	private String currentUser;
-	
+	private boolean cat;
+
 	public TerminalController() {
-		//get current User
+		// get current User
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
 		currentUser = (String) session.getAttribute("email");
+		cat = false;
 	}
-	
+
 	/**
 	 * 
 	 * @param command
@@ -32,10 +36,10 @@ public class TerminalController {
 	public String handleCommand(String command, String[] params) {
 		if (command.equals("sql")) {
 			if (params[0] != null && params[0].toLowerCase().equals("drop")) {
-				return "The requested database has been completely erased.";
+				return "The requested database has been completely erased. ;)";
 			} else if (params[0] != null
 					&& params[0].toLowerCase().equals("select")) {
-				return "There's nothing to select. ;)";
+				return "*SELECT* is not available.<br>Every SQL Statemant except *SELECT* and *DROP* is available.";
 			} else {
 				String query = new String();
 				for (int i = 0; i < params.length; i++) {
@@ -52,10 +56,20 @@ public class TerminalController {
 			}
 		} else if (command.equals("date"))
 			return new Date().toString();
-		else if (command.equals("cat"))
-			return "TODO: Show this cat: http://adultcatfinder.com/";
-		else if (command.equals("help")) {
-			return "*************** help ***************\n* sql - params: statement\n* date - params: non\n* cat - params: non";
+		else if (command.equals("cat")) {
+			if (cat) {
+				cat = false;
+				RequestContext context = RequestContext.getCurrentInstance();
+				context.execute("setVisibillity(true)");
+				return "You throw your cat successfully against a wall. :)";
+			} else {
+				cat = true;
+				RequestContext context = RequestContext.getCurrentInstance();
+				context.execute("setVisibillity(true)");
+				return "There's your cat";
+			}
+		} else if (command.equals("help")) {
+			return "*************** help ***************<br />* sql - params: statement<br />* date - params: non<br />* cat - params: non";
 		} else
 			return command + " not found";
 	}
@@ -68,9 +82,25 @@ public class TerminalController {
 	}
 
 	/**
-	 * @param currentUser the currentUser to set
+	 * @param currentUser
+	 *            the currentUser to set
 	 */
 	public void setCurrentUser(String currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	/**
+	 * @return the cat
+	 */
+	public boolean isCat() {
+		return cat;
+	}
+
+	/**
+	 * @param cat
+	 *            the cat to set
+	 */
+	public void setCat(boolean cat) {
+		this.cat = cat;
 	}
 }
