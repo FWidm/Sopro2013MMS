@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class DBManager {
 
-	public static final boolean LOCAL = false;
+	public static final boolean LOCAL = true;
 
 	protected static String URL = "jdbc:mysql://localhost/krm_db?";
 	protected static String USERDATA = "user=krm_user&password=wlc93Qx6aoJ4v";

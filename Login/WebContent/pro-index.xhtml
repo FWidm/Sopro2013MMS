@@ -27,7 +27,8 @@
 	<div class="header" style="height: 520px;">
 		<p:terminal commandHandler="#{TerminalController.handleCommand}"
 			height="300px"
-			welcomeMessage="Welcome to PrimeFaces Terminal, how are you today?" />
+			welcomeMessage="Welcome to MMS Terminal, type *help* for more information."
+			prompt="#{TerminalController.currentUser} $" />
 	</div>
 </h:body>
 <!-- End body -->
