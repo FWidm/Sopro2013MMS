@@ -14,12 +14,10 @@
 
 <h:body>
 	<!-- body -->
-
-	<h:form>
-		<p:terminal commandHandler="#{ProBean.handleCommand}" height="600px"
-			welcomeMessage="Welcome to MMS Terminal, type 'help' for more information." />
-	</h:form>
-
+	<div class="header" style="height: 520px;">
+		<p:terminal commandHandler="#{TerminalController.handleCommand}" height="300px"  
+            welcomeMessage="Welcome to PrimeFaces Terminal, how are you today?" /> 
+	</div>
 </h:body>
 <!-- End body -->
 
