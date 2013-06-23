@@ -4,6 +4,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
+<link rel="stylesheet" href="./css/default.css" />
+<link rel="stylesheet" href="./css/pro.css" />
+
+
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
 	<title>Pro Panel</title>
@@ -12,11 +16,18 @@
 
 </h:head>
 
-<h:body>
+<h:body id="pro">
 	<!-- body -->
-	<div class="header" style="height: 520px;">
-		<p:terminal commandHandler="#{TerminalController.handleCommand}" height="300px"  
-            welcomeMessage="Welcome to PrimeFaces Terminal, how are you today?" /> 
+	<div class="header" style="height: 120px;">
+		<p:graphicImage value="/Image/iui_19.png" />
+		<p:graphicImage
+			style="float: left !important; margin-left: 1.6em !important; margin-top: -0.7em !important; max-height: 110px; margin-top: 0px !important;"
+			value="/Image/MyBestLogoHack.png" />
+	</div>
+	<div class="header" style="height: 520px;" value="adfadca">
+		<p:terminal commandHandler="#{TerminalController.handleCommand}"
+			height="300px"
+			welcomeMessage="Welcome to PrimeFaces Terminal, how are you today?" />
 	</div>
 </h:body>
 <!-- End body -->
