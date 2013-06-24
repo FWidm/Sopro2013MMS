@@ -142,7 +142,8 @@ public class AdminBean {
 	public void onEdit(RowEditEvent event) {
 		User updateUser = (User) event.getObject();
 		FacesMessage msg = new FacesMessage("Benutzer bearbeitet.",
-				((User) event.getObject()).toString());
+				updateUser.getFirstname() + " " + updateUser.getName()
+						+ " wurde erfolgreich bearbeitet.");
 		if (DBUser.loadUser(updateUser.getEmail()) != null
 				&& updateUser.getName() != ""
 				&& updateUser.getFirstname() != "") {

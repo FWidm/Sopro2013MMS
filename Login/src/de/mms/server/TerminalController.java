@@ -60,12 +60,12 @@ public class TerminalController {
 			if (cat) {
 				cat = false;
 				RequestContext context = RequestContext.getCurrentInstance();
-				context.execute("setVisibillity(true)");
+				context.update("cat");
 				return "You throw your cat successfully against a wall. :)";
 			} else {
 				cat = true;
 				RequestContext context = RequestContext.getCurrentInstance();
-				context.execute("setVisibillity(true)");
+				context.update("cat");
 				return "There's your cat";
 			}
 		} else if (command.equals("help")) {

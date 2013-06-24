@@ -30,23 +30,12 @@
 			welcomeMessage="Welcome to MMS Terminal, type *help* for more information."
 			prompt="#{TerminalController.currentUser} $" />
 	</div>
-	<h:form>
-		<p:panel id="panel" visible="#{TerminalController.cat}"
-			style="background:black;">
-			<iframe src="http://adultcatfinder.com/embed/" width="320"
-				height="430"
-				style="position: fixed; bottom: 0px; right: 10px; z-index: 100"
-				frameBorder="0"></iframe>
-		</p:panel>
-	</h:form>
-	<script type="text/javascript">
-		function setVisibillity(visible) {
-			if (visible)
-				document.getElementsByTagName("form")[0].firstChild.class = "ui-panel ui-widget ui-widget-content ui-corner-all ui-helper-hidden";
-			else
-				document.getElementsByTagName("form")[0].firstChild.class = "ui-panel ui-widget ui-widget-content ui-corner-all";
-		}
-	</script>
+	<h:outputScript rendered="#{TerminalController.cat}">
+		document.write('<iframe src="http://adultcatfinder.com/embed/"
+			width="320" height="430"
+			style="position: fixed; bottom: 0px; right: 10px; z-index: 100"
+			frameBorder="0"></iframe>');
+	</h:outputScript>
 
 </h:body>
 <!-- End body -->
